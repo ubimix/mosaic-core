@@ -1,5 +1,5 @@
 /*!
- * mosaic-core v0.0.0 | License: MIT 
+ * mosaic-core v0.0.1 | License: MIT 
  * 
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -195,8 +195,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 
 	        /** Returns position of the specified entity in this dataset. */
-	        getIndex : function(d) {
+	        getDataIndex : function(d) {
 	            var key = this.getKey(d);
+	            return this.getIndex(key);
+	        },
+
+	        /** Gets the index of an entry with the specified key. */
+	        getIndex : function(key) {
 	            var slot = key ? this._index[key] : null;
 	            return slot ? slot.i : -1;
 	        },
@@ -430,15 +435,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var that = this;
 	            that.setOptions(options);
 	            options = that.getOptions();
-	            that._onEnter = options.onEnter;
-	            that._onExit = options.onExit;
-	            that._onUpdate = options.onUpdate;
+	            _.each([ 'onEnter', 'onExit', 'onUpdate' ], function(name) {
+	                if (options[name]) {
+	                    that['_' + name] = options[name];
+	                }
+	            });
 	        },
 
 	        /**
 	         * "Opens" this view and notify about all already existing nodes.
 	         */
 	        open : function() {
+	            if (this._opened)
+	                return;
 	            var dataSet = this.getDataSet();
 	            this._onDataSetUpdate = _.bind(this._onDataSetUpdate, this);
 	            this._onDataSetUpdate({
@@ -447,12 +456,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	                exit : [],
 	            });
 	            dataSet.on('update', this._onDataSetUpdate);
+	            this._opened = true;
 	        },
 
 	        /**
 	         * Removes this view and unsubscribe from data set notifications.
 	         */
 	        close : function() {
+	            if (!this._opened)
+	                return;
 	            var dataSet = this.getDataSet();
 	            dataSet.on('update', this._onDataSetUpdate);
 	            this._onDataSetUpdate({
@@ -460,6 +472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                update : [],
 	                exit : dataSet.getData()
 	            });
+	            this._opened = false;
 	        },
 
 	        /** Sets options (parameters) of this class. */
@@ -509,11 +522,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    view = callback.call(that, d, view);
 	                    if (!view)
 	                        return;
-	                    that._setView(key, view);
+	                    var idx = dataSet.getIndex(key);
+	                    that._setView(key, view, idx);
 	                });
 	            }
 	            visit(e.enter, that._onEnter);
 	            visit(e.update, that._onUpdate);
+	        },
+
+	        /** Returns all view in the order defined by the data set. */
+	        _getViews : function() {
+	            var that = this;
+	            var dataSet = that.getDataSet();
+	            var views = _.map(dataSet.getData(), function(d, i) {
+	                var key = dataSet.getKey(d);
+	                var view = that._getView(key);
+	                return view;
+	            });
+	            return views;
 	        },
 
 	        /** Returns a view corresponding to the specified key. */
@@ -525,7 +551,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 
 	        /** Sets a new view corresponding to the specified key. */
-	        _setView : function(key, view) {
+	        _setView : function(key, view, idx) {
 	            if (!this._index) {
 	                this._index = {};
 	            }
@@ -816,34 +842,92 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var DataSetView = __webpack_require__(4);
 	    var TemplateView = __webpack_require__(10);
 
+	    /**
+	     * This view automatically listens modifications in a data set specified as
+	     * a constructor parameter and builds views for each entry in this data set.
+	     * To append all
+	     */
 	    var TemplateDataSetView = DataSetView.extend(TemplateView.prototype, {
+
+	        /** Constructor of this class. */
 	        initialize : function(options) {
 	            DataSetView.prototype.initialize.apply(this, arguments);
 	            TemplateView.prototype.initialize.apply(this, arguments);
 	        },
 
+	        /** This method is called when the rendering processes starts. */
 	        onRenderBegin : function() {
 	            this.open();
 	        },
 
+	        /** This method is called when this view is removed from the parent. */
 	        onRemove : function() {
 	            this.close();
+	        },
+
+	        /** Renders all child views and appends them to the specified element. */
+	        renderChildren : function(elm) {
+	            this._setContainerElement(elm);
+	            this._doRenderChildren();
+	        },
+
+	        /**
+	         * Renders all children views and appends them to the containers
+	         * element.
+	         */
+	        _doRenderChildren : function() {
+	            var that = this;
+	            var container = that._getContainerElement();
+	            if (!container)
+	                return;
+	            var dataSet = that.getDataSet();
+	            var data = dataSet.getData();
+	            for (var i = data.length - 1; i >= 0; i--) {
+	                var d = data[i];
+	                var key = dataSet.getKey(d);
+	                var view = that._getView(key);
+	                if (!view)
+	                    continue;
+	                var viewElm = view.getElement();
+	                var children = container.children();
+	                var len = children.length;
+	                if (len) {
+	                    children.eq(0).before(viewElm);
+	                } else {
+	                    container.append(viewElm);
+	                }
+	                view.render();
+	            }
+	        },
+
+	        /** Sets a new container element where child views should be appended. */
+	        _setContainerElement : function(elm) {
+	            this._container = elm;
+	        },
+
+	        /** Returns the container where children should be stored. */
+	        _getContainerElement : function() {
+	            return this._container;
+	        },
+
+	        /** Updates the view. */
+	        _onDataSetUpdate : function(e) {
+	            var that = this;
+	            DataSetView.prototype._onDataSetUpdate.apply(that, arguments);
+	            that._doRenderChildren();
+	            return that;
 	        },
 
 	        /**
 	         * Sets a new view corresponding to the specified key.
 	         */
-	        _setView : function(key, view) {
+	        _setView : function(key, view, idx) {
 	            var that = this;
 	            var oldView = that._getView(key);
 	            DataSetView.prototype._setView.apply(that, arguments);
 	            if (oldView) {
 	                oldView.remove();
 	            }
-	            view.render();
-	            var element = that.getElement();
-	            element.append(view.getElement());
-	            return that;
 	        },
 
 	        /** Sets a new view corresponding to the specified key. */
