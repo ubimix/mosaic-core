@@ -40,15 +40,19 @@ function(require) {
             var that = this;
             that.setOptions(options);
             options = that.getOptions();
-            that._onEnter = options.onEnter;
-            that._onExit = options.onExit;
-            that._onUpdate = options.onUpdate;
+            _.each([ 'onEnter', 'onExit', 'onUpdate' ], function(name) {
+                if (options[name]) {
+                    that['_' + name] = options[name];
+                }
+            });
         },
 
         /**
          * "Opens" this view and notify about all already existing nodes.
          */
         open : function() {
+            if (this._opened)
+                return;
             var dataSet = this.getDataSet();
             this._onDataSetUpdate = _.bind(this._onDataSetUpdate, this);
             this._onDataSetUpdate({
@@ -57,12 +61,15 @@ function(require) {
                 exit : [],
             });
             dataSet.on('update', this._onDataSetUpdate);
+            this._opened = true;
         },
 
         /**
          * Removes this view and unsubscribe from data set notifications.
          */
         close : function() {
+            if (!this._opened)
+                return;
             var dataSet = this.getDataSet();
             dataSet.on('update', this._onDataSetUpdate);
             this._onDataSetUpdate({
@@ -70,6 +77,7 @@ function(require) {
                 update : [],
                 exit : dataSet.getData()
             });
+            this._opened = false;
         },
 
         /** Sets options (parameters) of this class. */
@@ -119,11 +127,24 @@ function(require) {
                     view = callback.call(that, d, view);
                     if (!view)
                         return;
-                    that._setView(key, view);
+                    var idx = dataSet.getIndex(key);
+                    that._setView(key, view, idx);
                 });
             }
             visit(e.enter, that._onEnter);
             visit(e.update, that._onUpdate);
+        },
+
+        /** Returns all view in the order defined by the data set. */
+        _getViews : function() {
+            var that = this;
+            var dataSet = that.getDataSet();
+            var views = _.map(dataSet.getData(), function(d, i) {
+                var key = dataSet.getKey(d);
+                var view = that._getView(key);
+                return view;
+            });
+            return views;
         },
 
         /** Returns a view corresponding to the specified key. */
@@ -135,7 +156,7 @@ function(require) {
         },
 
         /** Sets a new view corresponding to the specified key. */
-        _setView : function(key, view) {
+        _setView : function(key, view, idx) {
             if (!this._index) {
                 this._index = {};
             }

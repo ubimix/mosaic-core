@@ -105,8 +105,13 @@ function(require) {
         },
 
         /** Returns position of the specified entity in this dataset. */
-        getIndex : function(d) {
+        getDataIndex : function(d) {
             var key = this.getKey(d);
+            return this.getIndex(key);
+        },
+
+        /** Gets the index of an entry with the specified key. */
+        getIndex : function(key) {
             var slot = key ? this._index[key] : null;
             return slot ? slot.i : -1;
         },
