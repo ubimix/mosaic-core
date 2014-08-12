@@ -3,5 +3,9 @@
   	"version": "0.0.0",
     "main" : "src",
     "dependencies" : {
+        "mosaic-commons" : "*",
+        "underscore" : "*",
+        "jquery" : "*",
+        "leaflet" : "*"
     }
 }
