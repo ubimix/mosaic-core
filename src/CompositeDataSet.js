@@ -3,11 +3,10 @@ if (typeof define !== 'function') {
 }
 define(
 // Dependencies
-[ 'require', 'mosaic-commons', 'underscore', './DataSet' ],
+[ 'require', 'underscore', './DataSet' ],
 // Module
 function(require) {
 
-    var Mosaic = require('mosaic-commons');
     var _ = require('underscore');
     var DataSet = require('./DataSet');
 

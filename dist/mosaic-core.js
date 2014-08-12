@@ -58,18 +58,28 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Mosaic = __webpack_require__(1);
-	Mosaic.Core = module.exports = {
-	    DataSet : __webpack_require__(2),
-	    CompositeDataSet : __webpack_require__(3),
-	    DataSetView : __webpack_require__(4),
-	    DataSubsetView : __webpack_require__(5),
-	    LeafletDataSetView : __webpack_require__(6),
-	    LeafletDataSubsetView : __webpack_require__(7),
-	    LeafletFeatureBuilder : __webpack_require__(8),
-	    TemplateDataSetView : __webpack_require__(9),
-	    TemplateView : __webpack_require__(10)
-	};
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
+	    var define = require('amdefine')(module);
+	}
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(1), __webpack_require__(2), __webpack_require__(3),
+	        __webpack_require__(4), __webpack_require__(5), __webpack_require__(6),
+	        __webpack_require__(7), __webpack_require__(8),
+	        __webpack_require__(9), __webpack_require__(10) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	    var Mosaic = __webpack_require__(1);
+	    Mosaic.Core = {
+	        DataSet : __webpack_require__(2),
+	        CompositeDataSet : __webpack_require__(3),
+	        DataSetView : __webpack_require__(4),
+	        DataSubsetView : __webpack_require__(5),
+	        LeafletDataSetView : __webpack_require__(6),
+	        LeafletDataSubsetView : __webpack_require__(7),
+	        LeafletFeatureBuilder : __webpack_require__(8),
+	        TemplateDataSetView : __webpack_require__(9),
+	        TemplateView : __webpack_require__(10)
+	    };
+	    return Mosaic.Core;
+
+	}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 
 /***/ },
@@ -222,9 +232,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(1), __webpack_require__(11), __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(11), __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var Mosaic = __webpack_require__(1);
 	    var _ = __webpack_require__(11);
 	    var DataSet = __webpack_require__(2);
 
