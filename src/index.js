@@ -6,12 +6,13 @@ define(
 [ 'require', 'mosaic-commons', './DataSet', './CompositeDataSet',
         './DataSetView', './DataSubsetView', './LeafletDataSetView',
         './LeafletDataSubsetView', './LeafletFeatureBuilder',
-        './TemplateDataSetView', './TemplateView' ],
+        './TemplateDataSetView', './TemplateView', './AdapterManager' ],
 // Module
 function(require) {
     var Mosaic = require('mosaic-commons');
     Mosaic.Core = {
         DataSet : require('./DataSet'),
+        AdapterManager : require('./AdapterManager'),
         CompositeDataSet : require('./CompositeDataSet'),
         DataSetView : require('./DataSetView'),
         DataSubsetView : require('./DataSubsetView'),
@@ -19,7 +20,8 @@ function(require) {
         LeafletDataSubsetView : require('./LeafletDataSubsetView'),
         LeafletFeatureBuilder : require('./LeafletFeatureBuilder'),
         TemplateDataSetView : require('./TemplateDataSetView'),
-        TemplateView : require('./TemplateView')
+        TemplateView : require('./TemplateView'),
+        TemplateViewManager : require('./TemplateViewManager'),
     };
     return Mosaic.Core;
 

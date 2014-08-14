@@ -84,8 +84,11 @@ function(require) {
         /** Updates the view. */
         _onDataSetUpdate : function(e) {
             var that = this;
-            DataSetView.prototype._onDataSetUpdate.apply(that, arguments);
-            that._doRenderChildren();
+            var container = that._getContainerElement();
+            if (container) {
+                DataSetView.prototype._onDataSetUpdate.apply(that, arguments);
+                that._doRenderChildren();
+            }
             return that;
         },
 
@@ -109,5 +112,6 @@ function(require) {
         },
 
     });
+
     return TemplateDataSetView;
 });

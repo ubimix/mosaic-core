@@ -16,7 +16,8 @@ function(require) {
     /**
      * This mixin contains common methods used to visualize data set content.
      */
-    var DataSetView = Mosaic.Class.extend({
+    var DataSetView = Mosaic.Class.extend(// 
+    Mosaic.Events, Mosaic.Events.prototype, {
 
         /**
          * Constructor of this class. This method expects that the parameters
@@ -38,6 +39,7 @@ function(require) {
          */
         initialize : function(options) {
             var that = this;
+            Mosaic.Events.apply(this);
             that.setOptions(options);
             options = that.getOptions();
             _.each([ 'onEnter', 'onExit', 'onUpdate' ], function(name) {
@@ -53,6 +55,7 @@ function(require) {
         open : function() {
             if (this._opened)
                 return;
+            this.triggerMethod('open');
             var dataSet = this.getDataSet();
             this._onDataSetUpdate = _.bind(this._onDataSetUpdate, this);
             this._onDataSetUpdate({
@@ -71,12 +74,13 @@ function(require) {
             if (!this._opened)
                 return;
             var dataSet = this.getDataSet();
-            dataSet.on('update', this._onDataSetUpdate);
+            dataSet.off('update', this._onDataSetUpdate);
             this._onDataSetUpdate({
                 enter : [],
                 update : [],
                 exit : dataSet.getData()
             });
+            this.triggerMethod('close');
             this._opened = false;
         },
 
@@ -107,6 +111,7 @@ function(require) {
          */
         _onDataSetUpdate : function(e) {
             var that = this;
+            that.triggerMethod('update:begin');
             var dataSet = that.getDataSet();
             _.each(e.exit, function(d) {
                 var key = dataSet.getKey(d);
@@ -133,6 +138,7 @@ function(require) {
             }
             visit(e.enter, that._onEnter);
             visit(e.update, that._onUpdate);
+            that.triggerMethod('update:end');
         },
 
         /** Returns all view in the order defined by the data set. */

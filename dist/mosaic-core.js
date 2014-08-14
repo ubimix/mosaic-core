@@ -11,7 +11,7 @@
 		exports["mosaic-core"] = factory(require("mosaic-commons"), require("underscore"), require("leaflet"), require("jquery"));
 	else
 		root["mosaic-core"] = factory(root["mosaic-commons"], root["underscore"], root["leaflet"], root["jquery"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_11__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_13__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_12__, __WEBPACK_EXTERNAL_MODULE_13__, __WEBPACK_EXTERNAL_MODULE_14__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -64,7 +64,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(1), __webpack_require__(2), __webpack_require__(3),
 	        __webpack_require__(4), __webpack_require__(5), __webpack_require__(6),
 	        __webpack_require__(7), __webpack_require__(8),
-	        __webpack_require__(9), __webpack_require__(10) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	        __webpack_require__(9), __webpack_require__(10), __webpack_require__(11) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 	    var Mosaic = __webpack_require__(1);
 	    Mosaic.Core = {
 	        DataSet : __webpack_require__(2),
@@ -75,7 +75,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        LeafletDataSubsetView : __webpack_require__(7),
 	        LeafletFeatureBuilder : __webpack_require__(8),
 	        TemplateDataSetView : __webpack_require__(9),
-	        TemplateView : __webpack_require__(10)
+	        TemplateView : __webpack_require__(10),
+	        AdapterManager : __webpack_require__(11),
 	    };
 	    return Mosaic.Core;
 
@@ -95,10 +96,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(1), __webpack_require__(11) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(1), __webpack_require__(12) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
-	    var _ = __webpack_require__(11);
+	    var _ = __webpack_require__(12);
 
 	    /**
 	     * This class represents a data set. Each dataset manages a set of objects
@@ -237,9 +238,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(11), __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(12), __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var _ = __webpack_require__(11);
+	    var _ = __webpack_require__(12);
 	    var DataSet = __webpack_require__(2);
 
 	    /**
@@ -400,10 +401,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(1), __webpack_require__(11) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(1), __webpack_require__(12) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
-	    var _ = __webpack_require__(11);
+	    var _ = __webpack_require__(12);
 
 	    /**
 	     * Subclasses of this type are used to visualize data set content.
@@ -411,7 +412,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * This mixin contains common methods used to visualize data set content.
 	     */
-	    var DataSetView = Mosaic.Class.extend({
+	    var DataSetView = Mosaic.Class.extend(// 
+	    Mosaic.Events, Mosaic.Events.prototype, {
 
 	        /**
 	         * Constructor of this class. This method expects that the parameters
@@ -433,6 +435,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        initialize : function(options) {
 	            var that = this;
+	            Mosaic.Events.apply(this);
 	            that.setOptions(options);
 	            options = that.getOptions();
 	            _.each([ 'onEnter', 'onExit', 'onUpdate' ], function(name) {
@@ -448,6 +451,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        open : function() {
 	            if (this._opened)
 	                return;
+	            this.triggerMethod('open');
 	            var dataSet = this.getDataSet();
 	            this._onDataSetUpdate = _.bind(this._onDataSetUpdate, this);
 	            this._onDataSetUpdate({
@@ -472,6 +476,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                update : [],
 	                exit : dataSet.getData()
 	            });
+	            this.triggerMethod('close');
 	            this._opened = false;
 	        },
 
@@ -502,6 +507,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        _onDataSetUpdate : function(e) {
 	            var that = this;
+	            that.triggerMethod('update:begin');
 	            var dataSet = that.getDataSet();
 	            _.each(e.exit, function(d) {
 	                var key = dataSet.getKey(d);
@@ -528,6 +534,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            visit(e.enter, that._onEnter);
 	            visit(e.update, that._onUpdate);
+	            that.triggerMethod('update:end');
 	        },
 
 	        /** Returns all view in the order defined by the data set. */
@@ -621,9 +628,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(12), __webpack_require__(4) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(13), __webpack_require__(4) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var L = __webpack_require__(12);
+	    var L = __webpack_require__(13);
 	    var DataSetView = __webpack_require__(4);
 
 	    /**
@@ -726,9 +733,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(1), __webpack_require__(12) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(1), __webpack_require__(13) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var L = __webpack_require__(12);
+	    var L = __webpack_require__(13);
 	    var Mosaic = __webpack_require__(1);
 
 	    var Config = Mosaic.Class.extend({
@@ -835,9 +842,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(11), __webpack_require__(1), //
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(12), __webpack_require__(1), //
 	__webpack_require__(4), __webpack_require__(10) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
-	    var _ = __webpack_require__(11);
+	    var _ = __webpack_require__(12);
 	    var Mosaic = __webpack_require__(1);
 	    var DataSetView = __webpack_require__(4);
 	    var TemplateView = __webpack_require__(10);
@@ -948,9 +955,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(11), __webpack_require__(13), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
-	    var _ = __webpack_require__(11);
-	    var $ = __webpack_require__(13);
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(12), __webpack_require__(14), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	    var _ = __webpack_require__(12);
+	    var $ = __webpack_require__(14);
 	    var Mosaic = __webpack_require__(1);
 
 	    /**
@@ -1277,7 +1284,144 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_11__;
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
+	    var define = require('amdefine')(module);
+	}
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(12), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, Mosaic) {
+	    "use strict";
+
+	    var Class = Mosaic.Class;
+
+	    /**
+	     * An adapter manager used to register/retrieve objects corresponding to the
+	     * types of adaptable object and the types of the target object. This object
+	     * is used by views to get view adapters.
+	     */
+	    var AdapterManager = Class.extend({
+
+	        /** Initializes this object */
+	        initialize : function() {
+	            this._adapters = {};
+	        },
+
+	        /**
+	         * Returns a key used to find adapters of one type to another.
+	         * 
+	         * @param from
+	         *            the type of the adaptable object
+	         * @param to
+	         *            type of the target object
+	         */
+	        _getKey : function(from, to) {
+	            var fromType = getTypeId(from);
+	            var toType = getTypeId(to);
+	            return fromType + '-' + toType;
+	        },
+
+	        /**
+	         * Registers a new adapter from one type to another.
+	         * 
+	         * @param from
+	         *            the type of the adaptable object
+	         * @param to
+	         *            type of the target object
+	         * @param adapter
+	         *            the adapter type
+	         */
+	        registerAdapter : function(from, to, adapter) {
+	            var key = this._getKey(from, to);
+	            this._adapters[key] = adapter;
+	        },
+
+	        /** Returns an adapter of one object type to another type. */
+	        getAdapter : function(from, to) {
+	            var key = this._getKey(from, to);
+	            return this._adapters[key];
+	        },
+
+	        /**
+	         * Creates and returns a new adapter from one type to another. If the
+	         * registered adapter is a function then it is used as constructor to
+	         * create a new object.
+	         */
+	        newAdapterInstance : function(from, to, options) {
+	            var AdapterType = this.getAdapter(from, to);
+	            var result = null;
+	            if (_.isFunction(AdapterType)) {
+	                options = options || {};
+	                if (this._checkValidity(AdapterType, options)) {
+	                    if (_.isFunction(AdapterType.initialize)) {
+	                        AdapterType.initialize(options);
+	                    }
+	                    result = new AdapterType(options);
+	                    if (!this._checkValidity(result, options)) {
+	                        result = null;
+	                    }
+	                }
+	            } else {
+	                result = AdapterType;
+	            }
+	            return result;
+	        },
+
+	        /** Removes an adapter from one type to another. */
+	        removeAdapter : function(from, to) {
+	            var key = this._getKey(from, to);
+	            var result = this._adapters[key];
+	            delete this._adapters[key];
+	            return result;
+	        },
+
+	        /**
+	         * Checks if option values are valid using validation methods on the
+	         * specified object
+	         */
+	        _checkValidity : function(obj, options) {
+	            if (!_.isFunction(obj.isValid))
+	                return true;
+	            var result = obj.isValid(options);
+	            return result;
+	        }
+	    });
+
+	    /** Returns the type of the specified resource. */
+	    AdapterManager.getTypeId = getTypeId;
+	    function getTypeId(obj) {
+	        var type;
+	        if (_.isString(obj)) {
+	            type = obj;
+	        } else {
+	            var o = obj;
+	            if (_.isFunction(obj)) {
+	                o = obj.prototype;
+	            }
+	            type = o.type = o.type || _.uniqueId('type-');
+	        }
+	        return type;
+	        //            
+	        // var typeId;
+	        // if (_.isString(obj)) {
+	        // typeId = obj;
+	        // } else if (obj.type) {
+	        // typeId = obj.type;
+	        // }
+	        // if (!_.isString(typeId)) {
+	        // var type;
+	        // if (_.isFunction(obj)) {
+	        // type = _.isFunction(obj.getClass) ? obj.getClass()
+	        // : obj['class'];
+	        // }
+	        // if (type) {
+	        // typeId = type._typeId;
+	        // }
+	        // }
+	        // return typeId;
+	    }
+
+	    return AdapterManager;
+
+	}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
 
 /***/ },
 /* 12 */
@@ -1290,6 +1434,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_14__;
 
 /***/ }
 /******/ ])
