@@ -3,11 +3,12 @@ if (typeof define !== 'function') {
 }
 define(
 // Dependencies
-[ 'require', 'mosaic-commons', 'underscore' ],
+[ 'require', 'underscore', './AbstractSet', 'mosaic-commons' ],
 // Module
 function(require) {
 
     var Mosaic = require('mosaic-commons');
+    var AbstractSet = require('./AbstractSet');
     var _ = require('underscore');
 
     /**
@@ -18,7 +19,7 @@ function(require) {
      * "setListener" method or it can be defined as a parameter of the class
      * constructor.
      */
-    var DataSet = Mosaic.Class.extend(Mosaic.Events.prototype, {
+    var DataSet = AbstractSet.extend(Mosaic.Events.prototype, Mosaic.Events, {
 
         /**
          * Class constructor.
@@ -27,17 +28,11 @@ function(require) {
          * @param options.getId
          *            this optional method is used to retrieve object
          *            identifiers
-         * @param options.listener
-         *            the listener to set
          */
         initialize : function(options) {
+            AbstractSet.prototype.initialize.apply(this, arguments);
             Mosaic.Events.call(this);
-            this.setOptions(options);
-            if (_.isFunction(this.options.getKey)) {
-                this.getKey = this.options.getKey;
-            }
-            this._index = {};
-            this._data = [];
+            this._open = false;
         },
 
         /**
@@ -45,49 +40,40 @@ function(require) {
          * initial data.
          */
         open : function() {
+            if (this._open)
+                return false;
+            this.triggerMethod('open');
             if (this.options.data) {
                 this.setData(this.options.data);
             }
+            this._open = true;
+            return true;
         },
 
         /** Closes this dataset. It removes all registered listeners. */
         close : function() {
+            if (!this._open)
+                return false;
+            this.setData([]);
+            this.triggerMethod('close');
+            this._open = false;
+            return true;
         },
 
         /**
          * Sets a new array of objects and generates an "update" event
-         * containing the "enter", "exit" and "update" arrays. This method
-         * returns reference to this instance.
+         * containing the "enter", "exit" and "update" indexes; each index
+         * contains keys and the corresponding index entries with "key", "obj"
+         * and "idx" fields (where "key" is the key of the object; "obj" the
+         * object itself and "idx" the index of this object in the list). This
+         * method returns reference to this instance to allow methods call
+         * chaining.
          */
         setData : function(data) {
-            var array = _.toArray(data);
-            var newIndex = {};
-            var newData = [];
-            var event = {
-                enter : [],
-                update : [],
-                exit : []
-            };
-            _.each(array, function(d, i) {
-                var key = this.getKey(d);
-                if (_.has(this._index, key)) {
-                    event.update.push(d);
-                    delete this._index[key];
-                } else {
-                    event.enter.push(d);
-                }
-                newIndex[key] = {
-                    d : d,
-                    i : i
-                };
-                newData.push(d);
-            }, this);
-            _.each(this._index, function(s) {
-                event.exit.push(s.d);
-            }, this);
-            this._index = newIndex;
-            this._data = newData;
-            this.emit('update', event);
+            this.triggerMethod('update:begin');
+            var event = this._setObjects(data);
+            this.triggerMethod('update', event);
+            this.triggerMethod('update:end');
             return this;
         },
 
@@ -97,10 +83,25 @@ function(require) {
          */
         getData : function(key) {
             if (key) {
-                var slot = this._index[key];
-                return slot ? slot.d : null;
+                var entry = this._index[key];
+                return entry ? entry.obj : null;
             } else {
-                return this._data;
+                return _.map(this._index, function(entry) {
+                    return entry.obj;
+                });
+            }
+        },
+
+        /**
+         * This method returns an index entries containing the data, the
+         * corresponding key and position of the data object in the array.
+         */
+        getDataEntries : function(key) {
+            if (key) {
+                var entry = this._index[key];
+                return entry;
+            } else {
+                return _.values(this._index);
             }
         },
 
@@ -108,29 +109,6 @@ function(require) {
         getDataIndex : function(d) {
             var key = this.getKey(d);
             return this.getIndex(key);
-        },
-
-        /** Gets the index of an entry with the specified key. */
-        getIndex : function(key) {
-            var slot = key ? this._index[key] : null;
-            return slot ? slot.i : -1;
-        },
-
-        /**
-         * This method returns a key for the specified object. By default this
-         * method returns the object itself. To change this behaviour this
-         * method could be overloaded in subclasses or a "getKey" function can
-         * be set in the constructor parameters.
-         */
-        getKey : function(d) {
-            return d;
-        },
-
-        /**
-         * This method returns a list of all object keys.
-         */
-        getKeys : function() {
-            return _.keys(this._index);
         },
 
     });

@@ -3,12 +3,13 @@ if (typeof define !== 'function') {
 }
 define(
 // Dependencies
-[ 'require', 'mosaic-commons', 'underscore' ],
+[ 'require', 'underscore', 'mosaic-commons', './AbstractSet' ],
 // Module
 function(require) {
 
     var Mosaic = require('mosaic-commons');
     var _ = require('underscore');
+    var AbstractSet = require('./AbstractSet');
 
     /**
      * Subclasses of this type are used to visualize data set content.
@@ -16,7 +17,7 @@ function(require) {
     /**
      * This mixin contains common methods used to visualize data set content.
      */
-    var DataSetView = Mosaic.Class.extend(// 
+    var DataSetView = AbstractSet.extend(//
     Mosaic.Events, Mosaic.Events.prototype, {
 
         /**
@@ -26,156 +27,123 @@ function(require) {
          * 
          * @param options.dataSet
          *            a mandatory data set object
-         * @param options.onEnter
-         *            an optional callback method providing new features for the
-         *            map
-         * @param options.onUpdate
-         *            an optional callback method updating already existing
-         *            features
-         * @param options.onExit
-         *            an optional callback executed just before features removal
-         *            from the map
-         * 
          */
         initialize : function(options) {
-            var that = this;
-            Mosaic.Events.apply(this);
-            that.setOptions(options);
-            options = that.getOptions();
-            _.each([ 'onEnter', 'onExit', 'onUpdate' ], function(name) {
-                if (options[name]) {
-                    that['_' + name] = options[name];
-                }
-            });
+            Mosaic.Events.apply(this, arguments);
+            AbstractSet.prototype.initialize.apply(this, arguments);
+            this._onDataSetUpdate = _.bind(this._onDataSetUpdate, this);
+            if (!this.options.dataSet) {
+                throw new Error('Data set is not defined.');
+            }
+        },
+
+        /**
+         * Returns a key for the specified object. This method uses the "getKey"
+         * method of the underlying data set.
+         */
+        getKey : function(d) {
+            return this.getDataSet().getKey(d);
         },
 
         /**
          * "Opens" this view and notify about all already existing nodes.
          */
         open : function() {
-            if (this._opened)
-                return;
-            this.triggerMethod('open');
+            if (this._open)
+                return false;
             var dataSet = this.getDataSet();
-            this._onDataSetUpdate = _.bind(this._onDataSetUpdate, this);
-            this._onDataSetUpdate({
-                enter : dataSet.getData(),
-                update : [],
-                exit : [],
-            });
-            dataSet.on('update', this._onDataSetUpdate);
-            this._opened = true;
+            dataSet.on('update:end', this._onDataSetUpdate);
+            this._setData(dataSet.getData());
+            this._open = true;
+            return true;
         },
 
         /**
          * Removes this view and unsubscribe from data set notifications.
          */
         close : function() {
-            if (!this._opened)
-                return;
+            if (!this._open)
+                return false;
             var dataSet = this.getDataSet();
-            dataSet.off('update', this._onDataSetUpdate);
-            this._onDataSetUpdate({
-                enter : [],
-                update : [],
-                exit : dataSet.getData()
-            });
-            this.triggerMethod('close');
-            this._opened = false;
-        },
-
-        /** Sets options (parameters) of this class. */
-        setOptions : function(options) {
-            this.options = _.extend(this.options || {}, options);
-        },
-
-        /**
-         * Returns options (parameters) of this instance. The returned value is
-         * used to retrieve the "dataSet" field as well as "onEnter", "onUpdate"
-         * and "onExit" handlers. This method could be overloaded in subclasses
-         * to re-define the source of these parameters.
-         */
-        getOptions : function() {
-            return this.options || {};
+            dataSet.off('update:end', this._onDataSetUpdate);
+            this._setData([]);
+            this._open = false;
+            return true;
         },
 
         /** Returns the underlying dataset */
         getDataSet : function() {
-            var options = this.getOptions();
-            return options.dataSet;
+            return this.options.dataSet;
         },
 
         /**
-         * Handles data set notifications and dispatch calls to registered
-         * "onEnter", "onUpdate" and "onExit" handlers.
+         * Creates a new view and attaches it to the specified index entry. This
+         * method should be overloaded in subclasses.
          */
-        _onDataSetUpdate : function(e) {
+        createView : function(entry) {
+            if (this.options.createView) {
+                this.options.createView.call(this, entry);
+            }
+        },
+
+        /**
+         * Destroys a view in the specified index entry. This method should be
+         * overloaded in subclasses.
+         */
+        destroyView : function(entry) {
+            if (this.options.destroyView) {
+                this.options.destroyView.call(this, entry);
+            }
+        },
+
+        /**
+         * Updates a view in the specified index entry. This method should be
+         * overloaded in subclasses.
+         */
+        updateView : function(entry) {
+            if (this.options.updateView) {
+                this.options.updateView.call(this, entry);
+            }
+        },
+
+        /** Handles added data objects. */
+        _onEnter : function(entry) {
+            this.createView(entry);
+            delete entry.obj;
+            this.triggerMethod('view:add', entry);
+            return entry;
+        },
+
+        /** Handles data updates - changes the view visualization. */
+        _onUpdate : function(entry) {
+            this.updateView(entry);
+            this.triggerMethod('view:update', entry);
+            return entry;
+        },
+
+        /** Handles data removal - destroys the corresponding view */
+        _onExit : function(entry) {
+            this.destroyView(entry);
+            this.triggerMethod('view:destroy', entry);
+            return entry;
+        },
+
+        /** Rebuild views corresponding to the specified data entries. */
+        _setData : function(data) {
             var that = this;
             that.triggerMethod('update:begin');
-            var dataSet = that.getDataSet();
-            _.each(e.exit, function(d) {
-                var key = dataSet.getKey(d);
-                var view = that._getView(key);
-                if (!view)
-                    return;
-                if (that._onExit) {
-                    that._onExit(d, view);
-                }
-                that._removeView(key, view);
-            });
-            function visit(data, callback) {
-                if (!callback)
-                    return;
-                _.each(data, function(d) {
-                    var key = dataSet.getKey(d);
-                    var view = that._getView(key);
-                    view = callback.call(that, d, view);
-                    if (!view)
-                        return;
-                    var idx = dataSet.getIndex(key);
-                    that._setView(key, view, idx);
-                });
-            }
-            visit(e.enter, that._onEnter);
-            visit(e.update, that._onUpdate);
+            that._setObjects(data);
             that.triggerMethod('update:end');
-        },
-
-        /** Returns all view in the order defined by the data set. */
-        _getViews : function() {
-            var that = this;
-            var dataSet = that.getDataSet();
-            var views = _.map(dataSet.getData(), function(d, i) {
-                var key = dataSet.getKey(d);
-                var view = that._getView(key);
-                return view;
-            });
-            return views;
-        },
-
-        /** Returns a view corresponding to the specified key. */
-        _getView : function(key) {
-            if (!this._index) {
-                return null;
-            }
-            return this._index[key];
-        },
-
-        /** Sets a new view corresponding to the specified key. */
-        _setView : function(key, view, idx) {
-            if (!this._index) {
-                this._index = {};
-            }
-            this._index[key] = view;
             return this;
         },
 
-        /** Sets a new view corresponding to the specified key. */
-        _removeView : function(key, view) {
-            if (this._index) {
-                delete this._index[key];
-            }
-            return this;
+        /**
+         * Handles data set update notifications and render individual views.
+         */
+        _onDataSetUpdate : function(e) {
+            var dataSet = this.getDataSet();
+            var data = dataSet.getData();
+            this._setData(data);
         },
 
     });

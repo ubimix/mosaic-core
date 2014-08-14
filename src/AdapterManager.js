@@ -18,10 +18,12 @@ function(require) {
      * is used by views to get view adapters.
      */
     var AdapterManager = Class.extend({
+        TYPE_KEY_DELIM : '/',
 
         /** Initializes this object */
         initialize : function() {
             this._adapters = {};
+            this._cache = {};
         },
 
         /**
@@ -33,9 +35,9 @@ function(require) {
          *            type of the target object
          */
         _getKey : function(from, to) {
-            var fromType = getTypeId(from);
-            var toType = getTypeId(to);
-            return fromType + '-' + toType;
+            var fromType = this.getTypeKey(from);
+            var toType = this.getTypeKey(to);
+            return fromType + '::' + toType;
         },
 
         /**
@@ -51,12 +53,26 @@ function(require) {
         registerAdapter : function(from, to, adapter) {
             var key = this._getKey(from, to);
             this._adapters[key] = adapter;
+            this._cache = {};
         },
 
         /** Returns an adapter of one object type to another type. */
         getAdapter : function(from, to) {
-            var key = this._getKey(from, to);
-            return this._adapters[key];
+            var that = this;
+            var cacheKey = that._getKey(from, to);
+            var result = that._cache[cacheKey];
+            if (!result && !_.has(that._cache, cacheKey)) {
+                _.find(that._expandId(from), function(f) {
+                    _.find(that._expandId(to), function(t) {
+                        var key = that._getKey(f, t);
+                        result = that._adapters[key];
+                        return !!result;
+                    });
+                    return !!result;
+                });
+                that._cache[cacheKey] = result;
+            }
+            return result;
         },
 
         /**
@@ -89,6 +105,7 @@ function(require) {
             var key = this._getKey(from, to);
             var result = this._adapters[key];
             delete this._adapters[key];
+            delete this._cache[key];
             return result;
         },
 
@@ -101,42 +118,58 @@ function(require) {
                 return true;
             var result = obj.isValid(options);
             return result;
+        },
+
+        /**
+         * Expand the specified key to an array of keys taking into account
+         * inheritance defined in the key.
+         */
+        _expandId : function(key) {
+            var result = [];
+            key = this._normalizeTypeKey(key);
+            var delim = this.TYPE_KEY_DELIM;
+            var array = key.split(delim);
+            while (array.length) {
+                var k = array.join(delim);
+                result.push(k);
+                array.pop();
+            }
+            result.push('');
+            return result;
+        },
+
+        /** Returns the type of the specified resource. */
+        getTypeKey : function(obj) {
+            var type;
+            if (_.isString(obj)) {
+                type = obj;
+            } else {
+                var o = obj;
+                if (_.isFunction(obj)) {
+                    o = obj.prototype;
+                }
+                type = o.type = o.type || _.uniqueId('type-');
+            }
+            return this._normalizeTypeKey(type);
+        },
+
+        /**
+         * Returns a normalized key used to put values in the internal index and
+         * in the cache.
+         */
+        _normalizeTypeKey : function(str) {
+            if (!str)
+                return '';
+            var delim = this.TYPE_KEY_DELIM;
+            if (str.indexOf(delim) == 0) {
+                str = delim.substring(delim.length);
+            }
+            if (str.lastIndexOf(delim) == str.length - delim.length) {
+                str = str.substring(0, str.length - delim.length);
+            }
+            return str;
         }
     });
-
-    /** Returns the type of the specified resource. */
-    AdapterManager.getTypeId = getTypeId;
-    function getTypeId(obj) {
-        var type;
-        if (_.isString(obj)) {
-            type = obj;
-        } else {
-            var o = obj;
-            if (_.isFunction(obj)) {
-                o = obj.prototype;
-            }
-            type = o.type = o.type || _.uniqueId('type-');
-        }
-        return type;
-        //            
-        // var typeId;
-        // if (_.isString(obj)) {
-        // typeId = obj;
-        // } else if (obj.type) {
-        // typeId = obj.type;
-        // }
-        // if (!_.isString(typeId)) {
-        // var type;
-        // if (_.isFunction(obj)) {
-        // type = _.isFunction(obj.getClass) ? obj.getClass()
-        // : obj['class'];
-        // }
-        // if (type) {
-        // typeId = type._typeId;
-        // }
-        // }
-        // return typeId;
-    }
 
     return AdapterManager;
 

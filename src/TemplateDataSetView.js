@@ -18,16 +18,30 @@ function(require) {
      * a constructor parameter and builds views for each entry in this data set.
      * To append all
      */
-    var TemplateDataSetView = DataSetView.extend(TemplateView.prototype, {
+    var TemplateDataSetView = TemplateView.extend(DataSetView.prototype, {
 
         /** Constructor of this class. */
         initialize : function(options) {
             DataSetView.prototype.initialize.apply(this, arguments);
             TemplateView.prototype.initialize.apply(this, arguments);
+            if (!this.options.viewManager) {
+                throw new Error('View manager is not defined');
+            }
+            if (this.options.getType) {
+                this.getType = this.options.getType;
+            }
+        },
+
+        /**
+         * Returns the type of the specified object. This method should be
+         * overloaded in subclasses or in the constructor parameters.
+         */
+        getType : function(d) {
+            return d.type || 'Default';
         },
 
         /** This method is called when the rendering processes starts. */
-        onRenderBegin : function() {
+        onRenderEnd : function() {
             this.open();
         },
 
@@ -37,38 +51,56 @@ function(require) {
         },
 
         /** Renders all child views and appends them to the specified element. */
-        renderChildren : function(elm) {
-            this._setContainerElement(elm);
-            this._doRenderChildren();
+        renderChildren : function(elm, options) {
+            this._container = elm;
+            this.childOptions = options || {};
         },
 
         /**
-         * Renders all children views and appends them to the containers
-         * element.
+         * Creates a new view and attaches it to the specified index entry. This
+         * method should be overloaded in subclasses.
          */
-        _doRenderChildren : function() {
-            var that = this;
-            var container = that._getContainerElement();
-            if (!container)
-                return;
-            var dataSet = that.getDataSet();
-            var data = dataSet.getData();
-            for (var i = data.length - 1; i >= 0; i--) {
-                var d = data[i];
-                var key = dataSet.getKey(d);
-                var view = that._getView(key);
-                if (!view)
-                    continue;
-                var viewElm = view.getElement();
-                var children = container.children();
-                var len = children.length;
-                if (len) {
-                    children.eq(0).before(viewElm);
-                } else {
-                    container.append(viewElm);
-                }
-                view.render();
+        createView : function(entry) {
+            var viewManager = this.options.viewManager;
+            var viewType = this._getContainerViewType();
+            var resourceType = this.getType(entry.obj);
+            var options = _.extend({}, this.childOptions, {
+                viewManager : viewManager,
+                obj : entry.obj,
+                parent : this
+            });
+            entry.view = viewManager.newView(viewType, resourceType, options);
+            if (entry.view) {
+                entry.view.render();
+                var container = this._getContainerElement();
+                this._container.append(entry.view.$el);
+                entry.view.triggerMethod('create');
             }
+        },
+
+        /**
+         * Destroys a view in the specified index entry. This method should be
+         * overloaded in subclasses.
+         */
+        destroyView : function(entry) {
+            if (!entry.view)
+                return;
+            entry.view.remove();
+            entry.view.triggerMethod('destroy');
+            delete entry.view;
+        },
+
+        /**
+         * console.log('TemplateDataSetView: ',
+         * _.functions(TemplateDataSetView.prototype));
+         * 
+         * Updates a view in the specified index entry. This method should be
+         * overloaded in subclasses.
+         */
+        updateView : function(entry) {
+            if (!entry.view)
+                return;
+            entry.view.triggerMethod('update');
         },
 
         /** Sets a new container element where child views should be appended. */
@@ -81,34 +113,12 @@ function(require) {
             return this._container;
         },
 
-        /** Updates the view. */
-        _onDataSetUpdate : function(e) {
-            var that = this;
-            var container = that._getContainerElement();
-            if (container) {
-                DataSetView.prototype._onDataSetUpdate.apply(that, arguments);
-                that._doRenderChildren();
-            }
-            return that;
-        },
-
-        /**
-         * Sets a new view corresponding to the specified key.
-         */
-        _setView : function(key, view, idx) {
-            var that = this;
-            var oldView = that._getView(key);
-            DataSetView.prototype._setView.apply(that, arguments);
-            if (oldView) {
-                oldView.remove();
-            }
-        },
-
-        /** Sets a new view corresponding to the specified key. */
-        _removeView : function(key, view) {
-            DataSetView.prototype._removeView.apply(this, arguments);
-            view.remove();
-            return this;
+        /** Returns the container where children should be stored. */
+        _getContainerViewType : function() {
+            if (!this._container)
+                return null;
+            var viewType = this._container.data('view') || '';
+            return viewType;
         },
 
     });

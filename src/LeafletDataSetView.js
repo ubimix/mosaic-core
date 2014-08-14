@@ -19,23 +19,24 @@ function(require) {
     var LeafletDataSetView = DataSetView.extend({
 
         /**
-         * Sets a new view corresponding to the specified key.
+         * Creates a new view and attaches it to the specified index entry.
          */
-        _setView : function(key, view) {
-            var oldView = this._getView(key);
-            DataSetView.prototype._setView.apply(this, arguments);
-            if (oldView) {
-                this._layer.removeLayer(oldView);
+        createView : function(entry) {
+            DataSetView.prototype.createView.apply(this, arguments);
+            if (entry.layer) {
+                this._layer.addLayer(entry.layer);
             }
-            this._layer.addLayer(view);
-            return this;
         },
 
-        /** Sets a new view corresponding to the specified key. */
-        _removeView : function(key, view) {
-            DataSetView.prototype._removeView.apply(this, arguments);
-            this._layer.removeLayer(view);
-            return this;
+        /**
+         * Destroys a view in the specified index entry. This method should be
+         * overloaded in subclasses.
+         */
+        destroyView : function(entry) {
+            if (entry.layer) {
+                this._layer.removeLayer(entry.layer);
+            }
+            DataSetView.prototype.destroyView.apply(this, arguments);
         },
 
         /**

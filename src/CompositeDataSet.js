@@ -39,18 +39,24 @@ function(require) {
          * initial data merge.
          */
         open : function() {
+            if (!DataSet.prototype.open.apply(this, arguments))
+                return false;
             _.each(this.options.dataSets, function(dataSet) {
                 dataSet.on('update', this._filterDataSets);
             }, this);
             this._filterDataSets();
+            return true;
         },
 
         /** Closes this dataset. It removes all registered listeners. */
         close : function() {
+            if (!DataSet.prototype.close.apply(this, arguments))
+                return false;
             _.each(this.options.dataSets, function(dataSet) {
                 dataSet.off('update', this._filterDataSets);
             }, this);
             DataSet.prototype.setData.call(this, []);
+            return true;
         },
 
         /** Sets a new filter and updates this data set. */
@@ -75,23 +81,25 @@ function(require) {
             var data = [];
             _.each(_.keys(keys), function(key) {
                 var array = _.map(dataSets, function(dataSet) {
-                    var d = dataSet.getData(key);
-                    return d;
+                    var entry = dataSet.getDataEntries(key);
+                    return entry;
                 });
-                var d = this._filterData(key, array);
-                if (d) {
-                    data.push(d);
+                var obj = this._filterData(key, array);
+                if (obj) {
+                    data.push(obj);
                 }
             }, this);
             DataSet.prototype.setData.call(this, data);
         },
 
         /**
-         * Filters/merges individual objects corresponding to the same key.
+         * Filters/merges individual index entries corresponding to the same
+         * key.
          * 
          * @param array
-         *            an array of objects from all datasets corresponding to the
-         *            same key
+         *            an array of index entries from all datasets corresponding
+         *            to the same key; each entry contains the "obj", "idx" and
+         *            "key" fields.
          * @param key
          *            the key of the data
          */

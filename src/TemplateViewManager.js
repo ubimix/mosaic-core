@@ -28,22 +28,23 @@ function(require) {
      */
     var TemplateViewManager = Class.extend({
 
-        initialize : function() {
-            this._adapterManager = new AdapterManager();
+        initialize : function(options) {
+            this.setOptions(options);
+            this._adapterManager = this.options.adapterManager || // 
+            new AdapterManager();
         },
 
         /**
          * Registers visualization widget for all resources of the specified
-         * type shown in the contexts with the given contextKey.
+         * type shown in the contexts with the given viewType.
          */
-        registerView : function(contextKey, resourceType, View) {
-            this._adapterManager
-                    .registerAdapter(contextKey, resourceType, view);
+        registerView : function(viewType, resourceType, View) {
+            this._adapterManager.registerAdapter(viewType, resourceType, View);
         },
 
         /** Creates and returns a new view for the specified resource type. */
-        newView : function(contextKey, resourceType, options) {
-            return this._adapterManager.newAdapterInstance(contextKey,
+        newView : function(viewType, resourceType, options) {
+            return this._adapterManager.newAdapterInstance(viewType,
                     resourceType, options);
         },
 
@@ -56,7 +57,7 @@ function(require) {
             html = $(html);
             // This method recursively iterates over all parent elements
             // and add all methods defined in these elements.
-            function extendViewType(ViewType, el, set) {
+            function extendViewType(el, ViewType, set) {
                 var id = el.attr('id') || _.uniqueId('template-');
                 el.attr('id', id);
                 // Check that the element id was not visited yet (to
@@ -68,26 +69,25 @@ function(require) {
                 var extendedType = el.attr('data-extends');
                 if (extendedType) {
                     var parentViewEl = html.find(extendedType);
-                    ViewType = extendViewType(ViewType, parentViewEl, set);
+                    ViewType = extendViewType(parentViewEl, ViewType, set);
                 }
                 return ViewType.extendViewType(el, ViewType);
             }
-            html.find('[data-view]').each(
-                    function() {
-                        var el = $(this);
-                        var contextKey = el.attr('data-view-context');
-                        var resourceType = el.attr('data-view') || 'Default';
-                        var ViewType = that._getBasicViewType(contextKey,
-                                resourceType);
-                        ViewType = extendViewType(ViewType.extend({}), el);
-                        that.registerView(contextKey, resourceType, ViewType);
-                    });
+            html.find('[data-view-type]').each(function() {
+                var el = $(this);
+                var viewType = el.attr('data-view-type') || '';
+                var resourceType = el.attr('data-resource-type') || '';
+                var ViewType = that._getBasicViewType(viewType, resourceType);
+                ViewType = ViewType.extend();
+                ViewType = extendViewType(el, ViewType);
+                that.registerView(viewType, resourceType, ViewType);
+            });
         },
 
         /** Returns the basic view type depending on the context. */
-        _getBasicViewType : function(contextKey, resourceType) {
-            contextKey = (contextKey || '').toLowerCase();
-            if (contextType === 'layout') {
+        _getBasicViewType : function(viewType, resourceType) {
+            viewType = (viewType || '').toLowerCase();
+            if (resourceType === 'DataSet') {
                 return TemplateDataSetView;
             }
             return TemplateView;

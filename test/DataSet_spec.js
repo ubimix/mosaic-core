@@ -9,9 +9,21 @@ function(_, DataSet, expect) {
 
     describe('DataSet', function() {
         var event;
+        var begin = false;
+        var end = false;
         var dataSet = new DataSet({});
+        dataSet.on('update:begin', function() {
+            begin = true;
+        });
+        dataSet.on('update:end', function() {
+            end = true;
+        });
         dataSet.on('update', function(e) {
-            event = e;
+            event = {
+                enter : _.keys(e.enter),
+                update : _.keys(e.update),
+                exit : _.keys(e.exit),
+            };
         });
         function testDataSet(str, ent, upd, ext) {
             function split(s) {
@@ -19,7 +31,11 @@ function(_, DataSet, expect) {
                     return [];
                 return _.toArray(s);
             }
+            begin = false;
+            end = false;
             dataSet.setData(str);
+            expect(begin).to.eql(true);
+            expect(end).to.eql(true);
             expect(event).to.eql({
                 enter : split(ent),
                 update : split(upd),
