@@ -27,17 +27,6 @@ function(require) {
             if (!this.options.viewManager) {
                 throw new Error('View manager is not defined');
             }
-            if (this.options.getType) {
-                this.getType = this.options.getType;
-            }
-        },
-
-        /**
-         * Returns the type of the specified object. This method should be
-         * overloaded in subclasses or in the constructor parameters.
-         */
-        getType : function(d) {
-            return d.type || 'Default';
         },
 
         /** This method is called when the rendering processes starts. */
@@ -63,7 +52,7 @@ function(require) {
         createView : function(entry) {
             var viewManager = this.options.viewManager;
             var viewType = this._getContainerViewType();
-            var resourceType = this.getType(entry.obj);
+            var resourceType = viewManager.getResourceType(entry.obj);
             var options = _.extend({}, this.childOptions, {
                 viewManager : viewManager,
                 obj : entry.obj,

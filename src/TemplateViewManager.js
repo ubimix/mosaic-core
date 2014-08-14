@@ -32,6 +32,9 @@ function(require) {
             this.setOptions(options);
             this._adapterManager = this.options.adapterManager || // 
             new AdapterManager();
+            if (this.options.getResourceType) {
+                this.getResourceType = this.options.getResourceType;
+            }
         },
 
         /**
@@ -82,6 +85,14 @@ function(require) {
                 ViewType = extendViewType(el, ViewType);
                 that.registerView(viewType, resourceType, ViewType);
             });
+        },
+
+        /**
+         * Returns the type of the specified object. This method should be
+         * overloaded in subclasses or in the constructor parameters.
+         */
+        getResourceType : function(d) {
+            return d.type || 'Default';
         },
 
         /** Returns the basic view type depending on the context. */
