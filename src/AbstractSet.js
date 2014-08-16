@@ -10,6 +10,14 @@ function(require) {
     var Mosaic = require('mosaic-commons');
     var _ = require('underscore');
 
+    /** Objects of this type are used to keep information about data set entries */
+    var SetEntry = Mosaic.Class.extend(// 
+    Mosaic.Events.prototype, Mosaic.Events, {
+        initialize : function(options) {
+            _.extend(this, options);
+        }
+    });
+
     /**
      * This is an abstract set used to manage of key/value pairs and generate
      * notifications about new/updated/removed entries in this set. To perform
@@ -61,11 +69,11 @@ function(require) {
                     delete that._index[key];
                     event.update[entry.key] = entry;
                 } else {
-                    entry = that._onEnter({
+                    entry = that._onEnter(new SetEntry({
                         key : key,
                         obj : d,
                         idx : i
-                    });
+                    }));
                     event.enter[entry.key] = entry;
                 }
                 newIndex[key] = entry;
@@ -128,6 +136,7 @@ function(require) {
          *            and the corresponding key
          */
         _onEnter : function(entry) {
+            entry.emit('enter');
             return entry;
         },
 
@@ -139,6 +148,7 @@ function(require) {
          *            and the corresponding key
          */
         _onExit : function(entry) {
+            entry.emit('exit');
             return entry;
         },
 
@@ -151,6 +161,7 @@ function(require) {
          *            and the corresponding key
          */
         _onUpdate : function(entry) {
+            entry.emit('update');
             return entry;
         },
 
@@ -167,6 +178,7 @@ function(require) {
             return _.has(this._index, key);
         }
     });
+    AbstractSet.SetEntry = SetEntry;
 
     return AbstractSet;
 

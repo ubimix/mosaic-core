@@ -109,7 +109,7 @@ function(require) {
         /** Handles added data objects. */
         _onEnter : function(entry) {
             this.createView(entry);
-            delete entry.obj;
+            entry.fire('enter');
             this.triggerMethod('view:add', entry);
             return entry;
         },
@@ -117,12 +117,14 @@ function(require) {
         /** Handles data updates - changes the view visualization. */
         _onUpdate : function(entry) {
             this.updateView(entry);
+            entry.fire('update');
             this.triggerMethod('view:update', entry);
             return entry;
         },
 
         /** Handles data removal - destroys the corresponding view */
         _onExit : function(entry) {
+            entry.fire('exit');
             this.destroyView(entry);
             this.triggerMethod('view:destroy', entry);
             return entry;
