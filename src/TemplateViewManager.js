@@ -3,53 +3,23 @@ if (typeof define !== 'function') {
 }
 define(
 // Dependencies
-[ 'require', 'underscore', 'jquery', 'mosaic-commons', './AdapterManager',
-        './TemplateView', './TemplateDataSetView' ],
+[ 'require', 'underscore', 'jquery', './ViewManager', './TemplateView',
+        './TemplateDataSetView' ],
 // Module
 function(require) {
     "use strict";
 
     var _ = require('underscore');
+    var ViewManager = require('./ViewManager');
     var $ = require('jquery');
-    var Mosaic = require('mosaic-commons');
-    var Class = Mosaic.Class;
-    var AdapterManager = require('./AdapterManager');
     var TemplateView = require('./TemplateView');
     var TemplateDataSetView = require('./TemplateDataSetView');
 
     /**
-     * Instances of this type manage visual widgets for resources shown in
-     * various contexts. The same resource could be shown differently in
-     * different contexts. For example a person profile in a contact list has
-     * much details than the same user profile shown on a separate page. So
-     * resource visualization depends on the <em>context</em> and on the
-     * <em>type</em> of each resource. This class manages adapters for all
-     * resource types for their respective contexts.
+     * This extension of the ViewManager class provides additional methods used
+     * to build templates from HTML DOM by extending existing classes.
      */
-    var TemplateViewManager = Class.extend({
-
-        initialize : function(options) {
-            this.setOptions(options);
-            this._adapterManager = this.options.adapterManager || // 
-            new AdapterManager();
-            if (this.options.getResourceType) {
-                this.getResourceType = this.options.getResourceType;
-            }
-        },
-
-        /**
-         * Registers visualization widget for all resources of the specified
-         * type shown in the contexts with the given viewType.
-         */
-        registerView : function(viewType, resourceType, View) {
-            this._adapterManager.registerAdapter(viewType, resourceType, View);
-        },
-
-        /** Creates and returns a new view for the specified resource type. */
-        newView : function(viewType, resourceType, options) {
-            return this._adapterManager.newAdapterInstance(viewType,
-                    resourceType, options);
-        },
+    var TemplateViewManager = ViewManager.extend({
 
         /**
          * Analyzes the given HTML block and extracts from it all widget
@@ -85,14 +55,6 @@ function(require) {
                 ViewType = extendViewType(el, ViewType);
                 that.registerView(viewType, resourceType, ViewType);
             });
-        },
-
-        /**
-         * Returns the type of the specified object. This method should be
-         * overloaded in subclasses or in the constructor parameters.
-         */
-        getResourceType : function(d) {
-            return d.type || 'Default';
         },
 
         /** Returns the basic view type depending on the context. */
