@@ -13,66 +13,35 @@ function(require) {
     var Mosaic = require('mosaic-commons');
     var DataSetView = require('./DataSetView');
     var ReactDataView = require('./ReactDataView');
+    var DataSetView = require('./DataSetView');
 
+    /**
+     * Common superclass for all React-based views responsible for DataSet
+     * visualizations. Subclasses should implement the "_onEnter" method and
+     * append a "view" field to the entry.
+     */
     var ReactDataSetView = DataSetView.extend(ReactDataView.prototype, {
-
-        initialize : function(options) {
+        initialize : function() {
             DataSetView.prototype.initialize.apply(this, arguments);
-            ReactView.prototype.initialize.apply(this, arguments);
-            if (this.options.renderView) {
-                this.renderView = this.options.renderView;
-            }
-            if (this.options.renderLayout) {
-                this.renderLayout = this.options.renderLayout;
-            }
+            ReactDataView.prototype.initialize.apply(this, arguments);
+            this.on('update:end', function() {
+                this._redraw();
+            }, this);
         },
 
         /**
-         * Renders individual view from this set. This method should be
-         * overloaded in subclasses or re-defined as a constructor "renderView"
-         * parameter.
+         * Returns a list of all child views. Each child view should be a
+         * subclass of the ReactDataView class.
          */
-        renderView : function(view) {
-            return view && view.render ? view.render() : undefined;
-        },
-
-        /**
-         * Renders layout for individual dataset views. It takes a list of
-         * rendered entities
-         */
-        renderLayout : function(children) {
-            return React.DOM.div(this.options, children);
-        },
-
-        /**
-         * Render this view. By default it renders all children (using the
-         * "renderView" method and after that it calls the "renderLayout" method
-         * to organize these items.
-         */
-        _doRender : function() {
-            var that = this;
-            var childNodes = [];
-            var dataSet = this.getDataSet();
-            var data = dataSet.getData();
-            _.each(data, function(d) {
-                var key = dataSet.getKey(d);
-                var view = that._getView(key);
-                var rendered = that.renderView(view);
-                if (rendered) {
-                    childNodes.push(rendered);
-                }
+        getChildViews : function() {
+            var list = _.map(this._index, function(entry) {
+                var view = entry.view;
+                if (!view)
+                    return null;
+                return view.getElement();
             });
-            return that.renderLayout(childNodes);
+            return list;
         },
-
-        /**
-         * Handles data set notifications and dispatch calls to registered
-         * "onEnter", "onUpdate" and "onExit" handlers.
-         */
-        _onDataSetUpdate : function(e) {
-            DataSetView.prototype._onDataSetUpdate.call(this, e);
-            this.update();
-        }
 
     });
 

@@ -16,8 +16,7 @@ function(require) {
         componentWillMount : function() {
             var that = this;
             that._onUpdate = _.bind(that._onUpdate, that);
-            that.props.view._updateCallback = that._onUpdate;
-            console.log('ReactAdapter#componentWillMount');
+            that.props.view._setRedrawCallback(that._onUpdate);
             if (that.props.view.open) {
                 that.props.view.open();
             }
@@ -25,15 +24,13 @@ function(require) {
 
         componentWillUnmount : function() {
             var that = this;
-            delete that.props.view._updateCallback;
-            console.log('ReactAdapter#componentWillUnmount');
+            delete that.props.view._setRedrawCallback(null);
             if (that.props.view.close) {
                 that.props.view.close();
             }
         },
 
         _onUpdate : function() {
-            console.log('ReactAdapter#_onUpdate');
             this.setState(this._newState());
         },
 
@@ -46,7 +43,7 @@ function(require) {
         },
 
         render : function() {
-            var result = this.props.view._doRender();
+            var result = this.props.view.render();
             if (!result) {
                 result = '';
             }
@@ -61,25 +58,31 @@ function(require) {
         initialize : function(options) {
             this.setOptions(options);
             _.extend(this, this.options.methods);
+            this.react = React;
+            this._redrawCallback = null;
+            if (this.options.render) {
+                this.render = this.options.render;
+            }
             this._el = new ReactAdapter({
                 view : this
             });
-            this._updateCallback = null;
         },
         update : function() {
-            console.log('ReactDataView#update');
-            if (this._updateCallback) {
-                this._updateCallback();
+            this._redraw();
+        },
+        _setRedrawCallback : function(callback) {
+            this._redrawCallback = callback;
+        },
+        _redraw : function() {
+            if (this._redrawCallback) {
+                this._redrawCallback();
             }
         },
         getElement : function() {
             return this._el;
         },
-        _doRender : function() {
-            return React.DOM.div(null);
-        },
         render : function() {
-            return this._el;
+            return React.DOM.div(null);
         }
     });
 

@@ -17,8 +17,7 @@ function(require) {
     /**
      * This mixin contains common methods used to visualize data set content.
      */
-    var DataSetView = AbstractSet.extend(//
-    Mosaic.Events, Mosaic.Events.prototype, {
+    var DataSetView = AbstractSet.extend({
 
         /**
          * Constructor of this class. This method expects that the parameters
@@ -29,7 +28,6 @@ function(require) {
          *            a mandatory data set object
          */
         initialize : function(options) {
-            Mosaic.Events.apply(this, arguments);
             AbstractSet.prototype.initialize.apply(this, arguments);
             this._onDataSetUpdate = _.bind(this._onDataSetUpdate, this);
             if (!this.options.dataSet) {
@@ -65,8 +63,8 @@ function(require) {
             if (!this._open)
                 return false;
             var dataSet = this.getDataSet();
-            dataSet.off('update:end', this._onDataSetUpdate);
             this._setData([]);
+            dataSet.off('update:end', this._onDataSetUpdate);
             this._open = false;
             return true;
         },
@@ -74,60 +72,6 @@ function(require) {
         /** Returns the underlying dataset */
         getDataSet : function() {
             return this.options.dataSet;
-        },
-
-        /**
-         * Creates a new view and attaches it to the specified index entry. This
-         * method should be overloaded in subclasses.
-         */
-        createView : function(entry) {
-            if (this.options.createView) {
-                this.options.createView.call(this, entry);
-            }
-        },
-
-        /**
-         * Destroys a view in the specified index entry. This method should be
-         * overloaded in subclasses.
-         */
-        destroyView : function(entry) {
-            if (this.options.destroyView) {
-                this.options.destroyView.call(this, entry);
-            }
-        },
-
-        /**
-         * Updates a view in the specified index entry. This method should be
-         * overloaded in subclasses.
-         */
-        updateView : function(entry) {
-            if (this.options.updateView) {
-                this.options.updateView.call(this, entry);
-            }
-        },
-
-        /** Handles added data objects. */
-        _onEnter : function(entry) {
-            this.createView(entry);
-            entry.fire('enter');
-            this.triggerMethod('view:add', entry);
-            return entry;
-        },
-
-        /** Handles data updates - changes the view visualization. */
-        _onUpdate : function(entry) {
-            this.updateView(entry);
-            entry.fire('update');
-            this.triggerMethod('view:update', entry);
-            return entry;
-        },
-
-        /** Handles data removal - destroys the corresponding view */
-        _onExit : function(entry) {
-            entry.fire('exit');
-            this.destroyView(entry);
-            this.triggerMethod('view:destroy', entry);
-            return entry;
         },
 
         /** Rebuild views corresponding to the specified data entries. */

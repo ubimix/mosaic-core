@@ -19,7 +19,7 @@ function(require) {
      * "setListener" method or it can be defined as a parameter of the class
      * constructor.
      */
-    var DataSet = AbstractSet.extend(Mosaic.Events.prototype, Mosaic.Events, {
+    var DataSet = AbstractSet.extend({
 
         /**
          * Class constructor.
@@ -31,7 +31,6 @@ function(require) {
          */
         initialize : function(options) {
             AbstractSet.prototype.initialize.apply(this, arguments);
-            Mosaic.Events.call(this);
             this._open = false;
         },
 

@@ -18,14 +18,15 @@ function(require) {
         /**
          * Creates a new view and attaches it to the specified index entry.
          */
-        createView : function(entry) {
+        _onEnter : function(entry) {
             var parentView = this.options.parent;
             if (parentView) {
                 var parentEntry = parentView._getIndexEntry(entry.key);
                 // Copies all fields from a view found in the parent
                 _.extend(entry, parentEntry);
             }
-            DataSetView.prototype.createView.call(this, entry);
+            entry.emit('enter');
+            return entry;
         },
 
         /**

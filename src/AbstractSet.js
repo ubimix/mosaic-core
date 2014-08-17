@@ -25,7 +25,8 @@ function(require) {
      * methods respectively. This class should be extended to add custom
      * behaviour for each type of changes.
      */
-    var AbstractSet = Mosaic.Class.extend({
+    var AbstractSet = Mosaic.Class.extend(//
+    Mosaic.Events.prototype, Mosaic.Events, {
 
         /**
          * Class constructor.
@@ -36,7 +37,6 @@ function(require) {
          *            identifiers
          */
         initialize : function(options) {
-            Mosaic.Events.call(this);
             this.setOptions(options);
             if (_.isFunction(this.options.getKey)) {
                 this.getKey = this.options.getKey;
@@ -65,24 +65,30 @@ function(require) {
                 var key = that.getKey(d);
                 var entry;
                 if (_.has(that._index, key)) {
-                    entry = that._onUpdate(that._index[key]);
+                    entry = that._onUpdate(that._index[key]) || entry;
                     delete that._index[key];
                     event.update[entry.key] = entry;
                 } else {
-                    entry = that._onEnter(new SetEntry({
+                    entry = that._newSetEntry({
                         key : key,
                         obj : d,
                         idx : i
-                    }));
+                    });
+                    entry = that._onEnter(entry) || entry;
                     event.enter[entry.key] = entry;
                 }
                 newIndex[key] = entry;
             });
             _.each(that._index, function(entry) {
-                event.exit[entry.key] = that._onExit(entry);
+                event.exit[entry.key] = that._onExit(entry) || entry;
             });
             that._index = newIndex;
             return event;
+        },
+
+        /** Creates and returns a SetEntry instance. */
+        _newSetEntry : function(options) {
+            return new SetEntry(options);
         },
 
         /**

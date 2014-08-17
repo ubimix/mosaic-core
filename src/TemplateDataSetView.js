@@ -27,6 +27,7 @@ function(require) {
             if (!this.options.viewManager) {
                 throw new Error('View manager is not defined');
             }
+            this.on('update:end', _.bind(this._onUpdateEnd, this));
         },
 
         /** This method is called when the rendering processes starts. */
@@ -49,7 +50,7 @@ function(require) {
          * Creates a new view and attaches it to the specified index entry. This
          * method should be overloaded in subclasses.
          */
-        createView : function(entry) {
+        _onEnter : function(entry) {
             var viewManager = this.options.viewManager;
             var viewType = this._getContainerViewType();
             var resourceType = viewManager.getResourceType(entry.obj);
@@ -61,22 +62,24 @@ function(require) {
             entry.view = viewManager.newView(viewType, resourceType, options);
             if (entry.view) {
                 entry.view.render();
-                var container = this._getContainerElement();
-                this._container.append(entry.view.$el);
                 entry.view.triggerMethod('create');
             }
+            entry.emit('enter');
+            return entry;
         },
 
         /**
          * Destroys a view in the specified index entry. This method should be
          * overloaded in subclasses.
          */
-        destroyView : function(entry) {
-            if (!entry.view)
-                return;
-            entry.view.remove();
-            entry.view.triggerMethod('destroy');
-            delete entry.view;
+        _onExit : function(entry) {
+            if (entry.view) {
+                entry.view.remove();
+                entry.view.triggerMethod('destroy');
+                delete entry.view;
+            }
+            entry.emit('exit');
+            return entry;
         },
 
         /**
@@ -109,6 +112,14 @@ function(require) {
             var viewType = this._container.data('view') || '';
             return viewType;
         },
+
+        /** Appends all rendered entries to the container. */
+        _onUpdateEnd : function() {
+            var container = this._getContainerElement();
+            _.each(this._index, function(entry) {
+                container.append(entry.view.$el);
+            }, this);
+        }
 
     });
 
