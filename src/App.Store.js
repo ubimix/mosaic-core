@@ -16,7 +16,7 @@ function(require) {
         initialize : function(options) {
             this.setOptions(options);
             this.app = this.options.app;
-            this._initIntents();
+            this._initFields();
         },
 
         /** Notifies subscribers about changes */
@@ -33,10 +33,10 @@ function(require) {
         },
 
         /**
-         * This method should register intents listeners to initialize internal
-         * fields of the store. It should be overloaded in subclasses.
+         * This method should initialize all internal fields of the store. It
+         * should be overloaded in subclasses.
          */
-        _initIntents : function() {
+        _initFields : function() {
         },
 
     });
