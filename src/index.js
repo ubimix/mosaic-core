@@ -7,8 +7,8 @@ define(
         './CompositeDataSet', './DataSetView', './LeafletDataSetView',
         './LeafletDataSubsetView', './LeafletFeatureBuilder',
         './TemplateDataSetView', './TemplateView', './TemplateViewManager',
-        './AdapterManager', './Dependencies', './Intents', './ReactDataView',
-        './ReactDataSetView' ],
+        './AdapterManager', './Dependencies', './Intents',
+        './ReactDataSetMixin' ],
 // Module
 function(require) {
     var Mosaic = require('mosaic-commons');
@@ -27,8 +27,7 @@ function(require) {
         TemplateView : require('./TemplateView'),
         TemplateViewManager : require('./TemplateViewManager'),
 
-        ReactDataView : require('./ReactDataView'),
-        ReactDataSetView : require('./ReactDataSetView'),
+        ReactDataSetMixin : require('./ReactDataSetMixin'),
 
     };
     return Mosaic.Core;

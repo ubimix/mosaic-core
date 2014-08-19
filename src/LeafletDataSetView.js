@@ -25,29 +25,6 @@ function(require) {
         },
 
         /**
-         * Creates a new view and attaches it to the specified index entry.
-         */
-        _onEnter : function(entry) {
-            if (entry.layer) {
-                this._layer.addLayer(entry.layer);
-            }
-            entry.emit('enter');
-            return entry;
-        },
-
-        /**
-         * Destroys a view in the specified index entry. This method should be
-         * overloaded in subclasses.
-         */
-        _onExit : function(entry) {
-            if (entry.layer) {
-                this._layer.removeLayer(entry.layer);
-            }
-            entry.emit('exit');
-            return entry;
-        },
-
-        /**
          * This method is used by Leaflet when this layer is inserted in the
          * map.
          */
@@ -71,12 +48,44 @@ function(require) {
             delete this._layer;
         },
 
+        /**
+         * Creates a new view and attaches it to the specified index entry.
+         */
+        _onEnter : function(entry) {
+            entry.layer = this._newLeafletLayer(entry);
+            if (entry.layer) {
+                this._layer.addLayer(entry.layer);
+            }
+            entry.emit('enter');
+            return entry;
+        },
+
+        /**
+         * Destroys a view in the specified index entry. This method should be
+         * overloaded in subclasses.
+         */
+        _onExit : function(entry) {
+            if (entry.layer) {
+                this._layer.removeLayer(entry.layer);
+            }
+            entry.emit('exit');
+            return entry;
+        },
+
+        /**
+         * Creates and returns a new leaflet layer for the specified entry. This
+         * method should be overloaded in subclasses to create real map
+         * entities.
+         */
+        _newLeafletLayer : function(entry) {
+        },
+
         /** This method is called when the map changes its zoom level. */
         _onZoomEnd : function() {
             var that = this;
             var zoom = that._map.getZoom();
             _.each(that._index, function(entry) {
-                entry.fire('zoomend', {
+                entry.emit('zoomend', {
                     entry : entry,
                     zoom : zoom
                 });
