@@ -3,7 +3,8 @@ if (typeof define !== 'function') {
 }
 define(
 // Dependencies
-[ 'require', 'mosaic-commons', './AbstractSet', './DataSet',
+[ 'require', 'mosaic-commons', './App', './App.Actions', './App.Api',
+        './App.Component', './App.Store', './AbstractSet', './DataSet',
         './CompositeDataSet', './DataSetView', './LeafletDataSetView',
         './LeafletDataSubsetView', './LeafletFeatureBuilder',
         './TemplateDataSetView', './TemplateView', './TemplateViewManager',
@@ -12,6 +13,12 @@ define(
 // Module
 function(require) {
     var Mosaic = require('mosaic-commons');
+    Mosaic.App = require('./App');
+    Mosaic.App.Actions = require('./App.Actions');
+    Mosaic.App.Api = require('./App.Api');
+    Mosaic.App.Component = require('./App.Component');
+    Mosaic.App.Store = require('./App.Store');
+
     Mosaic.Core = {
         DataSet : require('./DataSet'),
         AbstractSet : require('./AbstractSet'),
