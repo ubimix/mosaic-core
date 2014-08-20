@@ -25,7 +25,7 @@ function(require) {
                         this._handlers[key] = handler;
                         return this;
                     } else {
-                        return this_handlers[key];
+                        return this._handlers[key];
                     }
                 };
             }, this);

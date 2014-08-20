@@ -6,9 +6,10 @@ define(
 [ 'require', 'mosaic-commons', './App', './App.Actions', './App.Api',
         './App.Component', './App.Store', './AbstractSet', './DataSet',
         './CompositeDataSet', './DataSetView', './LeafletDataSetView',
-        './LeafletDataSubsetView', './LeafletFeatureBuilder',
-        './TemplateDataSetView', './TemplateView', './TemplateViewManager',
-        './AdapterManager', './Dependencies', './Intents',
+        './LeafletReactMap', './LeafletDataSubsetView',
+        './LeafletFeatureBuilder',
+        // './TemplateDataSetView', './TemplateView', './TemplateViewManager',
+        './AdapterManager', './Dependencies', './Intents', './ViewManager',
         './ReactDataSetMixin' ],
 // Module
 function(require) {
@@ -18,6 +19,11 @@ function(require) {
     Mosaic.App.Api = require('./App.Api');
     Mosaic.App.Component = require('./App.Component');
     Mosaic.App.Store = require('./App.Store');
+
+    Mosaic.Leaflet = {
+        ReactMap : require('./LeafletReactMap'),
+        FeatureBuilder : require('./LeafletFeatureBuilder'),
+    }
 
     Mosaic.Core = {
         DataSet : require('./DataSet'),
@@ -30,11 +36,12 @@ function(require) {
         LeafletDataSetView : require('./LeafletDataSetView'),
         LeafletDataSubsetView : require('./LeafletDataSubsetView'),
         LeafletFeatureBuilder : require('./LeafletFeatureBuilder'),
-        TemplateDataSetView : require('./TemplateDataSetView'),
-        TemplateView : require('./TemplateView'),
-        TemplateViewManager : require('./TemplateViewManager'),
+        // TemplateDataSetView : require('./TemplateDataSetView'),
+        // TemplateView : require('./TemplateView'),
+        // TemplateViewManager : require('./TemplateViewManager'),
 
         ReactDataSetMixin : require('./ReactDataSetMixin'),
+        ViewManager : require('./ViewManager'),
 
     };
     return Mosaic.Core;

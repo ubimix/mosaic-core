@@ -180,13 +180,15 @@ function(require) {
         /** Resolves this intent with the specified value. */
         resolve : function(result) {
             this._handled = true;
-            return this._deferred.resolve(result);
+            this._deferred.resolve(result);
+            return this._deferred.promise;
         },
 
         /** Rejects this intent with the specified error. */
         reject : function(err) {
             this._handled = true;
-            return this._deferred.reject(err);
+            this._deferred.reject(err);
+            return this._deferred.promise;
         },
 
         /** Executes "then" function of the promise. */
