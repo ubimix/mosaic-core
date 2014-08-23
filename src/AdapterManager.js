@@ -125,30 +125,57 @@ function(require) {
          * inheritance defined in the key.
          */
         _expandId : function(key) {
+            if (!key)
+                return [];
             var result = [];
-            key = this._normalizeTypeKey(key);
-            var delim = this.TYPE_KEY_DELIM;
-            var array = key.split(delim);
-            while (array.length) {
-                var k = array.join(delim);
-                result.push(k);
-                array.pop();
+            var handled = false;
+            while (_.isFunction(key.getParent)) {
+                handled = true;
+                key = key.getParent();
+                if (key) {
+                    result.push(key);
+                } else {
+                    break;
+                }
             }
-            result.push('');
+            if (!handled && _.isString(key)) {
+                key = this._normalizeTypeKey(key);
+                var delim = this.TYPE_KEY_DELIM;
+                var array = key.split(delim);
+                while (array.length) {
+                    var k = array.join(delim);
+                    result.push(k);
+                    array.pop();
+                }
+                result.push('');
+            }
             return result;
         },
 
         /** Returns the type of the specified resource. */
         getTypeKey : function(obj) {
             var type;
-            if (_.isString(obj)) {
-                type = obj;
-            } else {
-                var o = obj;
-                if (_.isFunction(obj)) {
-                    o = obj.prototype;
+            if (obj) {
+                if (_.isString(obj)) {
+                    type = obj;
+                } else {
+                    var cls = null;
+                    if (_.isFunction(obj)) {
+                        cls = obj;
+                    } else if (_.isFunction(obj.getClass)) {
+                        cls = obj.getClass();
+                    }
+                    var proto;
+                    if (_.isFunction(cls)) {
+                        proto = cls.prototype;
+                    } else {
+                        proto = obj.prototype;
+                    }
+                    type = proto.__type;
+                    if (!type) {
+                        type = obj.type = obj.type || _.uniqueId('type-');
+                    }
                 }
-                type = o.type = o.type || _.uniqueId('type-');
             }
             return this._normalizeTypeKey(type);
         },
@@ -157,17 +184,19 @@ function(require) {
          * Returns a normalized key used to put values in the internal index and
          * in the cache.
          */
-        _normalizeTypeKey : function(str) {
-            if (!str)
+        _normalizeTypeKey : function(key) {
+            if (!_.isString(key))
+                return key;
+            if (key === '')
                 return '';
             var delim = this.TYPE_KEY_DELIM;
-            if (str.indexOf(delim) == 0) {
-                str = delim.substring(delim.length);
+            if (key.indexOf(delim) === 0) {
+                key = delim.substring(delim.length);
             }
-            if (str.lastIndexOf(delim) == str.length - delim.length) {
-                str = str.substring(0, str.length - delim.length);
+            if (key.lastIndexOf(delim) == key.length - delim.length) {
+                key = key.substring(0, key.length - delim.length);
             }
-            return str;
+            return key;
         }
     });
 

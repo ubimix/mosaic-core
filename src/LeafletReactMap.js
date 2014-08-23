@@ -51,7 +51,7 @@ function(require) {
             if (_.isArray(center)) {
                 center = L.latLng(center[1], center[0]);
             }
-            var zoom = mapOptions.zoom
+            var zoom = mapOptions.zoom;
             if (center && zoom !== undefined) {
                 map.setView(center, zoom);
             }

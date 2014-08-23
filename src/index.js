@@ -10,7 +10,7 @@ define(
         './LeafletFeatureBuilder',
         // './TemplateDataSetView', './TemplateView', './TemplateViewManager',
         './AdapterManager', './Dependencies', './Intents', './ViewManager',
-        './ReactDataSetMixin' ],
+        './TreeNode', './ReactDataSetMixin' ],
 // Module
 function(require) {
     var Mosaic = require('mosaic-commons');
@@ -23,10 +23,11 @@ function(require) {
     Mosaic.Leaflet = {
         ReactMap : require('./LeafletReactMap'),
         FeatureBuilder : require('./LeafletFeatureBuilder'),
-    }
+    };
 
     Mosaic.Core = {
         DataSet : require('./DataSet'),
+        TreeNode : require('./TreeNode'),
         AbstractSet : require('./AbstractSet'),
         AdapterManager : require('./AdapterManager'),
         CompositeDataSet : require('./CompositeDataSet'),

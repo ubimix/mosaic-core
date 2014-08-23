@@ -99,7 +99,7 @@ function(require) {
                 return client.exec({
                     path : path,
                     method : 'GET'
-                })
+                });
             });
         },
 

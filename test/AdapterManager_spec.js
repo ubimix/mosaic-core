@@ -3,7 +3,8 @@ if (typeof define !== 'function') {
 }
 define(
 // Dependencies
-[ 'require', 'underscore', 'mosaic-commons', '../src/AdapterManager', 'expect.js' ],
+[ 'require', 'underscore', 'mosaic-commons', '../src/AdapterManager',
+        'expect.js' ],
 // Module
 function(require) {
     "use strict";
@@ -14,21 +15,6 @@ function(require) {
     var Class = Mosaic.Class;
 
     describe('AdapterManager', function() {
-
-        it('AdapterManager.getTypeId', function() {
-            expect(AdapterManager.getTypeId('abc')).to.eql('abc');
-            var FirstType = Class.extend();
-
-            var typeId = AdapterManager.getTypeId(FirstType);
-            expect(!!typeId).to.eql(true);
-
-            var SecondType = Class.extend({
-                type : 'SecondType'
-            });
-            expect(AdapterManager.getTypeId(SecondType)).//
-            to.eql('SecondType');
-
-        });
 
         it('should be able to register/remove static adapters', function() {
             var m = new AdapterManager();
