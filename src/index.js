@@ -10,7 +10,7 @@ define(
         './LeafletFeatureBuilder',
         // './TemplateDataSetView', './TemplateView', './TemplateViewManager',
         './AdapterManager', './Dependencies', './Intents', './ViewManager',
-        './TreeNode', './ReactDataSetMixin' ],
+        './ActivationTree', './ReactDataSetMixin' ],
 // Module
 function(require) {
     var Mosaic = require('mosaic-commons');
@@ -27,7 +27,7 @@ function(require) {
 
     Mosaic.Core = {
         DataSet : require('./DataSet'),
-        TreeNode : require('./TreeNode'),
+        ActivationTree : require('./ActivationTree'),
         AbstractSet : require('./AbstractSet'),
         AdapterManager : require('./AdapterManager'),
         CompositeDataSet : require('./CompositeDataSet'),

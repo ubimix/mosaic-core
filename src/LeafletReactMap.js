@@ -45,8 +45,10 @@ function(require) {
             });
 
             // Set the initial view of this map
-            var zoomControl = L.control.zoom(options);
-            map.addControl(zoomControl);
+            if (mapOptions.zoomControl !== false) {
+                var zoomControl = L.control.zoom(options);
+                map.addControl(zoomControl);
+            }
             var center = mapOptions.center;
             if (_.isArray(center)) {
                 center = L.latLng(center[1], center[0]);

@@ -16,7 +16,7 @@ function(require) {
      * An common super-class for all APIs objects. It contains some utility
      * methods used to load information from the server.
      */
-    return AppComponent.extend({
+    var Api = AppComponent.extend({
 
         /**
          * Constructor of this class. Initializes the internal cache for data
@@ -35,6 +35,16 @@ function(require) {
          */
         _getGeoJsonArray : function(options) {
             return this._getJson(options).then(toArray);
+        },
+
+        /**
+         * This method loads a GeoJSON object and transforms it to an array.
+         * Returns a promise for the resulting array. Internally it calls the
+         * "_loadJson" method, so all parameters of the "_loadJson" method are
+         * applicable for this method as well.
+         */
+        _loadGeoJsonArray : function(options) {
+            return this._loadJson(options).then(toArray);
         },
 
         /**
@@ -115,5 +125,8 @@ function(require) {
         }
         return obj;
     }
+    
+    Api.toArray = toArray;
 
+    return Api;
 });

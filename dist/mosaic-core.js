@@ -83,7 +83,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    Mosaic.Core = {
 	        DataSet : __webpack_require__(8),
-	        TreeNode : __webpack_require__(19),
+	        ActivationTree : __webpack_require__(19),
 	        AbstractSet : __webpack_require__(7),
 	        AdapterManager : __webpack_require__(15),
 	        CompositeDataSet : __webpack_require__(9),
@@ -2169,14 +2169,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 
 	        /**
-	         * Adds the specified subnode to this tree node.
+	         * Adds the specified subnode to this tree node. If the subnode is not
+	         * defined then a new one is created and returned.
 	         */
 	        add : function(key, node) {
 	            var that = this;
 	            that.remove(key);
+	            if (!node) {
+	                node = that._newChild(key);
+	            }
 	            node.parent = this;
 	            that._children[key] = node;
 	            node._notify('add', {});
+	            return node;
 	        },
 
 	        /**
@@ -2188,8 +2193,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var that = this;
 	            var result = that._children[key];
 	            if (!result && create) {
-	                result = that._newChild(key);
-	                that.add(key, result);
+	                result = that.add(key);
 	            }
 	            return result;
 	        },
@@ -2347,7 +2351,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * This mixin is used to add status management for Mosaic.TreeNode
 	     * instances.
 	     */
-	    TreeNode.TreeNodeStatusMixin = {
+	    var TreeNodeStatusMixin = {
 
 	        /** Defaults status value */
 	        _status : 'inactive',
@@ -2375,6 +2379,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        },
 
+	        /**
+	         * Sets an exclusive mode for this node. It means that just one sub-node
+	         * can be active at once. Already active sub-node is automatically
+	         * deactivated if an another child is activated.
+	         */
+	        setExclusive : function(exclusive) {
+	            this.options.exclusive = !!exclusive;
+	        },
+
+	        /**
+	         * Returns <code>true</code> if just one sub-node can be active at
+	         * once.
+	         */
+	        isExclusive : function() {
+	            return this.options.mode == 'exclusive' || //
+	            this.options.exclusive !== false;
+	        },
+
 	        /** Returns true if this node is active */
 	        isActive : function() {
 	            return this._status == 'active';
@@ -2392,6 +2414,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        deactivate : function(options) {
 	            this.setStatus('inactive', options);
+	        },
+
+	        /** Activates inactive nodes and deactivates active ones. */
+	        toggle : function(options) {
+	            if (this.isActive()) {
+	                this.deactivate(options);
+	            } else {
+	                this.activate(options);
+	            }
 	        },
 
 	        /**
@@ -2443,6 +2474,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // already
 	            // active subnode
 	            function activateAfter(child, stage) {
+	                function addChildren(node, obj) {
+	                    _.each(obj, function(value, key) {
+	                        if (key == '_') {
+	                            node.setOptions(value);
+	                            return;
+	                        }
+	                        var child = node.get(key, true);
+	                        child.value = value;
+	                        if (_.isObject(value)) {
+	                            addChildren(child, value);
+	                        }
+	                    });
+	                }
+
 	                if (stage == 'before') {
 	                    child.deactivate(newEvent());
 	                } else if (stage == 'after') {
@@ -2462,8 +2507,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    checkMode = activateBefore;
 	                } else if (that.options.mode == 'activateAfter') {
 	                    checkMode = activateAfter;
-	                } else if (that.options.mode == 'exclusive' || //
-	                that.options.exclusive !== false) {
+	                } else if (that.isExclusive()) {
 	                    checkMode = exclusive;
 	                }
 	                if (checkMode) {
@@ -2503,7 +2547,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	        })(),
 	    };
 
-	    return TreeNode;
+	    var ActivationTree = TreeNode.extend(TreeNodeStatusMixin, {
+	        initialize : function(options) {
+	            var proto = TreeNode.prototype;
+	            proto.initialize.call(this, options);
+	            this.setOptions({
+	                deactivateAll : true
+	            });
+	        }
+	    });
+
+	    return ActivationTree;
 	}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 

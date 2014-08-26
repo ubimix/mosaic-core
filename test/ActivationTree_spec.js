@@ -3,24 +3,24 @@ if (typeof define !== 'function') {
 }
 define(
 // Dependencies
-[ 'underscore', '../src/TreeNode', 'expect.js' ],
+[ 'underscore', '../src/ActivationTree', 'expect.js' ],
 // Module
-function(_, TreeNode, expect) {
+function(_, ActivationTree, expect) {
 
-    describe('TreeNode', function() {
+    describe('ActivationTree', function() {
 
-        var TestNode = TreeNode.extend(TreeNode.TreeNodeStatusMixin);
-        var TestNodeExclusive = TestNode.extend({
+        var TestTreeExclusive = ActivationTree.extend({});
+        var TestTree = ActivationTree.extend({
             initialize : function() {
-                TestNode.prototype.initialize.apply(this, arguments);
+                ActivationTree.prototype.initialize.apply(this, arguments);
                 this.setOptions({
-                    deactivateAll : true
+                    deactivateAll : false
                 });
             }
         });
 
         it('should be able to find a sub-nodes by their keys', function() {
-            var tree = createTree(TestNode);
+            var tree = createTree(TestTree);
             var item = tree.find('item1.3');
             expect(item).not.to.eql(undefined);
             expect(item.value).to.eql('Item 1.3');
@@ -35,7 +35,7 @@ function(_, TreeNode, expect) {
         });
 
         it('a subtree should propagate event about new nodes', function() {
-            var tree = createTree(TestNode);
+            var tree = createTree(TestTree);
             var addEvt = null;
             tree.on('add', function(e) {
                 addEvt = e;
@@ -50,7 +50,7 @@ function(_, TreeNode, expect) {
         });
 
         it('a subtree should propagate its status to parents', function() {
-            var tree = createTree(TestNode);
+            var tree = createTree(TestTree);
             var evt;
             tree.on('status', function(e) {
                 evt = e;
@@ -69,7 +69,7 @@ function(_, TreeNode, expect) {
         });
 
         it('should be able to active just one node at time', function() {
-            var tree = createTree(TestNode);
+            var tree = createTree(TestTree);
             var item_1_4 = tree.find('item1.4');
             var item_1_4_1 = tree.find('item1.4.1');
             var item_1_4_2 = tree.find('item1.4.2');
@@ -111,7 +111,7 @@ function(_, TreeNode, expect) {
         });
 
         it('test1 - should be able to deactivate all subnodes', function() {
-            var tree = createTree(TestNodeExclusive);
+            var tree = createTree(TestTreeExclusive);
             var item_1_4_1 = tree.find('item1.4.1');
             var item_1_2_1 = tree.find('item1.2.1');
 
@@ -125,7 +125,7 @@ function(_, TreeNode, expect) {
         });
 
         it('test2 - should be able to deactivate all subnodes', function() {
-            var tree = newTree(TestNodeExclusive, {
+            var tree = newTree(TestTreeExclusive, {
                 'A' : {}, //
                 'B' : {}, // 
                 'C' : {}, //
@@ -162,11 +162,11 @@ function(_, TreeNode, expect) {
             tree.on('status', function(evt) {
                 list.push(evt.node.getKey());
             });
-            // printTreeNode(tree);
+            // printTestTree(tree);
             tree.deactivate({
                 force : true
             });
-            // printTreeNode(tree);
+            // printTestTree(tree);
             expect(list).to.eql([ 'root', 'N', 'K', 'D' ]);
         });
 
@@ -208,7 +208,7 @@ function(_, TreeNode, expect) {
             }
         });
     }
-    function printTreeNode(root) {
+    function printTestTree(root) {
         root.visit({
             print : function(node, msg) {
                 var n = node;

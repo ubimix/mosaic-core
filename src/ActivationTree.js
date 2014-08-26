@@ -34,14 +34,19 @@ function(require) {
         },
 
         /**
-         * Adds the specified subnode to this tree node.
+         * Adds the specified subnode to this tree node. If the subnode is not
+         * defined then a new one is created and returned.
          */
         add : function(key, node) {
             var that = this;
             that.remove(key);
+            if (!node) {
+                node = that._newChild(key);
+            }
             node.parent = this;
             that._children[key] = node;
             node._notify('add', {});
+            return node;
         },
 
         /**
@@ -53,8 +58,7 @@ function(require) {
             var that = this;
             var result = that._children[key];
             if (!result && create) {
-                result = that._newChild(key);
-                that.add(key, result);
+                result = that.add(key);
             }
             return result;
         },
@@ -212,7 +216,7 @@ function(require) {
      * This mixin is used to add status management for Mosaic.TreeNode
      * instances.
      */
-    TreeNode.TreeNodeStatusMixin = {
+    var TreeNodeStatusMixin = {
 
         /** Defaults status value */
         _status : 'inactive',
@@ -240,6 +244,24 @@ function(require) {
             }
         },
 
+        /**
+         * Sets an exclusive mode for this node. It means that just one sub-node
+         * can be active at once. Already active sub-node is automatically
+         * deactivated if an another child is activated.
+         */
+        setExclusive : function(exclusive) {
+            this.options.exclusive = !!exclusive;
+        },
+
+        /**
+         * Returns <code>true</code> if just one sub-node can be active at
+         * once.
+         */
+        isExclusive : function() {
+            return this.options.mode == 'exclusive' || //
+            this.options.exclusive !== false;
+        },
+
         /** Returns true if this node is active */
         isActive : function() {
             return this._status == 'active';
@@ -257,6 +279,31 @@ function(require) {
          */
         deactivate : function(options) {
             this.setStatus('inactive', options);
+        },
+
+        /** Activates inactive nodes and deactivates active ones. */
+        toggle : function(options) {
+            if (this.isActive()) {
+                this.deactivate(options);
+            } else {
+                this.activate(options);
+            }
+        },
+
+        /** Returns a list of all active direct children of this node. */
+        getActive : function() {
+            var list = this.getAll();
+            return _.map(list, function(n) {
+                return n.isActive();
+            });
+        },
+
+        /** Returns a first active direct child. */
+        getFirstActive : function() {
+            var list = this.getAll();
+            return _.find(list, function(n) {
+                return n.isActive();
+            });
         },
 
         /**
@@ -308,6 +355,20 @@ function(require) {
             // already
             // active subnode
             function activateAfter(child, stage) {
+                function addChildren(node, obj) {
+                    _.each(obj, function(value, key) {
+                        if (key == '_') {
+                            node.setOptions(value);
+                            return;
+                        }
+                        var child = node.get(key, true);
+                        child.value = value;
+                        if (_.isObject(value)) {
+                            addChildren(child, value);
+                        }
+                    });
+                }
+
                 if (stage == 'before') {
                     child.deactivate(newEvent());
                 } else if (stage == 'after') {
@@ -327,8 +388,7 @@ function(require) {
                     checkMode = activateBefore;
                 } else if (that.options.mode == 'activateAfter') {
                     checkMode = activateAfter;
-                } else if (that.options.mode == 'exclusive' || //
-                that.options.exclusive !== false) {
+                } else if (that.isExclusive()) {
                     checkMode = exclusive;
                 }
                 if (checkMode) {
@@ -368,5 +428,15 @@ function(require) {
         })(),
     };
 
-    return TreeNode;
+    var ActivationTree = TreeNode.extend(TreeNodeStatusMixin, {
+        initialize : function(options) {
+            var proto = TreeNode.prototype;
+            proto.initialize.call(this, options);
+            this.setOptions({
+                deactivateAll : true
+            });
+        }
+    });
+
+    return ActivationTree;
 });
