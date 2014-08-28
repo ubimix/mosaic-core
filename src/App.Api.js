@@ -28,6 +28,28 @@ function(require) {
         },
 
         /**
+         * Loads a set of GeoJSON arrays and merges them in one array. Returns a
+         * promise with the merged result.
+         */
+        _loadAndMergeGeoJsonArrays : function(urls) {
+            var that = this;
+            if (_.isString(urls)) {
+                urls = [ urls ];
+            } else {
+                urls = _.toArray(urls);
+            }
+            return Mosaic.P.all(_.map(urls, function(url) {
+                return that._loadGeoJsonArray(url);
+            })).then(function(list) {
+                var result = [];
+                _.each(list, function(array) {
+                    result = result.concat(array);
+                });
+                return result;
+            });
+        },
+
+        /**
          * This method loads a GeoJSON object and transforms it to an array.
          * Returns a promise for the resulting array. Internally it calls the
          * "_getJson" method, so all parameters of the "_getJson" method are
@@ -44,7 +66,8 @@ function(require) {
          * applicable for this method as well.
          */
         _loadGeoJsonArray : function(options) {
-            return this._loadJson(options).then(toArray);
+            var path = _.isString(options) ? options : options.path;
+            return this._loadJson(path).then(toArray);
         },
 
         /**
@@ -125,7 +148,7 @@ function(require) {
         }
         return obj;
     }
-    
+
     Api.toArray = toArray;
 
     return Api;
