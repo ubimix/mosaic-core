@@ -13,6 +13,10 @@ function(require) {
     var Config = Mosaic.Class.extend({
 
         initialize : function(data, options) {
+            if (!options) {
+                options = data;
+                data = null;
+            }
             this.data = data;
             _.extend(this, options);
             var methods = [ 'onClick', 'onMouseOver', 'onMouseOut',
@@ -29,6 +33,20 @@ function(require) {
                     }
                 };
             }, this);
+        },
+
+        setEventBinder : function(method) {
+            this.bindEventHandlers = method;
+            return this;
+        },
+
+        bindEventHandlers : function(data, layer) {
+            var that = this;
+            _.each(that._handlers, function(handler, event) {
+                layer.on(event, function(ev) {
+                    handler(data, ev);
+                });
+            });
         },
 
         setOptions : function(opt) {
@@ -51,27 +69,23 @@ function(require) {
             return this._getOrInvoke(this._marker, args);
         },
 
-        build : function() {
+        build : function(data) {
             var that = this;
-            var data = that.data;
+            data = data || that.data;
             var geom = data.geometry;
             if (that._isEmptyGeometry(geom)) {
-                return false;
+                return null;
             }
             var options = that.getOptions(data);
             var layer = L.GeoJSON.geometryToLayer(data, function(resource,
                 latlng) {
-                var marker = that.getMarker(latlng, options);
-                if (!marker) {
+                var marker = that.getMarker(resource, options);
+                if (marker === undefined) {
                     marker = new L.Marker(latlng, options);
                 }
                 return marker;
             }, L.GeoJSON.coordsToLatLng, options);
-            _.each(that._handlers, function(handler, event) {
-                layer.on(event, function(ev) {
-                    handler(data, ev);
-                });
-            });
+            this.bindEventHandlers(data, layer);
             return layer;
         },
 
