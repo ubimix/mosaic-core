@@ -7,7 +7,7 @@ define(
         './App.Component', './App.Store', './AbstractSet', './DataSet',
         './CompositeDataSet', './DataSetView', './LeafletDataSetView',
         './LeafletReactMap', './LeafletDataSubsetView',
-        './LeafletFeatureBuilder',
+        './LeafletFeatureBuilder', './React.FilterBox',
         // './TemplateDataSetView', './TemplateView', './TemplateViewManager',
         './AdapterManager', './Dependencies', './Intents', './ViewManager',
         './ActivationTree', './ReactDataSetMixin' ],
@@ -19,6 +19,10 @@ function(require) {
     Mosaic.App.Api = require('./App.Api');
     Mosaic.App.Component = require('./App.Component');
     Mosaic.App.Store = require('./App.Store');
+
+    Mosaic.React = {
+        FilterBox : require('./React.FilterBox')
+    }
 
     Mosaic.Leaflet = {
         ReactMap : require('./LeafletReactMap'),
