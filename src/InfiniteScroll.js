@@ -30,6 +30,9 @@ function(require) {
         getInitialState : function() {
             return this._newState({});
         },
+        _findScrollPos : function(el) {
+            return this._findPos(el)[1];
+        },
         _findPos : function(el) {
             var x = 0;
             var y = 0;
@@ -49,11 +52,17 @@ function(require) {
             var idx = that.state.offsetIndex - that.state.index;
             var children = node.children || [];
             var n = children[idx];
-            var pos = that._findPos(n)[1] - that.state.offset;
-            // that.scrollDisabled = true;
             var container = that.getDOMNode();
-            container.scrollTop = pos;
-            // that.scrollDisabled = false;
+            var posN = that._findScrollPos(n);
+            var posBlock = that._findScrollPos(node);
+            var heightBefore = container.scrollTop - (posN - that.state.offset -  posBlock);
+            var before = that.refs.before.getDOMNode();
+            before.style.height = Math.max(0, heightBefore) + 'px';
+            
+//            console.log(n, pos, that.state.offset, container.scrollTop);
+//            pos -= that.state.offset;
+//            container.scrollTop = pos;
+            // before + (posN - offset - posBlock)== scrollTop
         },
         _setScrollPos : function(scrollPos) {
             var that = this;
@@ -71,7 +80,7 @@ function(require) {
             var blockElements = [];
             if (block) {
                 var blockNode = block.getDOMNode();
-                blockStart = that._findPos(blockNode)[1];
+                blockStart = that._findScrollPos(blockNode);
                 blockEnd = blockStart + blockNode.offsetHeight;
                 blockElements = blockNode.children;
             }
@@ -118,10 +127,6 @@ function(require) {
                 startIndex -= delta;
                 length += delta;
 
-                if (offset != 0) {
-                    length++;
-                }
-                
                 var minBlockLen = this.props.minBlockSize || 10;
 
                 // Remove not visible items at the end
@@ -140,25 +145,24 @@ function(require) {
                         / recordHeight);
             }
 
-            if (startIndex != this.state.index || length != this.state.length) {
-                // Load items
-                that.props.loadItems(startIndex, length, function(result) {
-                    var state = that._newState({
-                        scrollPos : scrollPos,
-                        index : startIndex,
-                        items : result.items,
-                        length : result.length,
-                        offset : offset,
-                        offsetIndex : offsetIndex
-                    });
-                    that.setState(state);
+            // if (startIndex != this.state.index
+            // || length != blockElements.length) {
+            // Load items
+            that.props.loadItems(startIndex, length, function(result) {
+                var state = that._newState({
+                    scrollPos : scrollPos,
+                    index : startIndex,
+                    items : result.items,
+                    length : result.length,
+                    offset : offset,
+                    offsetIndex : offsetIndex
                 });
-            }
+                that.setState(state);
+            });
+            // }
         },
         _onScroll : function(event) {
-            // if (!this.scrollDisabled) {
             this._setScrollPos(this.getDOMNode().scrollTop);
-            // }
         },
         render : function() {
             var items = this.state.items || [];
