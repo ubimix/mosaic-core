@@ -24,11 +24,13 @@ function(require) {
             this._setScrollPos(this.state.scrollPos);
         },
         componentWillReceiveProps : function(nextProps) {
-            this.setState(this._newState(nextProps));
+//            this.setState(this._newState(nextProps));
             this._setScrollPos(this.state.scrollPos);
         },
         getInitialState : function() {
-            return this._newState({});
+            return this._newState({
+                length : -1
+            });
         },
         _findScrollPos : function(el) {
             return this._findPos(el)[1];
@@ -48,21 +50,22 @@ function(require) {
         },
         componentDidUpdate : function() {
             var that = this;
-            var node = that.refs.block.getDOMNode();
+            var blockNode = that.refs.block.getDOMNode();
+            var blockPos = that._findScrollPos(blockNode);
+
+            var children = blockNode.children || [];
+
             var idx = that.state.offsetIndex - that.state.index;
-            var children = node.children || [];
-            var n = children[idx];
+            var node = children[idx];
+            var nodePos = that._findScrollPos(node);
+
             var container = that.getDOMNode();
-            var posN = that._findScrollPos(n);
-            var posBlock = that._findScrollPos(node);
-            var heightBefore = container.scrollTop - (posN - that.state.offset -  posBlock);
+            // scrollTop = heightBefore + (nodePos - offset - blockPos)
+            var heightBefore = container.scrollTop + blockPos - nodePos
+                    + that.state.offset;
+
             var before = that.refs.before.getDOMNode();
             before.style.height = Math.max(0, heightBefore) + 'px';
-            
-//            console.log(n, pos, that.state.offset, container.scrollTop);
-//            pos -= that.state.offset;
-//            container.scrollTop = pos;
-            // before + (posN - offset - posBlock)== scrollTop
         },
         _setScrollPos : function(scrollPos) {
             var that = this;
@@ -93,6 +96,7 @@ function(require) {
             var offset;
             var offsetIndex;
 
+            var k = 1.5;
             if (windowEnd < blockStart || windowStart > blockEnd) {
                 if (windowEnd < blockStart) {
                     startIndex = Math.floor(windowStart / recordHeight);
@@ -102,9 +106,9 @@ function(require) {
                     startIndex = blockStartIndex + blockElements.length + //
                     indexInc;
                 }
-                length = Math.ceil(windowHeight / recordHeight);
-                offsetIndex = startIndex;
                 offset = -(windowStart % recordHeight);
+                length = Math.ceil((windowHeight - offset) / recordHeight) * k;
+                offsetIndex = startIndex;
             } else {
                 startIndex = blockStartIndex;
                 length = blockElements.length;
@@ -122,44 +126,48 @@ function(require) {
                 offset = blockStart - windowStart;
 
                 // Add nodes at the beginning
-                var delta = Math.ceil(Math.max(0, offset) / recordHeight);
+                var delta = Math.ceil(Math.abs(offset) / recordHeight);
                 offsetIndex = startIndex;
-                startIndex -= delta;
+                startIndex = Math.max(0, startIndex - delta);
                 length += delta;
 
                 var minBlockLen = this.props.minBlockSize || 10;
 
                 // Remove not visible items at the end
-                for (var i = blockElements.length - 1; i >= 0
-                        && length > minBlockLen; i--) {
+                for (var i = blockElements.length - 1; i >= 0; i--) {
                     var itemNode = blockElements[i];
                     var height = itemNode.offsetHeight;
-                    if (blockEnd - height <= windowEnd) {
+                    if (blockEnd - height - offset <= windowEnd) {
                         break;
                     }
                     blockEnd -= height;
                     length--;
                 }
                 // Add nodes at the end
-                length += Math.ceil(Math.max(0, windowEnd - blockEnd)
-                        / recordHeight);
+                length += Math.ceil(Math.max(0, windowEnd - blockEnd - offset)
+                        / recordHeight)
+                        * k;
+            }
+            if (this.state.length >= 0) {
+                length = Math.max(0, 
+                        Math.min(this.state.length - startIndex, length));
             }
 
-            // if (startIndex != this.state.index
-            // || length != blockElements.length) {
-            // Load items
-            that.props.loadItems(startIndex, length, function(result) {
-                var state = that._newState({
-                    scrollPos : scrollPos,
-                    index : startIndex,
-                    items : result.items,
-                    length : result.length,
-                    offset : offset,
-                    offsetIndex : offsetIndex
+            if (startIndex != this.state.index
+                    || length != blockElements.length) {
+                // Load items
+                that.props.loadItems(startIndex, length, function(result) {
+                    var state = that._newState({
+                        scrollPos : scrollPos,
+                        index : startIndex,
+                        items : result.items,
+                        length : result.length,
+                        offset : offset,
+                        offsetIndex : offsetIndex
+                    });
+                    that.setState(state);
                 });
-                that.setState(state);
-            });
-            // }
+            }
         },
         _onScroll : function(event) {
             this._setScrollPos(this.getDOMNode().scrollTop);
@@ -174,6 +182,7 @@ function(require) {
             var lengthBefore = (startIndex * recordHeight) + 'px';
             var lengthAfter = ''
                     + (Math.max(0, length - endIndex) * recordHeight) + 'px';
+            console.log('CLASS:', this.props.className)
             return React.DOM.div({
                 id : this.props.id,
                 className : this.props.className,
