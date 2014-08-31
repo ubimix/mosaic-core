@@ -10,7 +10,7 @@ define(
         './LeafletFeatureBuilder', './React.FilterBox',
         // './TemplateDataSetView', './TemplateView', './TemplateViewManager',
         './AdapterManager', './Dependencies', './Intents', './ViewManager',
-        './ActivationTree', './ReactDataSetMixin' ],
+        './ActivationTree', './ReactDataSetMixin', './InfiniteScroll' ],
 // Module
 function(require) {
     var Mosaic = require('mosaic-commons');
@@ -32,6 +32,8 @@ function(require) {
     Mosaic.Core = {
         DataSet : require('./DataSet'),
         ActivationTree : require('./ActivationTree'),
+
+        InfiniteScroll : require('./InfiniteScroll'),
         AbstractSet : require('./AbstractSet'),
         AdapterManager : require('./AdapterManager'),
         CompositeDataSet : require('./CompositeDataSet'),
