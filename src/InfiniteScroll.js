@@ -10,16 +10,7 @@ function(require) {
     var Mosaic = require('mosaic-commons');
     var _ = require('underscore');
     var React = require('react');
-    function findPos(container, el) {
-        var x = 0;
-        var y = 0;
-        while (el && el !== container) {
-            x += el.offsetLeft;
-            y += el.offsetTop;
-            el = el.offsetParent;
-        }
-        return [ x, y ];
-    }
+
     /**
      * This is an "infinite scroll" widget allowing to load elements by their
      * position.
@@ -50,30 +41,14 @@ function(require) {
                 loadItems : function(startIndex, size, callback) {
                     throw new Error('Not implemented');
                 },
-                /** Public method to go to the specified position */
-                goTo : function(pos) {
-                    this.emit('updatePos', pos);
-                },
-                /**
-                 * Adds a change position listener. This method is used
-                 * internally by the widget itself.
-                 */
-                _addPositionListener : function(listener, context) {
-                    this.on('updatePos', listener, context);
-                    return this;
-                },
-                /** Removes a change listener */
-                _removePositionListener : function(listener, context) {
-                    this.off('updatePos', listener, context);
-                    return this;
-                },
             })
         },
         _newState : function(options) {
-            return _.extend({}, this.state, options);
+            return _.extend({
+
+            }, this.state, options);
         },
         componentWillMount : function(nextProps) {
-            this.props.model._addPositionListener(this._positionHandler, this);
             this._adjustPosition = _.debounce(this._adjustPosition, 5);
             this._setScrollPos = _.debounce(_.bind(this._setScrollPos, this),
                     30);
@@ -83,12 +58,9 @@ function(require) {
             // this.componentDidUpdate();
         },
 
-        componentWillUnmount : function(nextProps) {
-            this.props.model._removePositionListener(this._positionHandler,
-                    this);
-        },
         componentWillReceiveProps : function(nextProps) {
-            console.log('I AM HERE!');
+            // this._setScrollPos(0, true);
+            // this.setState(this._newState());
             this._setScrollPos(this.state.scrollPos, true);
         },
         getInitialState : function() {
@@ -99,48 +71,24 @@ function(require) {
                 scrollPos : 0
             });
         },
-        _positionHandler : function(pos) {
-            var that = this;
-            var model = that.props.model;
-            var h = model.getItemHeight();
-            var scrollPos = pos * h;
-            that._setScrollPos(scrollPos, true);
-        },
         _adjustPosition : function() {
             var that = this;
             var container = that.getDOMNode();
-            var blockNode = that.refs.block.getDOMNode();
-            var wrapperNode = that.refs.wrapper.getDOMNode();
-
             var scrollPos = container.scrollTop;
+
             var model = that.props.model;
             var h = model.getItemHeight();
-
-            console.log('[BEFORE]: fullHeight:' + wrapperNode.offsetHeight,
-                    'blockPos:' + findPos(container, blockNode)[1],
-                    'blockHeight:' + blockNode.offsetHeight, 'scrollPos:'
-                            + scrollPos);
-            var size = model.getSize();
-            var fullHeight = size * h;
-            if (wrapperNode.offsetHeight != fullHeight) {
-                console.log('!!!!!');
-            }
-            wrapperNode.style.height = fullHeight + 'px';
-
             var pos = scrollPos - that.state.index * h;
             var height = that.state.items.length * h;
+            var blockNode = that.refs.block.getDOMNode();
             var blockHeight = blockNode.offsetHeight;
+
             var blockPos = scrollPos - blockHeight * (pos / height);
             blockPos = Math.round(blockPos);
             blockNode.style.top = blockPos + 'px';
-
-            console.log(' [AFTER]: fullHeight:' + fullHeight, 'blockPos:'
-                    + blockPos, 'blockHeight:' + blockHeight, 'scrollPos:'
-                    + scrollPos);
-
         },
         componentDidUpdate : function() {
-            // this._adjustPosition();
+            this._adjustPosition();
         },
         _getBlockInfo : function(scrollPos) {
             var that = this;
@@ -161,15 +109,21 @@ function(require) {
             var startPage = Math.floor(startItem / pageSize);
             var endPage = Math.ceil((endItem + pageSize - 1) / pageSize);
 
+            // console.log('---------------------------------------------');
+            // console.log('pageSize: ' + pageSize, ' h: ' + h);
+            // console.log('startPos: ' + startPos, 'endPos: ' + endPos);
+            // console.log('startItem: ' + startItem, 'endItem: ' + endItem);
+            // console.log('startPage: ' + startPage, 'endPage: ' + endPage);
+
             var index = startPage * pageSize;
             var length = (endPage - startPage) * pageSize;
             return {
+                scrollPos : scrollPos,
                 index : index,
                 length : length
             };
         },
         _setScrollPos : function(scrollPos, force) {
-            console.log('_setScrollPos', scrollPos, force);
             var that = this;
             var params = that._getBlockInfo(scrollPos);
             if (force || params.index != that.state.index
@@ -179,13 +133,14 @@ function(require) {
                     params.items = items;
                     that.setState(that._newState(params));
                 });
+            } else {
+                that._adjustPosition();
             }
         },
         _onScroll : function(event) {
             this._setScrollPos(this.getDOMNode().scrollTop);
         },
         render : function() {
-            console.log('render')
             var items = this.state.items || [];
             var model = this.props.model;
 
@@ -209,7 +164,10 @@ function(require) {
                 ref : 'block',
                 style : {
                     top : blockPos + 'px',
-                    position : 'absolute'
+                    position : 'absolute',
+                    left : '0px',
+                    right : '0px',
+                    bottom : 'auto'
                 }
             }, items)));
         }
