@@ -11,7 +11,44 @@ function(require) {
     var _ = require('underscore');
     var React = require('react');
 
+    /**
+     * This is an "infinite scroll" widget allowing to load elements by their
+     * position.
+     */
     return React.createClass({
+        statics : {
+            Model : Mosaic.Class.extend(Mosaic.Events.prototype, {
+                initialize : function(options) {
+                    this.items = [];
+                    _.extend(this, options);
+                },
+                getRecordHeight : function() {
+                    return this.recordHeight || 30;
+                },
+                getFullLength : function() {
+                    return this.fullLength || 1000000;
+                },
+                loadItems : function(startIndex, size, callback) {
+                    throw new Error('Not implemented');
+                },
+                goTo : function(pos) {
+                    this.emit('updatePos', pos);
+                },
+                /**
+                 * Adds a change position listener. This method is used
+                 * internally by the widget itself.
+                 */
+                _addPositionListener : function(listener, context) {
+                    this.on('updatePos', listener, context);
+                    return this;
+                },
+                /** Removes a change listener */
+                _removePositionListener : function(listener, context) {
+                    this.off('updatePos', listener, context);
+                    return this;
+                },
+            })
+        },
         _newState : function(options) {
             return _.extend({}, this.state, options);
         },
@@ -19,18 +56,24 @@ function(require) {
             this._setScrollPos(0);
         },
         componentWillMount : function(nextProps) {
+            this.props.model._addPositionListener(this._positionHandler, this);
             this._setScrollPos = _.debounce(_.bind(this._setScrollPos, this),
                     50);
             this._setScrollPos(this.state.scrollPos);
+        },
+        componentWillUnmount : function(nextProps) {
+            this.props.model._removePositionListener(this._positionHandler,
+                    this);
         },
         componentWillReceiveProps : function(nextProps) {
             // this.setState(this._newState(nextProps));
             this._setScrollPos(this.state.scrollPos);
         },
         getInitialState : function() {
-            return this._newState({
-                length : -1
-            });
+            return this._newState({});
+        },
+        _removePositionListener : function(pos) {
+            // TODO : scroll to the specified position
         },
         _findScrollPos : function(el) {
             return this._findPos(el)[1];
@@ -59,17 +102,12 @@ function(require) {
             var node = children[idx];
             var nodePos = that._findScrollPos(node);
 
-            // _.each(children, function(n) {
-            // n.style.backgroundColor = 'red';
-            // });
-            // node.style.backgroundColor = 'yellow';
-
             var container = that.getDOMNode();
             var step = 1; // Math.max(that.props.recordHeight / 10, 1);
             // scrollTop = heightBefore + (nodePos - offset - blockPos)
             var scrollTop = Math.ceil(container.scrollTop / step) * step;
-            var heightBefore = Math.round(scrollTop + blockPos - nodePos
-                    + that.state.offset);
+            var heightBefore = Math.round(scrollTop + blockPos - //
+            nodePos + that.state.offset);
             var before = that.refs.before.getDOMNode();
 
             if (before.offsetHeight != heightBefore) {
@@ -86,6 +124,7 @@ function(require) {
         _setScrollPos : function(scrollPos) {
             var that = this;
             // Get the visible range ("window")
+            var model = that.props.model;
             var node = that.getDOMNode();
             var windowHeight = node.offsetHeight;
             var windowStart = scrollPos; // node.scrollTop;
@@ -105,7 +144,7 @@ function(require) {
             }
 
             // Estimate average height of an item
-            var recordHeight = that.props.recordHeight;
+            var recordHeight = model.getRecordHeight();
 
             var startIndex;
             var length;
@@ -164,21 +203,21 @@ function(require) {
                         / recordHeight)
                         * k;
             }
-            if (this.state.length >= 0) {
-                length = Math.max(0, Math.min(this.state.length - startIndex,
-                        length));
+            var fullLength = model.getFullLength();
+            if (length >= 0) {
+                length = Math.max(0, //
+                Math.min(fullLength - startIndex, length));
             }
             if (offset !== 0) {
                 length++;
             }
 
             // Load items
-            that.props.loadItems(startIndex, length, function(result) {
+            model.loadItems(startIndex, length, function(items) {
                 var state = that._newState({
                     scrollPos : scrollPos,
                     index : startIndex,
-                    items : result.items,
-                    length : result.length,
+                    items : items,
                     offset : offset,
                     offsetIndex : offsetIndex
                 });
@@ -194,12 +233,13 @@ function(require) {
             var items = this.state.items || [];
             var startIndex = (this.state.index || 0);
             var endIndex = startIndex + items.length;
-            var length = this.state.length || 0;
-            var recordHeight = this.props.recordHeight;
-            // var offset = this.state.offset;
-            var lengthBefore = (startIndex * recordHeight) + 'px';
-            var lengthAfter = ''
-                    + (Math.max(0, length - endIndex) * recordHeight) + 'px';
+            var model = this.props.model;
+            var fullLength = model.getFullLength();
+            var recordHeight = model.getRecordHeight();
+            var heightBefore = (startIndex * recordHeight) + 'px';
+            var heightAfter = ''
+                    + (Math.max(0, fullLength - endIndex) * recordHeight)
+                    + 'px';
             return React.DOM.div({
                 id : this.props.id,
                 className : this.props.className,
@@ -209,7 +249,7 @@ function(require) {
             React.DOM.div({
                 ref : 'before',
                 style : {
-                    height : lengthBefore
+                    height : heightBefore
                 }
             }),
             //
@@ -220,7 +260,7 @@ function(require) {
             React.DOM.div({
                 ref : 'after',
                 style : {
-                    height : lengthAfter
+                    height : heightAfter
                 }
             }));
         }
