@@ -72,8 +72,18 @@ function(require) {
         getInitialState : function() {
             return this._newState({});
         },
-        _removePositionListener : function(pos) {
-            // TODO : scroll to the specified position
+        _positionHandler : function(pos) {
+            var idx = pos - this.state.index;
+            var scrollPos;
+            if (idx >= 0 && idx < this.state.items.length) {
+                var children = this.refs.block.getDOMNode();
+                scrollPos = this._findScrollPos(children[idx]);
+            } else {
+                var height = this.props.model.getRecordHeight();
+                scrollPos = pos * height;
+            }
+            var node = this.getDOMNode();
+            this._setScrollPos(scrollPos);
         },
         _findScrollPos : function(el) {
             return this._findPos(el)[1];
@@ -213,6 +223,7 @@ function(require) {
             }
 
             // Load items
+            var container = that.getDOMNode();
             model.loadItems(startIndex, length, function(items) {
                 var state = that._newState({
                     scrollPos : scrollPos,
@@ -225,8 +236,9 @@ function(require) {
             });
         },
         _onScroll : function(event) {
-            if (this._disableUpdates)
+            if (this._disableUpdates) {
                 return;
+            }
             this._setScrollPos(this.getDOMNode().scrollTop);
         },
         render : function() {
