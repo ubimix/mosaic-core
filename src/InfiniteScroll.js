@@ -28,6 +28,7 @@ function(require) {
             return React.DOM.div({
                 id : this.props.id,
                 className : this.props.className,
+                style : this.props.style,
                 onScroll : this._onScroll
             }, React.DOM.div({
                 ref : 'wrapper',
