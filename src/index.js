@@ -8,6 +8,7 @@ define(
         './CompositeDataSet', './DataSetView', './LeafletDataSetView',
         './LeafletReactMap', './LeafletDataSubsetView',
         './LeafletFeatureBuilder', './React.FilterBox',
+        './React.SearchBoxMixin',
         // './TemplateDataSetView', './TemplateView', './TemplateViewManager',
         './AdapterManager', './Dependencies', './Intents', './ViewManager',
         './ActivationTree', './ReactDataSetMixin', './InfiniteScroll' ],
@@ -21,7 +22,8 @@ function(require) {
     Mosaic.App.Store = require('./App.Store');
 
     Mosaic.React = {
-        FilterBox : require('./React.FilterBox')
+        FilterBox : require('./React.FilterBox'),
+        SearchBoxMixin : require('./React.SearchBoxMixin')
     }
 
     Mosaic.Leaflet = {
