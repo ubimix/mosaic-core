@@ -70,9 +70,23 @@ function(require) {
                         label : text
                     };
                 },
+                /** Updates focused status of the underlying input box. */
+                setFocused : function(focused) {
+                    var changed = false;
+                    if (this._focused === focused) {
+                        return;
+                    }
+                    changed = true;
+                    this._focused = focused;
+                    this.emit('focus', this._focused);
+                },
+                /** Returns <code>true</code> if the input is focused. */
+                isFocused : function() {
+                    return !!this._focused;
+                },
                 /** Notifies subscribers about changes */
                 _notify : function(evt) {
-                    if (evt){
+                    if (evt) {
                         this.emit(evt);
                     }
                     this.emit('changed');
@@ -92,41 +106,37 @@ function(require) {
         },
         /** Returns the initial state for this input box. */
         getInitialState : function() {
-            return this._newState({
-                focused : true
-            });
+            return this._newState({});
         },
         /** This method registers an API listener. */
         componentWillMount : function() {
-            this.props.model.addChangeListener(this._onUpdate);
+            this.props.model.addChangeListener(this._notifyUpdates);
         },
         /** Removes the registered API listener. */
         componentWillUnmount : function() {
-            this.props.model.removeChangeListener(this._onUpdate);
+            this.props.model.removeChangeListener(this._notifyUpdates);
         },
         componentDidMount : function() {
             this.componentDidUpdate();
         },
         componentDidUpdate : function() {
-            var focused = !!this.state.focused;
-            if (focused) {
+            if (this.props.model.isFocused()) {
                 var input = this.refs.input;
                 var node = input.getDOMNode();
                 node.focus();
             }
         },
         /** Updates this view when model properties were changed. */
-        _onUpdate : function() {
+        _notifyUpdates : function() {
             this.setState(this._newState({
-                focused : true,
                 text : ''
             }));
+            this.props.model.setFocused(true);
         },
         /** Returns a new state. */
         _newState : function(options) {
             var model = this.props.model;
             return _.extend({
-                focused : false,
                 text : '',
                 values : model.getAll()
             }, this.state, options);
@@ -150,32 +160,37 @@ function(require) {
          * focus the input box.
          */
         _focusInput : function(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            this.setState(this._newState({
-                focused : true
-            }));
+            this.props.model.setFocused(true);
+            this.forceUpdate();
         },
         /**
          * Handles input box focusing. Changes the visualization styles for the
          * FilterBox.
          */
         _handleInputFocus : function(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            this.setState(this._newState({
-                focused : true
-            }));
+            this.props.model.setFocused(true);
         },
+        /**
+         * Handles input box blurring. Changes the visualization styles for the
+         * FilterBox.
+         */
+        _handleInputBlur : function(ev) {
+            this._addValue(this.state.text);
+            this.props.model.setFocused(false);
+        },
+
         /**
          * Handles modifications of the input box.
          */
         _handleInputChange : function(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
+            // ev.preventDefault();
+            // ev.stopPropagation();
             var input = this.refs.input.getDOMNode();
+            var value = input.value;
+            var size = this._getInputSize(value);
+            input.size = size;
             this.setState(this._newState({
-                text : input.value
+                text : value
             }));
         },
         /**
@@ -186,9 +201,7 @@ function(require) {
             var clear = false;
             if (ev.which === 9) { // Tab
                 this._addValue(this.state.text);
-                this.setState(this._newState({
-                    focused : true
-                }));
+                this.props.model.setFocused(true);
                 clear = true;
             } else if (ev.which === 8 && this.state.text == '') { // Del
                 this._removeLastValue();
@@ -239,24 +252,32 @@ function(require) {
         render : function() {
             var app = this.props.app;
             var cssClass = this.props.className || 'filter-box';
-            if (this.state.focused) {
+            if (this.props.model.isFocused()) {
                 cssClass += ' focused';
             }
-            return (React.DOM.div({
-                key : this.props.key,
-                className : cssClass,
-                onClick : this._focusInput
-            }, this._formatTags(), React.DOM.input({
+            var value = this.state.text;
+            var inputSize = this._getInputSize(value);
+            return (React.DOM.div(_.extend({}, this.props.options, {
+                onClick : this._focusInput,
+                className : cssClass
+            }), this._formatTags(), React.DOM.input(_.extend({
+                className : 'item'
+            }, this.props.inputOptions, {
                 ref : 'input',
-                size : 12,
-                className : 'item',
+                size : inputSize,
                 type : 'text',
                 onFocus : this._handleInputFocus,
+                onBlur : this._handleInputBlur,
                 onChange : this._handleInputChange,
                 onKeyDown : this._handleKeyDown,
-                value : this.state.text
-            })));
+                value : value
+            }))));
         },
+        /** Returns the size of the input box. */
+        _getInputSize : function(value) {
+            value = value || '';
+            return Math.min(15, Math.max(value.length, 3));
+        }
     });
 
 });
