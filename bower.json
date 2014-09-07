@@ -6,6 +6,7 @@
         "mosaic-commons" : "*",
         "underscore" : "*",
         "jquery" : "*",
-        "leaflet" : "*"
+        "leaflet" : "*",
+        "rbush" : "git@github.com:mourner/rbush.git"
     }
 }

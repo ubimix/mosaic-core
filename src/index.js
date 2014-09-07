@@ -11,7 +11,10 @@ define(
         './React.SearchBoxMixin',
         // './TemplateDataSetView', './TemplateView', './TemplateViewManager',
         './AdapterManager', './Dependencies', './Intents', './ViewManager',
-        './ActivationTree', './ReactDataSetMixin', './InfiniteScroll' ],
+        './ActivationTree', './ReactDataSetMixin', './InfiniteScroll',
+
+        './IndexedCanvas', './Leaflet.InteractionLayer', './Leaflet.MapTiles',
+        './Leaflet.MarkersLayer', './Leaflet.UtfGrid' ],
 // Module
 function(require) {
     var Mosaic = require('mosaic-commons');
@@ -29,12 +32,18 @@ function(require) {
     Mosaic.Leaflet = {
         ReactMap : require('./LeafletReactMap'),
         FeatureBuilder : require('./LeafletFeatureBuilder'),
+
+        InteractionLayer : require('./Leaflet.InteractionLayer'),
+        MapTiles : require('./Leaflet.MapTiles'),
+        MarkersLayer : require('./Leaflet.MarkersLayer'),
+        UtfGrid : require('./Leaflet.UtfGrid')
     };
 
     Mosaic.Core = {
         DataSet : require('./DataSet'),
         ActivationTree : require('./ActivationTree'),
 
+        IndexedCanvas : require('./IndexedCanvas'),
         InfiniteScroll : require('./InfiniteScroll'),
         AbstractSet : require('./AbstractSet'),
         AdapterManager : require('./AdapterManager'),
