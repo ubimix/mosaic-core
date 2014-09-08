@@ -24,8 +24,8 @@ function(_, L, Mosaic) {
             this.setOptions(options);
             var resolution = this.options.reisolution || 4;
             this.options.resolutionX = this.options.resolutionX || resolution;
-            this.options.resolutionY = this.options.resolutionY
-                    || this.options.resolutionX || resolution;
+            this.options.resolutionY = this.options.resolutionY || //
+            this.options.resolutionX || resolution;
             this._canvas = this.options.canvas;
             this._maskWidth = this._getMaskX(this._canvas.width);
             this._maskHeight = this._getMaskY(this._canvas.height);
@@ -83,8 +83,8 @@ function(_, L, Mosaic) {
                     continue;
                 var x = maskShiftX + (i % imageMaskWidth);
                 var y = maskShiftY + Math.floor(i / imageMaskWidth);
-                if (x >= 0 && x < this._maskWidth && y >= 0
-                        && y < this._maskHeight) {
+                if (x >= 0 && x < this._maskWidth && y >= 0 && //
+                y < this._maskHeight) {
                     this._dataIndex[y * this._maskWidth + x] = data;
                 }
             }
@@ -118,7 +118,8 @@ function(_, L, Mosaic) {
         _getImageMaskIndex : function() {
             if (this.options.maskIndex)
                 return this.options.maskIndex;
-            return this._maskIndex = this._maskIndex || {}
+            this._maskIndex = this._maskIndex || {};
+            return this._maskIndex;
         },
 
         /** Creates and returns an image mask. */

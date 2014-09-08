@@ -27,7 +27,7 @@ function(require) {
     Mosaic.React = {
         FilterBox : require('./React.FilterBox'),
         SearchBoxMixin : require('./React.SearchBoxMixin')
-    }
+    };
 
     Mosaic.Leaflet = {
         ReactMap : require('./LeafletReactMap'),

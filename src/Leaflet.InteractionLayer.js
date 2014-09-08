@@ -112,8 +112,8 @@ function(_, L, Mosaic, MapTiles) {
          * the mouse event.
          */
         _objectForEvent : function(e) {
-            throw new Error('This method should be implemented '
-                    + 'in subclasses.');
+            throw new Error('This method should be implemented ' + //
+            'in subclasses.');
         },
 
     });

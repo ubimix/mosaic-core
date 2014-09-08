@@ -86,7 +86,7 @@ function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
             // Data indexing
             this._index = Rbush(9);
             data = data || [];
-            var data = _.map(data, function(d) {
+            data = _.map(data, function(d) {
                 var coordinates = this._getBoundingBoxArray(d);
                 if (coordinates) {
                     coordinates.data = d;
@@ -232,7 +232,7 @@ function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
             return {
                 image : icon.image,
                 anchor : anchor
-            }
+            };
         },
 
         /**
@@ -269,8 +269,8 @@ function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
         },
 
         _getVal : function(key, defaultValue) {
-            return this._getOptionValue(key, this._map.getZoom())
-                    || defaultValue;
+            return this._getOptionValue(key, this._map.getZoom()) || //
+            defaultValue;
         },
 
         _getRadius : function(defaultValue) {

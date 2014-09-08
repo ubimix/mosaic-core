@@ -203,7 +203,7 @@ function(require) {
                 this._addValue(this.state.text);
                 this.props.model.setFocused(true);
                 clear = true;
-            } else if (ev.which === 8 && this.state.text == '') { // Del
+            } else if (ev.which === 8 && this.state.text === '') { // Del
                 this._removeLastValue();
                 clear = true;
             } else if (ev.which === 13) { // Enter

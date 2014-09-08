@@ -201,12 +201,12 @@ function(require) {
                 index : index,
                 length : length
             };
-            if (force || params.index != that.state.index
-                    || params.length != that.state.length) {
+            if (force || params.index != that.state.index || //
+            params.length != that.state.length) {
                 params.callback = function(items) {
                     params.items = items;
                     that.setState(that._newState(params));
-                }
+                };
                 that._loadItems(params);
             } else {
                 that._adjustPosition();
