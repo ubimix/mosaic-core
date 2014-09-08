@@ -1,5 +1,5 @@
 /*!
- * mosaic-core v0.0.3 | License: MIT 
+ * mosaic-core v0.0.4 | License: MIT 
  * 
  */
 (function webpackUniversalModuleDefinition(root, factory) {
