@@ -189,14 +189,31 @@ function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
             return index;
         },
 
+        /** Returns point coordinates for the specified resource. */
+        _getCoordinates : function(d) {
+            var geom = d.geometry;
+            if (!geom || !geom.coordinates)
+                return null;
+            var coords;
+            if (geom.type == 'Point') {
+                coords = geom.coordinates;
+            } else {
+                var layer = L.GeoJSON.geometryToLayer(geom);
+                var bbox = layer.getBounds();
+                var center = bbox.getCenter();
+                coords = [ center.lng, center.lat ];
+            }
+            return coords;
+        },
+
         /**
          * Returns an array with a bounding box ([south, west, north, east]) for
          * the specified object.
          */
         _getBoundingBoxArray : function(d) {
-            if (!d.geometry || !d.geometry.coordinates)
-                return null;
-            var coords = d.geometry.coordinates;
+            var coords = this._getCoordinates(d);
+            if (!coords)
+                return;
             var array = [ coords[1], coords[0], coords[1], coords[0] ];
             return array;
         },
@@ -211,12 +228,10 @@ function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
          *         corresponding to resource coordinates
          */
         _drawFeature : function(tilePoint, bbox, resource) {
-            var geom = resource.geometry;
-            if (!geom)
-                return;
-            var coords = geom.coordinates;
+            var coords = this._getCoordinates(resource);
             if (!coords)
                 return;
+
             var latlng = new L.LatLng(coords[1], coords[0]);
             var p = this._map.project(latlng);
             var tileSize = this._getTileSize();
