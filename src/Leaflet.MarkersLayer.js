@@ -19,6 +19,12 @@ function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
             InteractionLayer.prototype.initialize.call(this, options);
             this._canvasLayer = new L.TileLayer.Canvas(this.options);
             this._canvasLayer._redrawTile = _.bind(this._redrawTile, this);
+            var initContainer =  this._canvasLayer._initContainer;
+            this._canvasLayer._initContainer = function () {
+                initContainer.apply(this, arguments);
+                var pane = this._map._panes.markerPane;
+                pane.appendChild(this._container);
+            };
             this._objectForEvent = _.bind(this._objectForEvent, this);
             this._clearTile = _.bind(this._onTileUnload, this);
             this._canvasLayer.on('tileunload', this._onTileUnload);
