@@ -71,14 +71,16 @@ function(require) {
                     };
                 },
                 /** Updates focused status of the underlying input box. */
-                setFocused : function(focused) {
+                setFocused : function(focused, silent) {
                     var changed = false;
                     if (this._focused === focused) {
                         return;
                     }
                     changed = true;
                     this._focused = focused;
-                    this.emit('focus', this._focused);
+                    if (!silent) {
+                        this.emit('focus', this._focused);
+                    }
                 },
                 /** Returns <code>true</code> if the input is focused. */
                 isFocused : function() {
@@ -176,7 +178,7 @@ function(require) {
          */
         _handleInputBlur : function(ev) {
             this._addValue(this.state.text);
-            this.props.model.setFocused(false);
+            this.props.model.setFocused(false, true);
         },
 
         /**
