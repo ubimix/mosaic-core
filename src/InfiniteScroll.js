@@ -142,6 +142,9 @@ function(require) {
                 scrollPos = focusedPos * h;
             }
             this._focusedItemIdx = focusedPos;
+            // We need this parameter to refresh because a debounced version
+            // of the _setScrollPos method is used.
+            this._resetPos = true;
             this._setScrollPos(scrollPos, true);
         },
         /**
@@ -201,13 +204,15 @@ function(require) {
                 index : index,
                 length : length
             };
-            if (force || params.index != that.state.index || //
+            if (that._resetPos || force || //
+            params.index != that.state.index || //
             params.length != that.state.length) {
                 params.callback = function(items) {
                     params.items = items;
                     that.setState(that._newState(params));
                 };
                 that._loadItems(params);
+                delete that._resetPos;
             } else {
                 that._adjustPosition();
             }
