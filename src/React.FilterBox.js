@@ -12,6 +12,87 @@ function(require) {
     var React = require('react');
 
     /**
+     * Datamodel for the FilterBox component providing access to values to
+     * visualize.
+     */
+    var FilterBoxModel = Mosaic.Class.extend(Mosaic.Events.prototype, {
+
+        initialize : function(options) {
+            this.values = [];
+            _.extend(this, options);
+        },
+        /** Sets a new list of value objects. */
+        set : function(values, notify) {
+            if (!_.isArray(values)) {
+                values = [];
+            }
+            this.values = values;
+            this._notify('set');
+            return this;
+        },
+        /** Returns a list of existing values. */
+        getAll : function() {
+            return this.values;
+        },
+        /** Adds a new text and creates a new tag object. */
+        add : function(text) {
+            this.values.push(this.newFilterValue(text));
+            this._notify('add');
+            return this;
+        },
+        /** Removes the specified value from the list. */
+        remove : function(tag) {
+            var len = this.values.length;
+            this.values = _.filter(this.values, function(t) {
+                return (t != tag);
+            });
+            if (this.values.length != len) {
+                this._notify('remove');
+            }
+            return this;
+        },
+        newFilterValue : function(text) {
+            return {
+                label : text
+            };
+        },
+        /** Updates focused status of the underlying input box. */
+        setFocused : function(focused, silent) {
+            var changed = false;
+            if (this._focused === focused) {
+                return;
+            }
+            changed = true;
+            this._focused = focused;
+            if (!silent) {
+                this.emit('focus', this._focused);
+            }
+        },
+        /** Returns <code>true</code> if the input is focused. */
+        isFocused : function() {
+            return !!this._focused;
+        },
+        /** Notifies subscribers about changes */
+        _notify : function(evt) {
+            if (evt) {
+                this.emit(evt);
+            }
+            this.emit('changed');
+            return this;
+        },
+        /** Adds a new change listener */
+        addChangeListener : function(listener, context) {
+            this.on('changed', listener, context);
+            return this;
+        },
+        /** Removes a change listener */
+        removeChangeListener : function(listener, context) {
+            this.off('changed', listener, context);
+            return this;
+        },
+    });
+
+    /**
      * Allows to manage filtering boxes where filter criteria are added as tags
      * to the list. This class expects the following parameters in the
      * constructor:
@@ -30,81 +111,10 @@ function(require) {
     return React.createClass({
         displayName : 'React.FilterBox',
         statics : {
-            Model : Mosaic.Class.extend(Mosaic.Events.prototype, {
-                initialize : function(options) {
-                    this.values = [];
-                    _.extend(this, options);
-                },
-                /** Sets a new list of value objects. */
-                set : function(values, notify) {
-                    if (!_.isArray(values)) {
-                        values = [];
-                    }
-                    this.values = values;
-                    this._notify('set');
-                    return this;
-                },
-                /** Returns a list of existing values. */
-                getAll : function() {
-                    return this.values;
-                },
-                /** Adds a new text and creates a new tag object. */
-                add : function(text) {
-                    this.values.push(this.newFilterValue(text));
-                    this._notify('add');
-                    return this;
-                },
-                /** Removes the specified value from the list. */
-                remove : function(tag) {
-                    var len = this.values.length;
-                    this.values = _.filter(this.values, function(t) {
-                        return (t != tag);
-                    });
-                    if (this.values.length != len) {
-                        this._notify('remove');
-                    }
-                    return this;
-                },
-                newFilterValue : function(text) {
-                    return {
-                        label : text
-                    };
-                },
-                /** Updates focused status of the underlying input box. */
-                setFocused : function(focused, silent) {
-                    var changed = false;
-                    if (this._focused === focused) {
-                        return;
-                    }
-                    changed = true;
-                    this._focused = focused;
-                    if (!silent) {
-                        this.emit('focus', this._focused);
-                    }
-                },
-                /** Returns <code>true</code> if the input is focused. */
-                isFocused : function() {
-                    return !!this._focused;
-                },
-                /** Notifies subscribers about changes */
-                _notify : function(evt) {
-                    if (evt) {
-                        this.emit(evt);
-                    }
-                    this.emit('changed');
-                    return this;
-                },
-                /** Adds a new change listener */
-                addChangeListener : function(listener, context) {
-                    this.on('changed', listener, context);
-                    return this;
-                },
-                /** Removes a change listener */
-                removeChangeListener : function(listener, context) {
-                    this.off('changed', listener, context);
-                    return this;
-                },
-            })
+            Model : FilterBoxModel,
+            extendModel : function(options) {
+                return FilterBoxModel.extend(options);
+            }
         },
         /** Returns the initial state for this input box. */
         getInitialState : function() {

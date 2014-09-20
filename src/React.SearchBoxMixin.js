@@ -3,13 +3,78 @@ if (typeof define !== 'function') {
 }
 define(
 // Dependencies
-[ 'require', 'underscore', 'react', './React.FilterBox' ],
+[ 'require', 'underscore', 'react', 'mosaic-commons', './React.FilterBox' ],
 // Module
 function(require) {
 
     var _ = require('underscore');
     var React = require('react');
+    var Mosaic = require('mosaic-commons');
     var FilterBox = require('./React.FilterBox');
+
+    var SearchBoxMixinModel = FilterBox.extendModel({
+
+        /**
+         * Converts a search criteria object into a list of values accepted by
+         * the filter box.
+         */
+        _convertSearchToFilters : function(criteria) {
+            var values = [];
+            _.map(criteria, function(value, key) {
+                if (_.isArray(value)) {
+                    _.each(value, function(val) {
+                        values.push(this.newFilterValue(val, key));
+                    }, this);
+                } else {
+                    values.push(this.newFilterValue(value, key));
+                }
+            }, this);
+            return values;
+        },
+
+        /** Converts filter box values in a search criteria object. */
+        convertFiltersToSearch : function(values) {
+            var result = {};
+            _.each(values, function(val) {
+                var key = val.key;
+                var criteria = this.newSearchValue(val, key);
+                if (!_.has(result, key)) {
+                    result[key] = [ criteria ];
+                } else {
+                    var arr = result[key];
+                    arr.push(criteria);
+                }
+            }, this);
+            return result;
+        },
+
+        /**
+         * Creates and returns a new filter value object used by filter box to
+         * show values. This function overloads a method with the same name from
+         * the FilterBox.Model class.
+         */
+        newFilterValue : function(value, key) {
+            return {
+                key : key || this.getDefaultField(),
+                label : value
+            };
+        },
+
+        /**
+         * Converts a filter value to a search criteria.
+         */
+        newSearchValue : function(value, key) {
+            return value.label;
+        },
+
+        /**
+         * Returns the name of the default text search field.
+         */
+        getDefaultField : function() {
+            return this.textSearchField || 'q';
+        },
+
+    });
 
     /**
      * This mixin expects that the following methods and fields are implemented
@@ -22,7 +87,9 @@ function(require) {
      * returns all search criteria managed by the filter box; the
      * 'renderSearchBox' returns a new rendered search box
      */
-    return {
+    var SearchBoxMixin = {
+
+        Model : SearchBoxMixinModel,
 
         /** Registers new filters the internal box model. */
         componentWillMount : function() {
@@ -43,55 +110,25 @@ function(require) {
          * the filter box.
          */
         _convertSearchToFilters : function(criteria) {
-            var values = [];
-            _.map(criteria, function(value, key) {
-                if (_.isArray(value)) {
-                    _.each(value, function(val) {
-                        values.push(this._newFilterValue(val, key));
-                    }, this);
-                } else {
-                    values.push(this._newFilterValue(value, key));
-                }
-            }, this);
-            return values;
+            var model = this._getFilterBoxModel();
+            return model._convertSearchToFilters(criteria);
         },
         /** Converts filter box values in a search criteria object. */
         _convertFiltersToSearch : function(values) {
-            var result = {};
-            _.each(values, function(val) {
-                var key = val.key;
-                if (!_.has(result, key)) {
-                    result[key] = val.label;
-                } else {
-                    var arr = result[key];
-                    if (!_.isArray(arr)) {
-                        result[key] = arr = [ arr ];
-                    }
-                    arr.push(val.label);
-                }
-            });
-            return result;
+            var model = this._getFilterBoxModel();
+            return model.convertFiltersToSearch(values);
         },
-        /**
-         * Creates and returns a new filter value object used by filter box to
-         * show values.
-         */
-        _newFilterValue : function(value, key) {
-            return {
-                key : key,
-                label : value
-            };
-        },
+
         /** Returns an underlying model keeping values for a filter box. */
         _getFilterBoxModel : function() {
             var that = this;
             if (!that._model) {
-                var defaultField = this.state.textSearchField || 'q';
-                that._model = new FilterBox.Model({
-                    newFilterValue : function(text) {
-                        return that._newFilterValue(text, defaultField);
-                    }
-                });
+                if (_.isFunction(that._newFilterModel)) {
+                    that._model = that._newFilterModel();
+                } else {
+                    that._model = new SearchBoxMixinModel();
+                }
+                var x = new FilterBox.Model();
             }
             return that._model;
         },
@@ -123,5 +160,7 @@ function(require) {
             })));
         },
     };
+
+    return SearchBoxMixin;
 
 });
