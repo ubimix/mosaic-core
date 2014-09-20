@@ -14,7 +14,7 @@ define(
         './ActivationTree', './ReactDataSetMixin', './InfiniteScroll',
 
         './IndexedCanvas', './Leaflet.InteractionLayer', './Leaflet.MapTiles',
-        './Leaflet.MarkersLayer', './Leaflet.UtfGrid' ],
+        './Leaflet.MarkersLayer', './Leaflet.UtfGrid', './URI' ],
 // Module
 function(require) {
     var Mosaic = require('mosaic-commons');
@@ -60,6 +60,8 @@ function(require) {
 
         ReactDataSetMixin : require('./ReactDataSetMixin'),
         ViewManager : require('./ViewManager'),
+
+        URI : require('./URI')
 
     };
     return Mosaic.Core;

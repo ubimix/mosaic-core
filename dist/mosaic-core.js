@@ -11,7 +11,7 @@
 		exports["mosaic-core"] = factory(require("mosaic-commons"), require("underscore"), require("mosaic-teleport"), require("leaflet"), require("react"), require("rbush"));
 	else
 		root["mosaic-core"] = factory(root["mosaic-commons"], root["underscore"], root["mosaic-teleport"], root["leaflet"], root["react"], root["rbush"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_29__, __WEBPACK_EXTERNAL_MODULE_30__, __WEBPACK_EXTERNAL_MODULE_31__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_33__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_30__, __WEBPACK_EXTERNAL_MODULE_31__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_33__, __WEBPACK_EXTERNAL_MODULE_34__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -72,7 +72,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        __webpack_require__(21), __webpack_require__(22), __webpack_require__(23),
 
 	        __webpack_require__(24), __webpack_require__(25), __webpack_require__(26),
-	        __webpack_require__(27), __webpack_require__(28) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	        __webpack_require__(27), __webpack_require__(28), __webpack_require__(29) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 	    var Mosaic = __webpack_require__(1);
 	    Mosaic.App = __webpack_require__(2);
 	    Mosaic.App.Actions = __webpack_require__(3);
@@ -116,6 +116,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        ReactDataSetMixin : __webpack_require__(22),
 	        ViewManager : __webpack_require__(20),
+
+	        URI : __webpack_require__(29)
 
 	    };
 	    return Mosaic.Core;
@@ -220,8 +222,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(5) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
-	    var _ = __webpack_require__(29);
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(5) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	    var _ = __webpack_require__(30);
 	    var AppComponent = __webpack_require__(5);
 
 	    /** Common superclass for all stores */
@@ -238,10 +240,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1), __webpack_require__(30),
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1), __webpack_require__(31),
 	        __webpack_require__(5) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var _ = __webpack_require__(29);
+	    var _ = __webpack_require__(30);
 	    var AppComponent = __webpack_require__(5);
 	    var Mosaic = __webpack_require__(1);
 
@@ -419,8 +421,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(5) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
-	    var _ = __webpack_require__(29);
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(5) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	    var _ = __webpack_require__(30);
 	    var AppComponent = __webpack_require__(5);
 
 	    /** Common superclass for all stores */
@@ -490,10 +492,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
-	    var _ = __webpack_require__(29);
+	    var _ = __webpack_require__(30);
 
 	    /** Objects of this type are used to keep information about data set entries */
 	    var SetEntry = Mosaic.Class.extend(// 
@@ -683,11 +685,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(7), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(7), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
 	    var AbstractSet = __webpack_require__(7);
-	    var _ = __webpack_require__(29);
+	    var _ = __webpack_require__(30);
 
 	    /**
 	     * This class represents a data set. Each dataset manages a set of objects
@@ -802,9 +804,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(8) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(8) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var _ = __webpack_require__(29);
+	    var _ = __webpack_require__(30);
 	    var DataSet = __webpack_require__(8);
 
 	    /**
@@ -973,10 +975,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1), __webpack_require__(7) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1), __webpack_require__(7) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
-	    var _ = __webpack_require__(29);
+	    var _ = __webpack_require__(30);
 	    var AbstractSet = __webpack_require__(7);
 
 	    /**
@@ -1074,9 +1076,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(31), __webpack_require__(10) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(32), __webpack_require__(10) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var L = __webpack_require__(31);
+	    var L = __webpack_require__(32);
 	    var DataSetView = __webpack_require__(10);
 
 	    /**
@@ -1174,11 +1176,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 	 * @jsx React.DOM
 	 */
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(32), __webpack_require__(31) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(33), __webpack_require__(32) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 	    'use strict';
-	    var _ = __webpack_require__(29);
-	    var React = __webpack_require__(32);
-	    var L = __webpack_require__(31);
+	    var _ = __webpack_require__(30);
+	    var React = __webpack_require__(33);
+	    var L = __webpack_require__(32);
 
 	    return React.createClass({
 	        displayName : 'ReactMap',
@@ -1305,9 +1307,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(1), __webpack_require__(31) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(1), __webpack_require__(32) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var L = __webpack_require__(31);
+	    var L = __webpack_require__(32);
 	    var Mosaic = __webpack_require__(1);
 
 	    var Config = Mosaic.Class.extend({
@@ -1428,11 +1430,92 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(32), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(33), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var _ = __webpack_require__(29);
+	    var _ = __webpack_require__(30);
 	    var Mosaic = __webpack_require__(1);
-	    var React = __webpack_require__(32);
+	    var React = __webpack_require__(33);
+
+	    /**
+	     * Datamodel for the FilterBox component providing access to values to
+	     * visualize.
+	     */
+	    var FilterBoxModel = Mosaic.Class.extend(Mosaic.Events.prototype, {
+
+	        initialize : function(options) {
+	            this.values = [];
+	            _.extend(this, options);
+	        },
+	        /** Sets a new list of value objects. */
+	        set : function(values, notify) {
+	            if (!_.isArray(values)) {
+	                values = [];
+	            }
+	            this.values = values;
+	            this._notify('set');
+	            return this;
+	        },
+	        /** Returns a list of existing values. */
+	        getAll : function() {
+	            return this.values;
+	        },
+	        /** Adds a new text and creates a new tag object. */
+	        add : function(text) {
+	            this.values.push(this.newFilterValue(text));
+	            this._notify('add');
+	            return this;
+	        },
+	        /** Removes the specified value from the list. */
+	        remove : function(tag) {
+	            var len = this.values.length;
+	            this.values = _.filter(this.values, function(t) {
+	                return (t != tag);
+	            });
+	            if (this.values.length != len) {
+	                this._notify('remove');
+	            }
+	            return this;
+	        },
+	        newFilterValue : function(text) {
+	            return {
+	                label : text
+	            };
+	        },
+	        /** Updates focused status of the underlying input box. */
+	        setFocused : function(focused, silent) {
+	            var changed = false;
+	            if (this._focused === focused) {
+	                return;
+	            }
+	            changed = true;
+	            this._focused = focused;
+	            if (!silent) {
+	                this.emit('focus', this._focused);
+	            }
+	        },
+	        /** Returns <code>true</code> if the input is focused. */
+	        isFocused : function() {
+	            return !!this._focused;
+	        },
+	        /** Notifies subscribers about changes */
+	        _notify : function(evt) {
+	            if (evt) {
+	                this.emit(evt);
+	            }
+	            this.emit('changed');
+	            return this;
+	        },
+	        /** Adds a new change listener */
+	        addChangeListener : function(listener, context) {
+	            this.on('changed', listener, context);
+	            return this;
+	        },
+	        /** Removes a change listener */
+	        removeChangeListener : function(listener, context) {
+	            this.off('changed', listener, context);
+	            return this;
+	        },
+	    });
 
 	    /**
 	     * Allows to manage filtering boxes where filter criteria are added as tags
@@ -1453,79 +1536,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return React.createClass({
 	        displayName : 'React.FilterBox',
 	        statics : {
-	            Model : Mosaic.Class.extend(Mosaic.Events.prototype, {
-	                initialize : function(options) {
-	                    this.values = [];
-	                    _.extend(this, options);
-	                },
-	                /** Sets a new list of value objects. */
-	                set : function(values, notify) {
-	                    if (!_.isArray(values)) {
-	                        values = [];
-	                    }
-	                    this.values = values;
-	                    this._notify('set');
-	                    return this;
-	                },
-	                /** Returns a list of existing values. */
-	                getAll : function() {
-	                    return this.values;
-	                },
-	                /** Adds a new text and creates a new tag object. */
-	                add : function(text) {
-	                    this.values.push(this.newFilterValue(text));
-	                    this._notify('add');
-	                    return this;
-	                },
-	                /** Removes the specified value from the list. */
-	                remove : function(tag) {
-	                    var len = this.values.length;
-	                    this.values = _.filter(this.values, function(t) {
-	                        return (t != tag);
-	                    });
-	                    if (this.values.length != len) {
-	                        this._notify('remove');
-	                    }
-	                    return this;
-	                },
-	                newFilterValue : function(text) {
-	                    return {
-	                        label : text
-	                    };
-	                },
-	                /** Updates focused status of the underlying input box. */
-	                setFocused : function(focused) {
-	                    var changed = false;
-	                    if (this._focused === focused) {
-	                        return;
-	                    }
-	                    changed = true;
-	                    this._focused = focused;
-	                    this.emit('focus', this._focused);
-	                },
-	                /** Returns <code>true</code> if the input is focused. */
-	                isFocused : function() {
-	                    return !!this._focused;
-	                },
-	                /** Notifies subscribers about changes */
-	                _notify : function(evt) {
-	                    if (evt) {
-	                        this.emit(evt);
-	                    }
-	                    this.emit('changed');
-	                    return this;
-	                },
-	                /** Adds a new change listener */
-	                addChangeListener : function(listener, context) {
-	                    this.on('changed', listener, context);
-	                    return this;
-	                },
-	                /** Removes a change listener */
-	                removeChangeListener : function(listener, context) {
-	                    this.off('changed', listener, context);
-	                    return this;
-	                },
-	            })
+	            Model : FilterBoxModel,
+	            extendModel : function(options) {
+	                return FilterBoxModel.extend(options);
+	            }
 	        },
 	        /** Returns the initial state for this input box. */
 	        getInitialState : function() {
@@ -1599,7 +1613,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        _handleInputBlur : function(ev) {
 	            this._addValue(this.state.text);
-	            this.props.model.setFocused(false);
+	            this.props.model.setFocused(false, true);
 	        },
 
 	        /**
@@ -1712,11 +1726,76 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(32), __webpack_require__(15) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(33), __webpack_require__(1), __webpack_require__(15) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var _ = __webpack_require__(29);
-	    var React = __webpack_require__(32);
+	    var _ = __webpack_require__(30);
+	    var React = __webpack_require__(33);
+	    var Mosaic = __webpack_require__(1);
 	    var FilterBox = __webpack_require__(15);
+
+	    var SearchBoxMixinModel = FilterBox.extendModel({
+
+	        /**
+	         * Converts a search criteria object into a list of values accepted by
+	         * the filter box.
+	         */
+	        _convertSearchToFilters : function(criteria) {
+	            var values = [];
+	            _.map(criteria, function(value, key) {
+	                if (_.isArray(value)) {
+	                    _.each(value, function(val) {
+	                        values.push(this.newFilterValue(val, key));
+	                    }, this);
+	                } else {
+	                    values.push(this.newFilterValue(value, key));
+	                }
+	            }, this);
+	            return values;
+	        },
+
+	        /** Converts filter box values in a search criteria object. */
+	        convertFiltersToSearch : function(values) {
+	            var result = {};
+	            _.each(values, function(val) {
+	                var key = val.key;
+	                var criteria = this.newSearchValue(val, key);
+	                if (!_.has(result, key)) {
+	                    result[key] = [ criteria ];
+	                } else {
+	                    var arr = result[key];
+	                    arr.push(criteria);
+	                }
+	            }, this);
+	            return result;
+	        },
+
+	        /**
+	         * Creates and returns a new filter value object used by filter box to
+	         * show values. This function overloads a method with the same name from
+	         * the FilterBox.Model class.
+	         */
+	        newFilterValue : function(value, key) {
+	            return {
+	                key : key || this.getDefaultField(),
+	                label : value
+	            };
+	        },
+
+	        /**
+	         * Converts a filter value to a search criteria.
+	         */
+	        newSearchValue : function(value, key) {
+	            return value.label;
+	        },
+
+	        /**
+	         * Returns the name of the default text search field.
+	         */
+	        getDefaultField : function() {
+	            return this.textSearchField || 'q';
+	        },
+
+	    });
 
 	    /**
 	     * This mixin expects that the following methods and fields are implemented
@@ -1729,7 +1808,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * returns all search criteria managed by the filter box; the
 	     * 'renderSearchBox' returns a new rendered search box
 	     */
-	    return {
+	    var SearchBoxMixin = {
+
+	        Model : SearchBoxMixinModel,
 
 	        /** Registers new filters the internal box model. */
 	        componentWillMount : function() {
@@ -1750,55 +1831,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * the filter box.
 	         */
 	        _convertSearchToFilters : function(criteria) {
-	            var values = [];
-	            _.map(criteria, function(value, key) {
-	                if (_.isArray(value)) {
-	                    _.each(value, function(val) {
-	                        values.push(this._newFilterValue(val, key));
-	                    }, this);
-	                } else {
-	                    values.push(this._newFilterValue(value, key));
-	                }
-	            }, this);
-	            return values;
+	            var model = this._getFilterBoxModel();
+	            return model._convertSearchToFilters(criteria);
 	        },
 	        /** Converts filter box values in a search criteria object. */
 	        _convertFiltersToSearch : function(values) {
-	            var result = {};
-	            _.each(values, function(val) {
-	                var key = val.key;
-	                if (!_.has(result, key)) {
-	                    result[key] = val.label;
-	                } else {
-	                    var arr = result[key];
-	                    if (!_.isArray(arr)) {
-	                        result[key] = arr = [ arr ];
-	                    }
-	                    arr.push(val.label);
-	                }
-	            });
-	            return result;
+	            var model = this._getFilterBoxModel();
+	            return model.convertFiltersToSearch(values);
 	        },
-	        /**
-	         * Creates and returns a new filter value object used by filter box to
-	         * show values.
-	         */
-	        _newFilterValue : function(value, key) {
-	            return {
-	                key : key,
-	                label : value
-	            };
-	        },
+
 	        /** Returns an underlying model keeping values for a filter box. */
 	        _getFilterBoxModel : function() {
 	            var that = this;
 	            if (!that._model) {
-	                var defaultField = this.state.textSearchField || 'q';
-	                that._model = new FilterBox.Model({
-	                    newFilterValue : function(text) {
-	                        return that._newFilterValue(text, defaultField);
-	                    }
-	                });
+	                if (_.isFunction(that._newFilterModel)) {
+	                    that._model = that._newFilterModel();
+	                } else {
+	                    that._model = new SearchBoxMixinModel();
+	                }
+	                var x = new FilterBox.Model();
 	            }
 	            return that._model;
 	        },
@@ -1831,6 +1882,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 	    };
 
+	    return SearchBoxMixin;
+
 	}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ },
@@ -1840,10 +1893,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 	    "use strict";
 
-	    var _ = __webpack_require__(29);
+	    var _ = __webpack_require__(30);
 	    var Mosaic = __webpack_require__(1);
 	    var Class = Mosaic.Class;
 
@@ -2047,10 +2100,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1), __webpack_require__(7) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1), __webpack_require__(7) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
-	    var _ = __webpack_require__(29);
+	    var _ = __webpack_require__(30);
 
 	    /** This is a simple class used to manage dependencies between entities. */
 	    var Dependencies = Mosaic.Class.extend({
@@ -2296,10 +2349,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1), __webpack_require__(18) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1), __webpack_require__(18) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
-	    var _ = __webpack_require__(29);
+	    var _ = __webpack_require__(30);
 	    var Dependencies = __webpack_require__(18);
 
 	    /**
@@ -2574,10 +2627,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1), __webpack_require__(17) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1), __webpack_require__(17) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 	    "use strict";
 
-	    var _ = __webpack_require__(29);
+	    var _ = __webpack_require__(30);
 	    var Mosaic = __webpack_require__(1);
 	    var AdapterManager = __webpack_require__(17);
 
@@ -2636,10 +2689,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
-	    var _ = __webpack_require__(29);
+	    var _ = __webpack_require__(30);
 	    /* ------------------------------------------------- */
 
 	    /**
@@ -3080,9 +3133,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var _ = __webpack_require__(29);
+	    var _ = __webpack_require__(30);
 
 	    /**
 	     * This is a common mixin used by React classes to add automatic binding for
@@ -3135,11 +3188,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1), __webpack_require__(32) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1), __webpack_require__(33) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
-	    var _ = __webpack_require__(29);
-	    var React = __webpack_require__(32);
+	    var _ = __webpack_require__(30);
+	    var React = __webpack_require__(33);
 
 	    /**
 	     * This is an "infinite scroll" widget allowing to load elements by their
@@ -3272,6 +3325,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                scrollPos = focusedPos * h;
 	            }
 	            this._focusedItemIdx = focusedPos;
+	            // We need this parameter to refresh because a debounced version
+	            // of the _setScrollPos method is used.
+	            this._resetPos = true;
 	            this._setScrollPos(scrollPos, true);
 	        },
 	        /**
@@ -3331,13 +3387,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	                index : index,
 	                length : length
 	            };
-	            if (force || params.index != that.state.index || //
+	            if (that._resetPos || force || //
+	            params.index != that.state.index || //
 	            params.length != that.state.length) {
 	                params.callback = function(items) {
 	                    params.items = items;
 	                    that.setState(that._newState(params));
 	                };
 	                that._loadItems(params);
+	                delete that._resetPos;
 	            } else {
 	                that._adjustPosition();
 	            }
@@ -3355,7 +3413,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(29), __webpack_require__(31), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(30), __webpack_require__(32), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic) {
 
 	    /**
 	     * This utility class allows to associate data with non-transparent pixels
@@ -3523,7 +3581,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(29), __webpack_require__(31), __webpack_require__(1), __webpack_require__(26) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic, MapTiles) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(30), __webpack_require__(32), __webpack_require__(1), __webpack_require__(26) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic, MapTiles) {
 
 	    /**
 	     * The code of this class was mostly copied from the leaflet.utfgrid Leaflet
@@ -3648,7 +3706,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(29), __webpack_require__(31), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(30), __webpack_require__(32), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic) {
 
 	    /**
 	     * Common superclass for all map layers loading tiles using an external
@@ -3789,7 +3847,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(29), __webpack_require__(31), __webpack_require__(1), __webpack_require__(33),
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(30), __webpack_require__(32), __webpack_require__(1), __webpack_require__(34),
 	        __webpack_require__(25), __webpack_require__(24) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
 
 	    /** This mixin provides methods used to index data points. */
@@ -3806,6 +3864,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            InteractionLayer.prototype.initialize.call(this, options);
 	            this._canvasLayer = new L.TileLayer.Canvas(this.options);
 	            this._canvasLayer._redrawTile = _.bind(this._redrawTile, this);
+	            var initContainer =  this._canvasLayer._initContainer;
+	            this._canvasLayer._initContainer = function () {
+	                initContainer.apply(this, arguments);
+	                var pane = this._map._panes.markerPane;
+	                pane.appendChild(this._container);
+	            };
 	            this._objectForEvent = _.bind(this._objectForEvent, this);
 	            this._clearTile = _.bind(this._onTileUnload, this);
 	            this._canvasLayer.on('tileunload', this._onTileUnload);
@@ -3976,14 +4040,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return index;
 	        },
 
+	        /** Returns point coordinates for the specified resource. */
+	        _getCoordinates : function(d) {
+	            var geom = d.geometry;
+	            if (!geom || !geom.coordinates)
+	                return null;
+	            var coords;
+	            if (geom.type == 'Point') {
+	                coords = geom.coordinates;
+	            } else {
+	                var layer = L.GeoJSON.geometryToLayer(geom);
+	                var bbox = layer.getBounds();
+	                var center = bbox.getCenter();
+	                coords = [ center.lng, center.lat ];
+	            }
+	            return coords;
+	        },
+
 	        /**
 	         * Returns an array with a bounding box ([south, west, north, east]) for
 	         * the specified object.
 	         */
 	        _getBoundingBoxArray : function(d) {
-	            if (!d.geometry || !d.geometry.coordinates)
-	                return null;
-	            var coords = d.geometry.coordinates;
+	            var coords = this._getCoordinates(d);
+	            if (!coords)
+	                return;
 	            var array = [ coords[1], coords[0], coords[1], coords[0] ];
 	            return array;
 	        },
@@ -3998,12 +4079,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	         *         corresponding to resource coordinates
 	         */
 	        _drawFeature : function(tilePoint, bbox, resource) {
-	            var geom = resource.geometry;
-	            if (!geom)
-	                return;
-	            var coords = geom.coordinates;
+	            var coords = this._getCoordinates(resource);
 	            if (!coords)
 	                return;
+
 	            var latlng = new L.LatLng(coords[1], coords[0]);
 	            var p = this._map.project(latlng);
 	            var tileSize = this._getTileSize();
@@ -4133,7 +4212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(29), __webpack_require__(31), __webpack_require__(1), __webpack_require__(25) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic, InteractionLayer) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(30), __webpack_require__(32), __webpack_require__(1), __webpack_require__(25) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic, InteractionLayer) {
 
 	    /**
 	     * The code of this class was mostly copied from the leaflet.utfgrid Leaflet
@@ -4250,7 +4329,331 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_29__;
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
+	    var define = require('amdefine')(module);
+	}
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__ ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	    "use strict";
+
+	    /* ================================================================== */
+	    /* URI */
+	    /* ================================================================== */
+
+	    URI.toURI = function(obj) {
+	        return new URI(obj).toString();
+	    };
+	    URI.parse = function(str) {
+	        return new URI(str);
+	    };
+
+	    /** Constructor */
+	    function URI(url) {
+	        this.reset();
+	        if (typeof (url) === 'string') {
+	            this.setURI(url);
+	        } else if (typeof (url) === 'object') {
+	            URI._doCopy(url, this, true);
+	        }
+	    }
+
+	    /* ----------------------------------------------------------------- */
+	    /* URI static utility methods */
+	    /* ----------------------------------------------------------------- */
+
+	    /** Splits the given query string to an object */
+	    URI.splitQuery = function(query) {
+	        var result = {};
+	        if (query && query !== '') {
+	            var array = query.split('&');
+	            for (var i = 0; i < array.length; i++) {
+	                var str = array[i];
+	                var parts = str.split('=');
+	                var key = decodeURIComponent(parts[0]);
+	                var value = decodeURIComponent(parts[1]);
+	                result[key] = value;
+	            }
+	        }
+	        return result;
+	    };
+
+	    /** Serializes the specified query object as a string */
+	    URI.serializeQuery = function(query) {
+	        var result = '';
+	        for ( var key in query) {
+	            if (query.hasOwnProperty(key)) {
+	                var value = query[key] || '';
+	                var k = encodeURIComponent(key);
+	                var v = encodeURIComponent(value);
+	                if (result.length > 0) {
+	                    result += '&';
+	                }
+	                result += k;
+	                result += '=';
+	                result += v;
+	            }
+	        }
+	        return result;
+	    };
+
+	    function isEmptySegment(segment) {
+	        return segment === '' || segment === '.' || segment === '..';
+	    }
+
+	    /** This method resolves all path segments in the specified array. */
+	    URI.resolvePathSegments = function(segments, skipTraling) {
+	        // Resolve the merged path
+	        var result = false;
+	        var len = segments.length;
+	        var before = isEmptySegment(segments[0]);
+	        var after = isEmptySegment(segments[len - 1]);
+	        for (var i = 0; i < len; i++) {
+	            var segment = segments[i];
+	            if (isEmptySegment(segment)) {
+	                result = false;
+	                segments.splice(i, 1);
+	                len--;
+	                i--;
+	                if ('..' == segment && i >= 0) {
+	                    segments.splice(i, 1);
+	                    len--;
+	                    i--;
+	                }
+	            } else {
+	                result = true;
+	            }
+	        }
+	        if (before) {
+	            segments.splice(0, 0, '');
+	        }
+	        if (after) {
+	            segments = segments.push('');
+	        }
+	        return result;
+	    };
+
+	    URI._doCopy = function(from, to, deep) {
+	        for ( var key in from) {
+	            if (!from.hasOwnProperty(key))
+	                continue;
+	            var value = from[key];
+	            if ((typeof (value) === 'object') && deep) {
+	                value = URI._doCopy(value, {});
+	            }
+	            to[key] = value;
+	        }
+	        return to;
+	    };
+
+	    /* ----------------------------------------------------------------- */
+	    /* Main URI methods definition */
+	    /* ----------------------------------------------------------------- */
+
+	    /** Cleans up all internal fields */
+	    URI.prototype.reset = function(keepPath, keepDomain) {
+	        if (!keepDomain){
+	            delete this.scheme;
+	            delete this.authority;
+	            delete this.domain;
+	            delete this.port;
+	        }
+	        if (!keepPath){
+	            delete this.path;
+	            delete this.query;
+	            delete this.fragment;
+	        }
+	    };
+
+	    /** Cleans up all fields but 'path', 'query' and 'fragment' */
+	    URI.prototype.resetDomain = function() {
+	        this.reset(true);
+	    };
+
+	    /** Returns serialized JSON representation of this URI */
+	    URI.prototype.asJSON = function(spaces) {
+	        return JSON.stringify(this, null, spaces);
+	    };
+
+	    /** Creates and returns a new copy of this object */
+	    URI.prototype.newCopy = function() {
+	        var copy = this.newInstance();
+	        URI._doCopy(this, copy, true);
+	        return copy;
+	    };
+
+	    /** Creates and returns a new instance of this type */
+	    URI.prototype.newInstance = function() {
+	        return new URI();
+	    };
+
+	    /**
+	     * This method splits the given URI to individual URI parts
+	     * <ul>
+	     * <li>scheme</li>
+	     * <li>authority part (user info + domain name)</li>
+	     * <li>domain - in lower case</li>
+	     * <li>port - a number; 0 - if the port is not defined</li>
+	     * <li>path - starts with '/' or null if is not defined</li>
+	     * <li>query</li>
+	     * <li>fragment</li>
+	     * </ul>
+	     */
+	    URI.prototype.setURI = function(url) {
+	        url = url || '';
+	        url = url.replace(/[\\]/gi, '/');
+	        var idx = url.lastIndexOf('#');
+	        if (idx >= 0) {
+	            this.fragment = url.substring(idx + 1);
+	            url = url.substring(0, idx);
+	        }
+	        idx = url.indexOf('?');
+	        if (idx >= 0) {
+	            var str = url.substring(idx + 1);
+	            this.query = URI.splitQuery(str);
+	            url = url.substring(0, idx);
+	        }
+
+	        var hasDomain = false;
+	        if (url.match(/^\/\//)) {
+	            url = url.substring('//'.length);
+	            hasDomain = true;
+	        } else {
+	            idx = url.indexOf('://');
+	            if (idx >= 0) {
+	                this.scheme = url.substring(0, idx);
+	                url = url.substring(idx + '://'.length);
+	                hasDomain = true;
+	            }
+	        }
+	        if (hasDomain) {
+	            idx = url.indexOf('/');
+	            if (idx >= 0) {
+	                this.path = url.substring(idx);
+	                url = url.substring(0, idx);
+	            }
+	            idx = url.indexOf(':');
+	            if (idx >= 0) {
+	                try {
+	                    this.port = parseInt(url.substring(idx + 1));
+	                } catch (e) {
+	                }
+	                url = url.substring(0, idx);
+	            }
+	            idx = url.indexOf('@');
+	            if (idx >= 0) {
+	                this.authority = url.substring(0, idx);
+	                url = url.substring(0, idx);
+	            }
+	            this.domain = url.toLowerCase();
+	        } else {
+	            this.path = url;
+	        }
+	        return this;
+	    };
+
+	    function hasTrailingSeparator(str) {
+	        if (!str || str === '')
+	            return false;
+	        if (str[str.length - 1] === '/')
+	            return true;
+	        return false;
+	    }
+
+	    /**
+	     * This method resolves the specified URI object relative to this URI and
+	     * returns a new resolved URI instance.
+	     */
+	    URI.prototype.resolve = function(urlObj) {
+	        if (typeof urlObj === 'string') {
+	            urlObj = new URI(urlObj);
+	        }
+	        // Don't try to resolve absolute URIs
+	        if (urlObj.domain && '' !== urlObj.domain)
+	            return urlObj.newCopy();
+	        var base = this.newCopy();
+	        var urlPath = urlObj.path;
+	        if (urlPath.indexOf('/') !== 0) {
+	            var basePath = base.path;
+	            var idx = basePath.lastIndexOf('/');
+	            // Create a global array of segments containing base
+	            // segments
+	            // and
+	            // URL path segments.
+	            var segments = basePath.split(/[\/]/gi);
+	            var baseTrailingSeparator = hasTrailingSeparator(basePath);
+	            if (!baseTrailingSeparator) {
+	                // Remove the last segment ('file name') of the base
+	                // URL.
+	                segments.pop();
+	            }
+	            var urlSegments = urlPath.split(/[\/]/gi);
+	            for (var i = 0; i < urlSegments.length; i++) {
+	                var segment = urlSegments[i];
+	                segments.push(segment);
+	            }
+	            var before = segments[0] === '';
+	            var after = segments.length > 0 && //
+	            segments[segments.length - 1] === '';
+	            URI.resolvePathSegments(segments, true);
+	            base.path = segments.join('/');
+	            // if (before) {
+	            // base.path = '/' + base.path;
+	            // }
+	            // if (after) {
+	            // base.path += '/';
+	            // }
+	        } else {
+	            base.path = urlPath;
+	        }
+	        base.query = urlObj.query;
+	        base.fragment = urlObj.fragment;
+	        return base;
+	    };
+
+	    /**
+	     * This method serializes the object containing individual parts of URIs.
+	     */
+	    URI.prototype.toString = function() {
+	        var result = '';
+	        if (this.scheme) {
+	            result = this.scheme;
+	        }
+	        if (this.authority || this.domain) {
+	            if (result !== '') {
+	                result += ':';
+	            }
+	            result += '//';
+	        }
+	        if (this.authority) {
+	            result += this.authority;
+	            result += '@';
+	        }
+	        if (this.domain) {
+	            result += this.domain;
+	        }
+	        if (this.port) {
+	            result += ':' + this.port;
+	        }
+	        if (this.path !== '') {
+	            if (result.length > 0 && !this.path.match(/^[\/]/)) {
+	                result += '/';
+	            }
+	            result += this.path;
+	        }
+	        if (this.query) {
+	            var q = this.query;
+	            if ((typeof q) != 'string') {
+	                q = URI.serializeQuery(q);
+	            }
+	            result += '?' + q;
+	        }
+	        if (this.fragment) {
+	            result += '#' + this.fragment;
+	        }
+	        return result;
+	    };
+
+	    return URI;
+	}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ },
 /* 30 */
@@ -4275,6 +4678,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_33__;
+
+/***/ },
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_34__;
 
 /***/ }
 /******/ ])
