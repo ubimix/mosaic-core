@@ -1211,7 +1211,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _newMap : function(container) {
 	            var mapOptions = this.props.options || {};
 	            var map = L.map(container, {
-	                zoomControl : false
+	                zoomControl : false,
+	                attributionControl : false
 	            });
 	            var options = _.extend({}, mapOptions.zoomControl);
 	            options = _.defaults(options, {
@@ -1223,6 +1224,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var zoomControl = L.control.zoom(options);
 	                map.addControl(zoomControl);
 	            }
+
+	            if (mapOptions.attributionControl !== false) {
+	                var attributionControl = L.control.attribution(options);
+	                map.addControl(attributionControl);
+	            }
+	            
 	            var center = mapOptions.center;
 	            if (_.isArray(center)) {
 	                center = L.latLng(center[1], center[0]);
