@@ -1652,6 +1652,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                clear = true;
 	            } else if (ev.which === 13) { // Enter
 	                this._addValue(this.state.text);
+	                if (this.props.onSubmit) {
+	                    this.props.onSubmit(ev);
+	                }
 	                clear = true;
 	            } else if (ev.which == 27) { // Esc
 	                clear = true;
