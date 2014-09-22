@@ -1,14 +1,10 @@
-define(
-// Dependencies
-[ 'underscore', 'leaflet', 'mosaic-commons' ],
-// Module
-function(_, L, Mosaic) {
+define([ 'leaflet' ], function(L) {
 
     /**
      * This utility class allows to associate data with non-transparent pixels
      * of images drawn on canvas.
      */
-    var IndexedCanvas = Mosaic.Class.extend({
+    var IndexedCanvas = L.Class.extend({
 
         /**
          * Initializes internal fields of this class.
@@ -21,8 +17,8 @@ function(_, L, Mosaic) {
          *            areas (resolution = 4)
          */
         initialize : function(options) {
-            this.setOptions(options);
-            var resolution = this.options.reisolution || 4;
+            L.setOptions(this, options);
+            var resolution = this.options.resolution || 4;
             this.options.resolutionX = this.options.resolutionX || resolution;
             this.options.resolutionY = this.options.resolutionY || //
             this.options.resolutionX || resolution;
@@ -106,8 +102,7 @@ function(_, L, Mosaic) {
 
         /** Returns a unique key of the specified image. */
         _getImageKey : function(image) {
-            var key = image._key = image._key || _.uniqueId('img-');
-            return key;
+            return L.Util.stamp(image);
         },
 
         /**

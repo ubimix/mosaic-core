@@ -1,133 +1,201 @@
-define(
-// Dependencies
-[ 'underscore', 'leaflet', 'mosaic-commons', 'rbush',
-        './Leaflet.InteractionLayer', './IndexedCanvas' ],
-// Module
-function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
+define([ 'leaflet', 'rbush', './IndexedCanvas' ], function(L, Rbush,
+    IndexedCanvas) {
 
-    /** This mixin provides methods used to index data points. */
-    var MarkersLayer = InteractionLayer.extend({
+    /**
+     * This layer draws data on canvas tiles.
+     */
+    var MarkersLayer = L.TileLayer.Canvas.extend({
+
+        /** Default options of this class. */
+        options : {
+            // Default size of a minimal clickable zone is 4x4 screen pixels.
+            resolution : 4,
+            // Show pointer cursor for zones associated with data
+            pointerCursor : true,
+            // Asynchronous tiles drawing
+            async : true,
+            // Don't reuse canvas tiles
+            reuseTiles : false
+        },
 
         /**
+         * Initializes this layer
          */
         initialize : function(options) {
-            options = _.extend({
-                async : true
-            }, options);
+            // Not used anymore. Deprecated. To remove.
+            this._canvasLayer = this;
             options.fillOpacity = options.opacity;
             delete options.opacity;
-            InteractionLayer.prototype.initialize.call(this, options);
-            this._canvasLayer = new L.TileLayer.Canvas(this.options);
-            this._canvasLayer._redrawTile = _.bind(this._redrawTile, this);
-            var initContainer =  this._canvasLayer._initContainer;
-            this._canvasLayer._initContainer = function () {
-                initContainer.apply(this, arguments);
-                var pane = this._map._panes.markerPane;
-                pane.appendChild(this._container);
-            };
-            this._objectForEvent = _.bind(this._objectForEvent, this);
-            this._clearTile = _.bind(this._onTileUnload, this);
-            this._canvasLayer.on('tileunload', this._onTileUnload);
+            var url = null;
+            L.TileLayer.Canvas.prototype.initialize.apply(this, url, options);
+            L.setOptions(this, options);
             this.setData(this.options.data);
         },
 
         // --------------------------------------------------------------------
-        // Leaflet.InteractionLayer method
-
-        /**
-         * Returns an object from UTF grid corresponding to the coordinates of
-         * the mouse event.
-         */
-        _objectForEvent : function(e) {
-            var latlng = e.latlng;
-            var map = this._map;
-            var point = map.latLngToLayerPoint(latlng);
-            point = point.add(map.getPixelOrigin());
-            var tileSize = this._getTileSize();
-            var tilePoint = point.divideBy(tileSize).floor();
-            var key = tilePoint.x + ':' + tilePoint.y;
-            var canvas = this._canvasLayer._tiles[key];
-            var data;
-            if (canvas && canvas._index) {
-                var id = canvas._index._id;
-                var canvasX = point.x % tileSize;
-                var canvasY = point.y % tileSize;
-                data = canvas._index.getData(canvasX, canvasY);
-            }
-            return {
-                latlng : latlng,
-                data : data
-            };
-        },
-
-        // --------------------------------------------------------------------
-        // Leaflet.ILayer methods
+        // Leaflet.ILayer/L.TileLayer.Canvas methods
 
         /**
          * This method is called when this layer is added to the map.
          */
         onAdd : function(map) {
-            InteractionLayer.prototype.onAdd.call(this, map);
-            map.addLayer(this._canvasLayer);
+            L.TileLayer.Canvas.prototype.onAdd.apply(this, arguments);
+            this.on('tileunload', this._onTileUnload, this);
+            map.on('click', this._click, this);
+            map.on('mouseover mouseout mousemove', this._move, this);
         },
 
         /**
          * This method is called when this layer is removed from the map.
          */
         onRemove : function(map) {
-            map.removeLayer(this._canvasLayer);
-            InteractionLayer.prototype.onRemove.call(this, map);
+            this.off('tileunload', this._onTileUnload, this);
+            map.off('click', this._click, this);
+            map.off('mouseover mouseout mousemove', this._move, this);
+            this._removeMouseCursorStyle();
+            L.TileLayer.Canvas.prototype.onRemove.apply(this, arguments);
+        },
+
+        /**
+         * Initializes container for tiles.
+         */
+        _initContainer : function() {
+            var initContainer = L.TileLayer.Canvas.prototype._initContainer;
+            initContainer.apply(this, arguments);
+            var pane = this._map._panes.markerPane;
+            pane.appendChild(this._container);
         },
 
         // --------------------------------------------------------------------
+        // Event management
 
+        /** Map click handler */
+        _click : function(e) {
+            if (!this.hasEventListeners('click'))
+                return;
+            var on = this._objectForEvent(e);
+            if (on.data) {
+                this.fire('click', on);
+            }
+        },
+
+        /** Map move handler */
+        _move : function(e) {
+            // if (!this.hasEventListeners('mouseout')
+            // && !this.hasEventListeners('mouseover')
+            // && !this.hasEventListeners('mousemove'))
+            // return;
+            var on = this._objectForEvent(e);
+            if (on.data !== this._mouseOn) {
+                if (this._mouseOn) {
+                    this.fire('mouseout', {
+                        latlng : e.latlng,
+                        data : this._mouseOn
+                    });
+                    this._removeMouseCursorStyle();
+                }
+                if (on.data) {
+                    this.fire('mouseover', on);
+                    this._setMouseCursorStyle();
+                }
+                this._mouseOn = on.data;
+            } else if (on.data) {
+                this.fire('mousemove', on);
+            }
+        },
+
+        // --------------------------------------------------------------------
+        // Cursor style management
+
+        /**
+         * Checks if the cursor style of the container should be changed to
+         * pointer cursor
+         */
+        _setMouseCursorStyle : function() {
+            if (!this.options.pointerCursor)
+                return;
+            var container = this._getMapContainer();
+            if (!container._pointerCursorCount) {
+                container._pointerCursorCount = 1;
+                container.style.cursor = 'pointer';
+            } else {
+                container._pointerCursorCount++;
+            }
+        },
+
+        /** Removes cursor style from the map container */
+        _removeMouseCursorStyle : function() {
+            if (!this.options.pointerCursor)
+                return;
+            var container = this._getMapContainer();
+            if (container._pointerCursorCount) {
+                container._pointerCursorCount--;
+                if (container._pointerCursorCount === 0) {
+                    container.style.cursor = '';
+                    delete container._pointerCursorCount;
+                }
+            }
+        },
+
+        /** Returns a map container. */
+        _getMapContainer : function() {
+            return this._map._container;
+        },
+
+        // --------------------------------------------------------------------
+        // Data management
+
+        /** Sets the specified data and re-draws the layer. */
         setData : function(data) {
             this._indexData(data);
-            this._canvasLayer.redraw();
+            this.redraw();
         },
-        // --------------------------------------------------------------------
 
         /** Indexes the specified data array using a quad tree. */
         _indexData : function(data) {
             // Data indexing
-            this._index = Rbush(9);
+            this._rtree = new Rbush(9);
             data = data || [];
-            data = _.map(data, function(d) {
-                var coordinates = this._getBoundingBoxArray(d);
-                if (coordinates) {
-                    coordinates.data = d;
+            var array = [];
+            L.Util.invokeEach(data, function(i, d) {
+                var bbox = this._getBoundingBox(d);
+                if (bbox) {
+                    var coords = this._toIndexKey(bbox);
+                    coords.data = d;
+                    array.push(coords);
                 }
-                return coordinates;
             }, this);
-            data = _.filter(data, function(array) {
-                return !!array;
-            });
-            this._index.load(data);
+            this._rtree.load(array);
         },
 
-        /** Searches resources inside of the specified bounding box. */
+        /** Searches resources in the specified bounding box. */
         _searchInBbox : function(bbox, point) {
-            var sw = bbox.getSouthWest();
-            var ne = bbox.getNorthEast();
-            point = point || ne;
-            var coords = [ sw.lat, sw.lng, ne.lat, ne.lng ];
-            var p = [ point.lat, point.lng ];
-            var array = this._index.search(coords);
+            var coords = this._toIndexKey(bbox);
+            var p = point ? [ point.lat, point.lng ] : //
+            [ coords[0], coords[1] ];
+            var array = this._rtree.search(coords);
             // Sort points by Manhattan distance to the origin point
             array.sort(function(a, b) {
                 var d1 = Math.abs(a[0] - p[0]) + Math.abs(a[1] - p[1]);
                 var d2 = Math.abs(b[0] - p[0]) + Math.abs(b[1] - p[1]);
                 return d1 - d2;
             });
-            var result = _.map(array, function(arr) {
-                return arr.data;
+            var result = [];
+            L.Util.invokeEach(array, function(i, arr) {
+                result.push(arr.data);
             });
             return result;
         },
 
-        /** Returns size of canvas tiles. */
-        _getTileSize : function() {
-            return this._canvasLayer._getTileSize();
+        /**
+         * This method transforms a L.LatLngBounds instance into a key for RTree
+         * index.
+         */
+        _toIndexKey : function(bbox) {
+            var sw = bbox.getSouthWest();
+            var ne = bbox.getNorthEast();
+            var coords = [ sw.lat, sw.lng, ne.lat, ne.lng ];
+            return coords;
         },
 
         /** Returns a buffer zone size around each tile. */
@@ -149,8 +217,8 @@ function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
         },
 
         /**
-         * This method is used by the underlying L.TileLayer.Canvas to draw
-         * information on the canvas tile.
+         * This method is used to draw on canvas tiles. It is invoked by the
+         * parent L.TileLayer.Canvas class.
          */
         _redrawTile : function(canvas) {
             var that = this;
@@ -163,75 +231,88 @@ function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
             sePoint = sePoint.add(bufferSize);
             var bbox = new L.LatLngBounds(that._map.unproject(sePoint),
                     that._map.unproject(nwPoint));
-            var index = that._getCanvasIndex(canvas);
+            var index = that._getCanvasIndex(canvas, true);
             var data = that._searchInBbox(bbox);
-            _.each(data, function(d) {
+            L.Util.invokeEach(data, function(i, d) {
                 var ctx = that._drawFeature(tilePoint, bbox, d);
                 if (ctx) {
                     index.draw(ctx.image, ctx.anchor.x, ctx.anchor.y, d);
                 }
             });
-            that._canvasLayer.tileDrawn(canvas);
+            that.tileDrawn(canvas);
         },
 
-        // -----------------------------------------------------------------
+        /**
+         * Returns an object from the internal index corresponding to the
+         * coordinates of the mouse event.
+         */
+        _objectForEvent : function(e) {
+            var latlng = e.latlng;
+            var map = this._map;
+            var point = map.latLngToLayerPoint(latlng);
+            point = point.add(map.getPixelOrigin());
+            var tileSize = this._getTileSize();
+            var tilePoint = point.divideBy(tileSize).floor();
+            var key = tilePoint.x + ':' + tilePoint.y;
+            var canvas = this._tiles[key];
+
+            var data;
+            if (canvas) {
+                var index = this._getCanvasIndex(canvas, false);
+                if (index) {
+                    var canvasX = point.x % tileSize;
+                    var canvasY = point.y % tileSize;
+                    data = index.getData(canvasX, canvasY);
+                }
+            }
+            return {
+                latlng : latlng,
+                data : data
+            };
+        },
 
         /**
          * Returns an IndexedCanvas instance associated with the specified
          * canvas.
          */
-        _getCanvasIndex : function(canvas) {
-            var that = this;
-            var index = canvas._index;
-            if (index) {
-                index.reset();
-            } else {
-                that._maskIndex = that._maskIndex || {};
-                index = canvas._index = new IndexedCanvas({
+        _getCanvasIndex : function(canvas, create) {
+            if (!canvas._index && create) {
+                var maskIndex = this._maskIndex = this._maskIndex || {};
+                canvas._index = new IndexedCanvas({
                     canvas : canvas,
-                    maskIndex : that._maskIndex
+                    maskIndex : maskIndex
                 });
             }
-            return index;
+            return canvas._index;
         },
 
-        /** Returns point coordinates for the specified resource. */
-        _getCoordinates : function(d) {
-            var geom = d.geometry;
-            if (!geom || !geom.coordinates)
-                return null;
-            var coords;
-            if (geom.type == 'Point') {
-                coords = geom.coordinates;
-            } else {
-                var layer = L.GeoJSON.geometryToLayer(geom);
-                var bbox = layer.getBounds();
-                var center = bbox.getCenter();
-                coords = [ center.lng, center.lat ];
-            }
-            return coords;
-        },
+        // -----------------------------------------------------------------
+        // The following methods could be overloaded to adapt this layer to
+        // other data structures and drawing styles.
 
         /**
-         * Returns an array with a bounding box ([south, west, north, east]) for
-         * the specified object.
+         * Returns a L.LatLngBounds instance defining a bounding box ([south,
+         * west, north, east]) for the specified object.
          */
-        _getBoundingBoxArray : function(d) {
+        _getBoundingBox : function(d) {
             var coords = this._getCoordinates(d);
             if (!coords)
                 return;
-            var array = [ coords[1], coords[0], coords[1], coords[0] ];
-            return array;
+            var bbox = L.latLngBounds(L.latLng(coords[1], coords[0]), L.latLng(
+                    coords[1], coords[0]));
+            return bbox;
         },
 
         /**
-         * Draws the specified resource and returns an image with x/y
-         * coordinates of this image on the canvas.
+         * Draws the specified resource and returns an image with x/y position
+         * of this image on the tile. If this method returns nothing (or a
+         * <code>null</code> value) then nothing is drawn for the specified
+         * resource.
          * 
          * @return an object containing the following fields: a) 'image' - an
          *         Image or Canvas instance with the drawn result b) 'anchor' a
-         *         L.Point instance defining the point on the returned image
-         *         corresponding to resource coordinates
+         *         L.Point object defining position on the returned image on the
+         *         tile;
          */
         _drawFeature : function(tilePoint, bbox, resource) {
             var coords = this._getCoordinates(resource);
@@ -254,6 +335,30 @@ function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
                 image : icon.image,
                 anchor : anchor
             };
+        },
+
+        // -----------------------------------------------------------------
+        // All other methods are specific for resources corresponding to points
+        // on maps and used only by the _getBoundingBox and/or by _drawFeature
+        // methods.
+
+        /**
+         * Returns point coordinates for the specified resource.
+         */
+        _getCoordinates : function(d) {
+            var geom = d.geometry;
+            if (!geom || !geom.coordinates)
+                return null;
+            var coords;
+            if (geom.type == 'Point') {
+                coords = geom.coordinates;
+            } else {
+                var layer = L.GeoJSON.geometryToLayer(geom);
+                var bbox = layer.getBounds();
+                var center = bbox.getCenter();
+                coords = [ center.lng, center.lat ];
+            }
+            return coords;
         },
 
         /**
@@ -279,9 +384,10 @@ function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
             return 'resource';
         },
 
+        /** Returns an option value */
         _getOptionValue : function(key) {
             var val = this.options[key];
-            if (_.isFunction(val)) {
+            if (typeof val === 'function') {
                 var args = _.toArray(arguments);
                 args.splice(0, 1);
                 val = val.apply(this.options, args);
@@ -289,11 +395,13 @@ function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
             return val;
         },
 
+        /** Returns an option value */
         _getVal : function(key, defaultValue) {
             return this._getOptionValue(key, this._map.getZoom()) || //
             defaultValue;
         },
 
+        /** Get the radius of markers. */
         _getRadius : function(defaultValue) {
             return this._getVal('radius', 16);
         },
@@ -329,6 +437,7 @@ function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
             };
         },
 
+        /** Draws a simple marker */
         _drawMarker : function(g, x, y, width, height, radius) {
             g.beginPath();
             // a
