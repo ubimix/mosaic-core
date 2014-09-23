@@ -13,7 +13,7 @@ define(
         './AdapterManager', './Dependencies', './Intents', './ViewManager',
         './ActivationTree', './ReactDataSetMixin', './InfiniteScroll',
 
-        './IndexedCanvas', './Leaflet.InteractionLayer', './Leaflet.MapTiles',
+        './Leaflet.InteractionLayer', './Leaflet.MapTiles',
         './Leaflet.MarkersLayer', './Leaflet.UtfGrid', './URI' ],
 // Module
 function(require) {
@@ -43,7 +43,6 @@ function(require) {
         DataSet : require('./DataSet'),
         ActivationTree : require('./ActivationTree'),
 
-        IndexedCanvas : require('./IndexedCanvas'),
         InfiniteScroll : require('./InfiniteScroll'),
         AbstractSet : require('./AbstractSet'),
         AdapterManager : require('./AdapterManager'),

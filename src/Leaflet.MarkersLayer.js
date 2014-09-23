@@ -1,160 +1,239 @@
-define([ 'leaflet', 'rbush', './IndexedCanvas' ], function(L, Rbush,
-    IndexedCanvas) {
+define([ 'leaflet', 'rbush' ], function(L, rbush) {
 
+    // --------------------------------------------------------------------
     /**
-     * This layer draws data on canvas tiles.
+     * This utility class allows to associate data with non-transparent pixels
+     * of images drawn on canvas.
      */
-    var MarkersLayer = L.TileLayer.Canvas.extend({
-
-        /** Default options of this class. */
-        options : {
-            // Default size of a minimal clickable zone is 4x4 screen pixels.
-            resolution : 4,
-            // Show pointer cursor for zones associated with data
-            pointerCursor : true,
-            // Asynchronous tiles drawing
-            async : true,
-            // Don't reuse canvas tiles
-            reuseTiles : false
-        },
+    var IndexedCanvas = L.Class.extend({
 
         /**
-         * Initializes this layer
+         * Initializes internal fields of this class.
+         * 
+         * @param options.canvas
+         *            mandatory canvas object used to draw images
+         * @param options.resolution
+         *            optional resolution field defining precision of image
+         *            areas associated with data; by default it is 4x4 pixel
+         *            areas (resolution = 4)
          */
         initialize : function(options) {
-            // Not used anymore. Deprecated. To remove.
-            this._canvasLayer = this;
-            options.fillOpacity = options.opacity;
-            delete options.opacity;
-            var url = null;
-            L.TileLayer.Canvas.prototype.initialize.apply(this, url, options);
             L.setOptions(this, options);
-            this.setData(this.options.data);
-        },
-
-        // --------------------------------------------------------------------
-        // Leaflet.ILayer/L.TileLayer.Canvas methods
-
-        /**
-         * This method is called when this layer is added to the map.
-         */
-        onAdd : function(map) {
-            L.TileLayer.Canvas.prototype.onAdd.apply(this, arguments);
-            this.on('tileunload', this._onTileUnload, this);
-            map.on('click', this._click, this);
-            map.on('mouseover mouseout mousemove', this._move, this);
+            var resolution = this.options.resolution || 4;
+            this.options.resolutionX = this.options.resolutionX || resolution;
+            this.options.resolutionY = this.options.resolutionY || //
+            this.options.resolutionX || resolution;
+            this._canvas = this.options.canvas;
+            this._maskWidth = this._getMaskX(this._canvas.width);
+            this._maskHeight = this._getMaskY(this._canvas.height);
+            this._dataIndex = {};
         },
 
         /**
-         * This method is called when this layer is removed from the map.
+         * Draws the specified image in the given position on the underlying
+         * canvas.
          */
-        onRemove : function(map) {
-            this.off('tileunload', this._onTileUnload, this);
-            map.off('click', this._click, this);
-            map.off('mouseover mouseout mousemove', this._move, this);
-            this._removeMouseCursorStyle();
-            L.TileLayer.Canvas.prototype.onRemove.apply(this, arguments);
+        draw : function(image, x, y, data) {
+            // Draw the image on the canvas
+            var g = this._canvas.getContext('2d');
+            g.drawImage(image, x, y);
+            // Associate non-transparent pixels of the image with data
+            this._addToCanvasMask(image, x, y, data);
+        },
+
+        /** Returns data associated with the specified position on the canvas. */
+        getData : function(x, y) {
+            var maskX = this._getMaskX(x);
+            var maskY = this._getMaskY(y);
+            var pos = maskY * this._maskWidth + maskX;
+            var result = this._dataIndex[pos];
+            return result;
         },
 
         /**
-         * Initializes container for tiles.
+         * Removes all data from internal indexes and cleans up underlying
+         * canvas.
          */
-        _initContainer : function() {
-            var initContainer = L.TileLayer.Canvas.prototype._initContainer;
-            initContainer.apply(this, arguments);
-            var pane = this._map._panes.markerPane;
-            pane.appendChild(this._container);
-        },
-
-        // --------------------------------------------------------------------
-        // Event management
-
-        /** Map click handler */
-        _click : function(e) {
-            if (!this.hasEventListeners('click'))
-                return;
-            var on = this._objectForEvent(e);
-            if (on.data) {
-                this.fire('click', on);
+        reset : function() {
+            this._dataIndex = {};
+            if (this._maskIndex) {
+                this._maskIndex = {};
             }
+            var g = this._canvas.getContext('2d');
+            g.clearRect(0, 0, this._canvas.width, this._canvas.height);
         },
 
-        /** Map move handler */
-        _move : function(e) {
-            // if (!this.hasEventListeners('mouseout')
-            // && !this.hasEventListeners('mouseover')
-            // && !this.hasEventListeners('mousemove'))
-            // return;
-            var on = this._objectForEvent(e);
-            if (on.data !== this._mouseOn) {
-                if (this._mouseOn) {
-                    this.fire('mouseout', {
-                        latlng : e.latlng,
-                        data : this._mouseOn
-                    });
-                    this._removeMouseCursorStyle();
-                }
-                if (on.data) {
-                    this.fire('mouseover', on);
-                    this._setMouseCursorStyle();
-                }
-                this._mouseOn = on.data;
-            } else if (on.data) {
-                this.fire('mousemove', on);
-            }
-        },
-
-        // --------------------------------------------------------------------
-        // Cursor style management
+        // ------------------------------------------------------------------
+        // Private methods
 
         /**
-         * Checks if the cursor style of the container should be changed to
-         * pointer cursor
+         * Adds all pixels occupied by the specified image to a data mask
+         * associated with canvas.
          */
-        _setMouseCursorStyle : function() {
-            if (!this.options.pointerCursor)
-                return;
-            var container = this._getMapContainer();
-            if (!container._pointerCursorCount) {
-                container._pointerCursorCount = 1;
-                container.style.cursor = 'pointer';
-            } else {
-                container._pointerCursorCount++;
-            }
-        },
-
-        /** Removes cursor style from the map container */
-        _removeMouseCursorStyle : function() {
-            if (!this.options.pointerCursor)
-                return;
-            var container = this._getMapContainer();
-            if (container._pointerCursorCount) {
-                container._pointerCursorCount--;
-                if (container._pointerCursorCount === 0) {
-                    container.style.cursor = '';
-                    delete container._pointerCursorCount;
+        _addToCanvasMask : function(image, shiftX, shiftY, data) {
+            var mask = this._getImageMask(image);
+            var imageMaskWidth = this._getMaskX(image.width);
+            var maskShiftX = this._getMaskX(shiftX);
+            var maskShiftY = this._getMaskY(shiftY);
+            for (var i = 0; i < mask.length; i++) {
+                if (!mask[i])
+                    continue;
+                var x = maskShiftX + (i % imageMaskWidth);
+                var y = maskShiftY + Math.floor(i / imageMaskWidth);
+                if (x >= 0 && x < this._maskWidth && y >= 0 && //
+                y < this._maskHeight) {
+                    this._dataIndex[y * this._maskWidth + x] = data;
                 }
             }
         },
 
-        /** Returns a map container. */
-        _getMapContainer : function() {
-            return this._map._container;
+        /**
+         * Returns a mask corresponding to the specified image.
+         */
+        _getImageMask : function(image) {
+            var maskIndex = this._getImageMaskIndex();
+            var imageId = this._getImageKey(image);
+            var mask = maskIndex[imageId];
+            if (!mask) {
+                mask = this._buildImageMask(image);
+                maskIndex[imageId] = mask;
+            }
+            return mask;
         },
 
-        // --------------------------------------------------------------------
-        // Data management
+        /** Returns a unique key of the specified image. */
+        _getImageKey : function(image) {
+            return L.Util.stamp(image);
+        },
 
-        /** Sets the specified data and re-draws the layer. */
+        /**
+         * This method maintain an index of image masks associated with the
+         * provided canvas. This method could be overloaded to implement a
+         * global index of image masks.
+         */
+        _getImageMaskIndex : function() {
+            if (this.options.maskIndex)
+                return this.options.maskIndex;
+            this._maskIndex = this._maskIndex || {};
+            return this._maskIndex;
+        },
+
+        /** Creates and returns an image mask. */
+        _buildImageMask : function(image) {
+            var canvas = this._newCanvas();
+            var g = canvas.getContext('2d');
+            canvas.width = image.width;
+            canvas.height = image.height;
+            g.drawImage(image, 0, 0);
+            var data = g.getImageData(0, 0, image.width, image.height).data;
+            var maskWidth = this._getMaskX(image.width);
+            var maskHeight = this._getMaskY(image.height);
+            var mask = new Array(image.width * image.height);
+            for (var y = 0; y < image.height; y++) {
+                for (var x = 0; x < image.width; x++) {
+                    var idx = (y * image.width + x) * 4 + 3;
+                    var maskX = this._getMaskX(x);
+                    var maskY = this._getMaskY(y);
+                    mask[maskY * maskWidth + maskX] = data[idx] ? 1 : 0;
+                }
+            }
+            return mask;
+        },
+
+        _newCanvas : function() {
+            return document.createElement('canvas');
+        },
+
+        /** Transforms an X coordinate on canvas to X coordinate in the mask. */
+        _getMaskX : function(x) {
+            var resolutionX = this.options.resolutionX;
+            return Math.round(x / resolutionX);
+        },
+
+        /** Transforms a Y coordinate on canvas to Y coordinate in the mask. */
+        _getMaskY : function(y) {
+            var resolutionY = this.options.resolutionY;
+            return Math.round(y / resolutionY);
+        }
+    });
+
+    // --------------------------------------------------------------------
+    // Data providers
+
+    /**
+     * A common interface providing data for individual tiles. Used to
+     * synchronously/asynchronously load data to render on tiles.
+     */
+    var IDataProvider = L.Class.extend({
+
+        /**
+         * This method loads returns an array of objects to show on tile
+         * corresponding to the specified bounding box. This is a "do-nothing"
+         * method and it should be overload in subclasses.
+         * 
+         * @param bbox
+         *            bounding box for the tile; this bounding box includes a
+         *            buffer zone around the tile so it is (by default) bigger
+         *            than area corresponding to the tile
+         * @param tilePoint
+         *            a L.Point instance defining position of the tile
+         * @param callback
+         *            a callback function accepting the following parameters: 1)
+         *            error 2) resulting array of objects to draw
+         */
+        loadData : function(bbox, tilePoint, callback) {
+            callback([]);
+        },
+
+        /** Static utility methods */
+        statics : {
+
+            /** Returns a bounding box for a GeoJson object. */
+            getGeoJsonBoundingBox : function(d) {
+                var geom = d.geometry;
+                if (!geom || !geom.coordinates)
+                    return null;
+                var bbox;
+                if (geom.type == 'Point') {
+                    var coords = geom.coordinates;
+                    var point = L.latLng(coords[1], coords[0]);
+                    bbox = L.latLngBounds(point, point);
+                } else {
+                    var layer = L.GeoJSON.geometryToLayer(geom);
+                    bbox = layer.getBounds();
+                }
+                return bbox;
+            },
+
+        },
+
+    });
+
+    /**
+     * A simple data provider synchronously indexing the given data using an
+     * RTree index.
+     */
+    var SimpleDataProvider = IDataProvider.extend({
+
+        /** Sets and indexes the given data */
         setData : function(data) {
             this._indexData(data);
-            this.redraw();
         },
 
-        /** Indexes the specified data array using a quad tree. */
+        /**
+         * Loads and returns indexed data contained in the specified bounding
+         * box.
+         */
+        loadData : function(bbox, tilePoint, callback) {
+            var that = this;
+            var results = that._searchInBbox(bbox);
+            callback(null, results);
+        },
+
+        /** Indexes the specified data array using a RTree index. */
         _indexData : function(data) {
             // Data indexing
-            this._rtree = new Rbush(9);
+            this._rtree = rbush(9);
             data = data || [];
             var array = [];
             L.Util.invokeEach(data, function(i, d) {
@@ -198,109 +277,28 @@ define([ 'leaflet', 'rbush', './IndexedCanvas' ], function(L, Rbush,
             return coords;
         },
 
-        /** Returns a buffer zone size around each tile. */
-        _getBufferZoneSize : function() {
-            var r = this._getRadius() * 2.5;
-            return L.point(r, r);
-        },
-
-        /**
-         * This method is called when a tile is removed from the map. It cleans
-         * up data associated with this tile.
-         */
-        _onTileUnload : function(evt) {
-            var canvas = evt.tile;
-            if (canvas._index) {
-                canvas._index.reset();
-                delete canvas._index;
-            }
-        },
-
-        /**
-         * This method is used to draw on canvas tiles. It is invoked by the
-         * parent L.TileLayer.Canvas class.
-         */
-        _redrawTile : function(canvas) {
-            var that = this;
-            var tileSize = that._getTileSize();
-            var tilePoint = canvas._tilePoint;
-            var nwPoint = tilePoint.multiplyBy(tileSize);
-            var sePoint = nwPoint.add(new L.Point(tileSize, tileSize));
-            var bufferSize = that._getBufferZoneSize();
-            nwPoint = nwPoint.subtract(bufferSize);
-            sePoint = sePoint.add(bufferSize);
-            var bbox = new L.LatLngBounds(that._map.unproject(sePoint),
-                    that._map.unproject(nwPoint));
-            var index = that._getCanvasIndex(canvas, true);
-            var data = that._searchInBbox(bbox);
-            L.Util.invokeEach(data, function(i, d) {
-                var ctx = that._drawFeature(tilePoint, bbox, d);
-                if (ctx) {
-                    index.draw(ctx.image, ctx.anchor.x, ctx.anchor.y, d);
-                }
-            });
-            that.tileDrawn(canvas);
-        },
-
-        /**
-         * Returns an object from the internal index corresponding to the
-         * coordinates of the mouse event.
-         */
-        _objectForEvent : function(e) {
-            var latlng = e.latlng;
-            var map = this._map;
-            var point = map.latLngToLayerPoint(latlng);
-            point = point.add(map.getPixelOrigin());
-            var tileSize = this._getTileSize();
-            var tilePoint = point.divideBy(tileSize).floor();
-            var key = tilePoint.x + ':' + tilePoint.y;
-            var canvas = this._tiles[key];
-
-            var data;
-            if (canvas) {
-                var index = this._getCanvasIndex(canvas, false);
-                if (index) {
-                    var canvasX = point.x % tileSize;
-                    var canvasY = point.y % tileSize;
-                    data = index.getData(canvasX, canvasY);
-                }
-            }
-            return {
-                latlng : latlng,
-                data : data
-            };
-        },
-
-        /**
-         * Returns an IndexedCanvas instance associated with the specified
-         * canvas.
-         */
-        _getCanvasIndex : function(canvas, create) {
-            if (!canvas._index && create) {
-                var maskIndex = this._maskIndex = this._maskIndex || {};
-                canvas._index = new IndexedCanvas({
-                    canvas : canvas,
-                    maskIndex : maskIndex
-                });
-            }
-            return canvas._index;
-        },
-
-        // -----------------------------------------------------------------
-        // The following methods could be overloaded to adapt this layer to
-        // other data structures and drawing styles.
-
         /**
          * Returns a L.LatLngBounds instance defining a bounding box ([south,
          * west, north, east]) for the specified object.
          */
-        _getBoundingBox : function(d) {
-            var coords = this._getCoordinates(d);
-            if (!coords)
-                return;
-            var bbox = L.latLngBounds(L.latLng(coords[1], coords[0]), L.latLng(
-                    coords[1], coords[0]));
-            return bbox;
+        _getBoundingBox : IDataProvider.getGeoJsonBoundingBox,
+
+    });
+
+    // --------------------------------------------------------------------
+    // Data visualization class
+
+    /**
+     * A common interface visualizing data on canvas.
+     */
+    var IDataRenderer = L.Class.extend({
+
+        /**
+         * Returns a point (L.Point instance) defining a buffer zone size in
+         * pixels around each tile.
+         */
+        getBufferZoneSize : function() {
+            return L.point(0, 0);
         },
 
         /**
@@ -314,14 +312,70 @@ define([ 'leaflet', 'rbush', './IndexedCanvas' ], function(L, Rbush,
          *         L.Point object defining position on the returned image on the
          *         tile;
          */
-        _drawFeature : function(tilePoint, bbox, resource) {
-            var coords = this._getCoordinates(resource);
-            if (!coords)
-                return;
+        drawFeature : function(tilePoint, bbox, resource, callback) {
+            var error = null;
+            var result = {
+                image : null,
+                anchor : L.point(0, 0)
+            };
+            callback(error, result);
+        },
 
-            var latlng = new L.LatLng(coords[1], coords[0]);
-            var p = this._map.project(latlng);
-            var tileSize = this._getTileSize();
+        // --------------------------------------------------------------------
+        // Lifecycle methods used to initialize internal fields
+
+        /**
+         * This method is called when the parent layer is added to the map.
+         */
+        onAdd : function(layer) {
+            this._layer = layer;
+            this._map = layer._map;
+            this.options = this._layer.options;
+        },
+
+        /**
+         * This method is called when the paren layer is removed from the map.
+         */
+        onRemove : function(layer) {
+            delete this._layer;
+            delete this._map;
+            delete this.options;
+        },
+
+    });
+
+    /**
+     * A common interface visualizing data on canvas.
+     */
+    var MarkersRenderer = IDataRenderer.extend({
+
+        /**
+         * Returns a buffer zone size (in pixels) around each tile.
+         */
+        getBufferZoneSize : function() {
+            var r = this._getRadius() * 2.5;
+            return L.point(r, r);
+        },
+
+        /**
+         * Draws the specified resource and returns an image with x/y position
+         * of this image on the tile. If this method returns nothing (or a
+         * <code>null</code> value) then nothing is drawn for the specified
+         * resource.
+         * 
+         * @return an object containing the following fields: a) 'image' - an
+         *         Image or Canvas instance with the drawn result b) 'anchor' a
+         *         L.Point object defining position on the returned image on the
+         *         tile;
+         */
+        drawFeature : function(tilePoint, bbox, resource, callback) {
+            var coords = this._getCoordinates(resource);
+            if (!coords) {
+                callback(null, null);
+                return;
+            }
+            var p = this._map.project(coords);
+            var tileSize = this._layer._getTileSize();
             var s = tilePoint.multiplyBy(tileSize);
 
             var x = Math.round(p.x - s.x);
@@ -331,10 +385,10 @@ define([ 'leaflet', 'rbush', './IndexedCanvas' ], function(L, Rbush,
             if (icon.anchor) {
                 anchor._subtract(icon.anchor);
             }
-            return {
+            callback(null, {
                 image : icon.image,
                 anchor : anchor
-            };
+            });
         },
 
         // -----------------------------------------------------------------
@@ -343,22 +397,14 @@ define([ 'leaflet', 'rbush', './IndexedCanvas' ], function(L, Rbush,
         // methods.
 
         /**
-         * Returns point coordinates for the specified resource.
+         * Returns point a L.LatLng object with coordinates for the specified
+         * resource.
          */
         _getCoordinates : function(d) {
-            var geom = d.geometry;
-            if (!geom || !geom.coordinates)
+            var bbox = IDataProvider.getGeoJsonBoundingBox(d);
+            if (!bbox)
                 return null;
-            var coords;
-            if (geom.type == 'Point') {
-                coords = geom.coordinates;
-            } else {
-                var layer = L.GeoJSON.geometryToLayer(geom);
-                var bbox = layer.getBounds();
-                var center = bbox.getCenter();
-                coords = [ center.lng, center.lat ];
-            }
-            return coords;
+            return bbox.getCenter();
         },
 
         /**
@@ -464,9 +510,340 @@ define([ 'leaflet', 'rbush', './IndexedCanvas' ], function(L, Rbush,
             x + width / 2, y + 0);
             g.closePath();
         },
+    });
+
+    // --------------------------------------------------------------------
+    // The main class
+
+    /**
+     * This layer draws data on canvas tiles. This class uses the following
+     * parameters from the constructor: 1) 'dataProvider' is a IDataProvider
+     * instance allowing asynchronously load data for each tile; by default a
+     * SimpleDataProvider is used 2) 'dataRenderer' is a IDataRenderer instance
+     * responsible for data visualization on canvas tiles; by default a
+     * MarkersRenderer instance is used
+     */
+    var DataLayer = L.TileLayer.Canvas.extend({
+
+        statics : {
+            IDataProvider : IDataProvider,
+            SimpleDataProvider : SimpleDataProvider,
+            IDataRenderer : IDataRenderer,
+            MarkersRenderer : MarkersRenderer,
+            IndexedCanvas : IndexedCanvas
+        },
+
+        /** Default options of this class. */
+        options : {
+            // Default size of a minimal clickable zone is 4x4 screen pixels.
+            resolution : 4,
+            // Show pointer cursor for zones associated with data
+            pointerCursor : true,
+            // Asynchronous tiles drawing
+            async : true,
+            // Don't reuse canvas tiles
+            reuseTiles : false
+        },
+
+        /**
+         * Initializes this layer
+         */
+        initialize : function(options) {
+            // Not used anymore. Deprecated. To remove.
+            this._canvasLayer = this;
+            options.fillOpacity = options.opacity;
+            delete options.opacity;
+            var url = null;
+            L.TileLayer.Canvas.prototype.initialize.apply(this, url, options);
+            L.setOptions(this, options);
+            this.setData(this.options.data);
+        },
+
+        // --------------------------------------------------------------------
+        // Leaflet.ILayer/L.TileLayer.Canvas methods
+
+        /**
+         * This method is called when this layer is added to the map.
+         */
+        onAdd : function(map) {
+            this._map = map;
+            var dataRenderer = this._getDataRenderer();
+            dataRenderer.onAdd(this);
+            L.TileLayer.Canvas.prototype.onAdd.apply(this, arguments);
+            this.on('tileunload', this._onTileUnload, this);
+            map.on('click', this._click, this);
+            map.on('mouseover mouseout mousemove', this._move, this);
+        },
+
+        /**
+         * This method is called when this layer is removed from the map.
+         */
+        onRemove : function(map) {
+            this.off('tileunload', this._onTileUnload, this);
+            map.off('click', this._click, this);
+            map.off('mouseover mouseout mousemove', this._move, this);
+            this._removeMouseCursorStyle();
+            L.TileLayer.Canvas.prototype.onRemove.apply(this, arguments);
+            var dataRenderer = this._getDataRenderer();
+            dataRenderer.onRemove(this);
+        },
+
+        /**
+         * Initializes container for tiles.
+         */
+        _initContainer : function() {
+            var initContainer = L.TileLayer.Canvas.prototype._initContainer;
+            initContainer.apply(this, arguments);
+            var pane = this._map._panes.markerPane;
+            pane.appendChild(this._container);
+        },
+
+        // --------------------------------------------------------------------
+        // Event management
+
+        /** Map click handler */
+        _click : function(e) {
+            if (!this.hasEventListeners('click'))
+                return;
+            var on = this._objectForEvent(e);
+            if (on.data) {
+                this.fire('click', on);
+            }
+        },
+
+        /** Map move handler */
+        _move : function(e) {
+            // if (!this.hasEventListeners('mouseout')
+            // && !this.hasEventListeners('mouseover')
+            // && !this.hasEventListeners('mousemove'))
+            // return;
+            var on = this._objectForEvent(e);
+            if (on.data !== this._mouseOn) {
+                if (this._mouseOn) {
+                    this.fire('mouseout', {
+                        latlng : e.latlng,
+                        data : this._mouseOn
+                    });
+                    this._removeMouseCursorStyle();
+                }
+                if (on.data) {
+                    this.fire('mouseover', on);
+                    this._setMouseCursorStyle();
+                }
+                this._mouseOn = on.data;
+            } else if (on.data) {
+                this.fire('mousemove', on);
+            }
+        },
+
+        // --------------------------------------------------------------------
+        // Cursor style management
+
+        /**
+         * Checks if the cursor style of the container should be changed to
+         * pointer cursor
+         */
+        _setMouseCursorStyle : function() {
+            if (!this.options.pointerCursor)
+                return;
+            var container = this._getMapContainer();
+            if (!container._pointerCursorCount) {
+                container._pointerCursorCount = 1;
+                container.style.cursor = 'pointer';
+            } else {
+                container._pointerCursorCount++;
+            }
+        },
+
+        /** Removes cursor style from the map container */
+        _removeMouseCursorStyle : function() {
+            if (!this.options.pointerCursor)
+                return;
+            var container = this._getMapContainer();
+            if (container._pointerCursorCount) {
+                container._pointerCursorCount--;
+                if (container._pointerCursorCount === 0) {
+                    container.style.cursor = '';
+                    delete container._pointerCursorCount;
+                }
+            }
+        },
+
+        /** Returns a map container. */
+        _getMapContainer : function() {
+            return this._map._container;
+        },
+
+        // --------------------------------------------------------------------
+        // Data management
+
+        /**
+         * Returns the underlying data provider object (a IDataProvider
+         * instance).
+         */
+        _getDataProvider : function() {
+            if (!this.options.dataProvider) {
+                this.options.dataProvider = new SimpleDataProvider();
+            }
+            return this.options.dataProvider;
+        },
+
+        /** Sets the specified data and re-draws the layer. */
+        setData : function(data) {
+            var dataProvider = this._getDataProvider();
+            if (dataProvider.setData) {
+                dataProvider.setData(data);
+                this.redraw();
+            }
+        },
+
+        /**
+         * This method is called when a tile is removed from the map. It cleans
+         * up data associated with this tile.
+         */
+        _onTileUnload : function(evt) {
+            var canvas = evt.tile;
+            if (canvas._index) {
+                canvas._index.reset();
+                delete canvas._index;
+            }
+        },
+
+        /**
+         * This method is used to draw on canvas tiles. It is invoked by the
+         * parent L.TileLayer.Canvas class.
+         */
+        _redrawTile : function(canvas) {
+            var that = this;
+            var tilePoint = canvas._tilePoint;
+            var bbox = this._getTileBoundingBox(tilePoint);
+            var dataProvider = this._getDataProvider();
+            dataProvider.loadData(bbox, tilePoint, function(error, data) {
+                if (error) {
+                    that._handleRenderError(canvas, tilePoint, error);
+                    that.tileDrawn(canvas);
+                    return;
+                }
+                var counter = data ? data.length : 0;
+                if (counter === 0) {
+                    that.tileDrawn(canvas);
+                    return;
+                }
+                try {
+                    L.Util.invokeEach(data, function(i, d) {
+                        var dataRenderer = that._getDataRenderer();
+                        dataRenderer.drawFeature(tilePoint, bbox, d, function(
+                            error, ctx) {
+                            try {
+                                if (error) {
+                                    that._handleRenderError(canvas, tilePoint,
+                                            error);
+                                } else if (ctx && ctx.image) {
+                                    var index = that._getCanvasIndex(canvas,
+                                            true);
+                                    index.draw(ctx.image, //
+                                    ctx.anchor.x, ctx.anchor.y, d);
+                                }
+                            } finally {
+                                counter--;
+                                if (counter === 0) {
+                                    that.tileDrawn(canvas);
+                                }
+                            }
+                        });
+                    });
+                } catch (error) {
+                    that._handleRenderError(canvas, tilePoint, error);
+                    that.tileDrawn(canvas);
+                }
+            });
+        },
+
+        /** Reports a rendering error */
+        _handleRenderError : function(canvas, tilePoint, error) {
+            // TODO: visualize the error on canvas
+            console.log('ERROR', error);
+        },
+
+        /**
+         * Returns a bounding box around a tile with the specified coordinates.
+         * This bounding box is used to load data to show on the tile. The
+         * returned bounding box is bigger than tile - it includes a buffer zone
+         * used to avoid clipping of rendered data. The size of the additional
+         * buffering zone is defined by the "IDataRenderer.getBufferZoneSize"
+         * method.
+         */
+        _getTileBoundingBox : function(tilePoint) {
+            var that = this;
+            var tileSize = that._getTileSize();
+            var nwPoint = tilePoint.multiplyBy(tileSize);
+            var sePoint = nwPoint.add(new L.Point(tileSize, tileSize));
+            var dataRenderer = this._getDataRenderer();
+            var bufferSize = dataRenderer.getBufferZoneSize();
+            nwPoint = nwPoint.subtract(bufferSize);
+            sePoint = sePoint.add(bufferSize);
+            var bbox = new L.LatLngBounds(that._map.unproject(sePoint),
+                    that._map.unproject(nwPoint));
+            return bbox;
+        },
+
+        /**
+         * Returns a IDataRenderer renderer instance responsible for data
+         * visualization.
+         */
+        _getDataRenderer : function() {
+            if (!this.options.dataRenderer) {
+                this.options.dataRenderer = new MarkersRenderer();
+            }
+            return this.options.dataRenderer;
+        },
+
+        /**
+         * Returns an object from the internal index corresponding to the
+         * coordinates of the mouse event.
+         */
+        _objectForEvent : function(e) {
+            var latlng = e.latlng;
+            var map = this._map;
+            var point = map.latLngToLayerPoint(latlng);
+            point = point.add(map.getPixelOrigin());
+            var tileSize = this._getTileSize();
+            var tilePoint = point.divideBy(tileSize).floor();
+            var key = tilePoint.x + ':' + tilePoint.y;
+            var canvas = this._tiles[key];
+
+            var data;
+            if (canvas) {
+                var index = this._getCanvasIndex(canvas, false);
+                if (index) {
+                    var canvasX = point.x % tileSize;
+                    var canvasY = point.y % tileSize;
+                    data = index.getData(canvasX, canvasY);
+                }
+            }
+            return {
+                latlng : latlng,
+                data : data
+            };
+        },
+
+        /**
+         * Returns an IndexedCanvas instance associated with the specified
+         * canvas.
+         */
+        _getCanvasIndex : function(canvas, create) {
+            if (!canvas._index && create) {
+                var maskIndex = this._maskIndex = this._maskIndex || {};
+                canvas._index = new IndexedCanvas({
+                    canvas : canvas,
+                    maskIndex : maskIndex
+                });
+            }
+            return canvas._index;
+        },
 
     });
 
-    return MarkersLayer;
+    return DataLayer;
 
 });
