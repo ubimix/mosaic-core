@@ -1,3 +1,17 @@
+/*
+ * Leaflet layer visualizing data on canvas tiles.
+ *  (c) 2014, Ubimix SAS
+ *  (c) 2014, Mikhail Kotelnikov
+ */
+if (typeof define !== "function" || !define.amd) {
+    var define = function(deps, definition) {
+        if (typeof module === 'object' && typeof module.exports === 'object') {
+            module.exports = definition([ require('L'), require('rbush') ]);
+        } else {
+            window.LeafletDataLayer = definition([ window.L, window.rbush ]);
+        }
+    };
+}
 define([ 'leaflet', 'rbush' ], function(L, rbush) {
 
     // --------------------------------------------------------------------
@@ -523,8 +537,9 @@ define([ 'leaflet', 'rbush' ], function(L, rbush) {
      * responsible for data visualization on canvas tiles; by default a
      * MarkersRenderer instance is used
      */
-    var DataLayer = L.TileLayer.Canvas.extend({
+    var LeafletDataLayer = L.TileLayer.Canvas.extend({
 
+        // References to classes
         statics : {
             IDataProvider : IDataProvider,
             SimpleDataProvider : SimpleDataProvider,
@@ -535,14 +550,23 @@ define([ 'leaflet', 'rbush' ], function(L, rbush) {
 
         /** Default options of this class. */
         options : {
+
             // Default size of a minimal clickable zone is 4x4 screen pixels.
             resolution : 4,
+
             // Show pointer cursor for zones associated with data
             pointerCursor : true,
+
             // Asynchronous tiles drawing
             async : true,
+
             // Don't reuse canvas tiles
-            reuseTiles : false
+            reuseTiles : false,
+
+            // Use a global (per layer) index of masks.
+            // Should be set to false if all data have individual
+            // reprensentations on the map.
+            reuseMasks : true
         },
 
         /**
@@ -556,6 +580,13 @@ define([ 'leaflet', 'rbush' ], function(L, rbush) {
             var url = null;
             L.TileLayer.Canvas.prototype.initialize.apply(this, url, options);
             L.setOptions(this, options);
+            // Use a global index for image masks used by this layer.
+            // This index accelerates mapping of individual rendered objects
+            // but it is useful only if multiple objects have the same visual
+            // representation on the map.
+            if (this.options.reuseMasks) {
+                this.options.maskIndex = this.options.maskIndex || {};
+            }
             this.setData(this.options.data);
         },
 
@@ -718,40 +749,42 @@ define([ 'leaflet', 'rbush' ], function(L, rbush) {
             var tilePoint = canvas._tilePoint;
             var bbox = this._getTileBoundingBox(tilePoint);
             var dataProvider = this._getDataProvider();
+            function renderData(data) {
+                var counter = data ? data.length : 0;
+                L.Util.invokeEach(data, function(i, d) {
+                    var dataRenderer = that._getDataRenderer();
+                    dataRenderer.drawFeature(tilePoint, bbox, d, //
+                    function(error, ctx) {
+                        try {
+                            if (error) {
+                                that._handleRenderError(canvas, tilePoint,
+                                        error);
+                            } else if (ctx && ctx.image) {
+                                var index = that._getCanvasIndex(canvas, true);
+                                index.draw(ctx.image, //
+                                ctx.anchor.x, ctx.anchor.y, d);
+                            }
+                        } finally {
+                            counter--;
+                            if (counter === 0) {
+                                that.tileDrawn(canvas);
+                            }
+                        }
+                    });
+                });
+            }
             dataProvider.loadData(bbox, tilePoint, function(error, data) {
                 if (error) {
                     that._handleRenderError(canvas, tilePoint, error);
                     that.tileDrawn(canvas);
                     return;
                 }
-                var counter = data ? data.length : 0;
-                if (counter === 0) {
+                if (!data || data.length === 0) {
                     that.tileDrawn(canvas);
                     return;
                 }
                 try {
-                    L.Util.invokeEach(data, function(i, d) {
-                        var dataRenderer = that._getDataRenderer();
-                        dataRenderer.drawFeature(tilePoint, bbox, d, function(
-                            error, ctx) {
-                            try {
-                                if (error) {
-                                    that._handleRenderError(canvas, tilePoint,
-                                            error);
-                                } else if (ctx && ctx.image) {
-                                    var index = that._getCanvasIndex(canvas,
-                                            true);
-                                    index.draw(ctx.image, //
-                                    ctx.anchor.x, ctx.anchor.y, d);
-                                }
-                            } finally {
-                                counter--;
-                                if (counter === 0) {
-                                    that.tileDrawn(canvas);
-                                }
-                            }
-                        });
-                    });
+                    renderData(data);
                 } catch (error) {
                     that._handleRenderError(canvas, tilePoint, error);
                     that.tileDrawn(canvas);
@@ -759,9 +792,11 @@ define([ 'leaflet', 'rbush' ], function(L, rbush) {
             });
         },
 
-        /** Reports a rendering error */
+        /**
+         * Reports a rendering error
+         */
         _handleRenderError : function(canvas, tilePoint, error) {
-            // TODO: visualize the error on canvas
+            // TODO: visualize the error on the canvas
             console.log('ERROR', error);
         },
 
@@ -811,7 +846,6 @@ define([ 'leaflet', 'rbush' ], function(L, rbush) {
             var tilePoint = point.divideBy(tileSize).floor();
             var key = tilePoint.x + ':' + tilePoint.y;
             var canvas = this._tiles[key];
-
             var data;
             if (canvas) {
                 var index = this._getCanvasIndex(canvas, false);
@@ -833,7 +867,7 @@ define([ 'leaflet', 'rbush' ], function(L, rbush) {
          */
         _getCanvasIndex : function(canvas, create) {
             if (!canvas._index && create) {
-                var maskIndex = this._maskIndex = this._maskIndex || {};
+                var maskIndex = this.options.maskIndex || {};
                 canvas._index = new IndexedCanvas({
                     canvas : canvas,
                     maskIndex : maskIndex
@@ -844,6 +878,6 @@ define([ 'leaflet', 'rbush' ], function(L, rbush) {
 
     });
 
-    return DataLayer;
+    return LeafletDataLayer;
 
 });

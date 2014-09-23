@@ -14,7 +14,7 @@ define(
         './ActivationTree', './ReactDataSetMixin', './InfiniteScroll',
 
         './Leaflet.InteractionLayer', './Leaflet.MapTiles',
-        './Leaflet.MarkersLayer', './Leaflet.UtfGrid', './URI' ],
+        './LeafletDataLayer', './Leaflet.UtfGrid', './URI' ],
 // Module
 function(require) {
     var Mosaic = require('mosaic-commons');
@@ -35,7 +35,7 @@ function(require) {
 
         InteractionLayer : require('./Leaflet.InteractionLayer'),
         MapTiles : require('./Leaflet.MapTiles'),
-        MarkersLayer : require('./Leaflet.MarkersLayer'),
+        MarkersLayer : require('./LeafletDataLayer'),
         UtfGrid : require('./Leaflet.UtfGrid')
     };
 
