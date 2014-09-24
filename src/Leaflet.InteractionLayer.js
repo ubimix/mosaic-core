@@ -1,30 +1,31 @@
 define(
 // Dependencies
-[ 'underscore', 'leaflet', 'mosaic-commons', './Leaflet.MapTiles' ],
+[ 'underscore', 'leaflet', './Leaflet.MapTiles' ],
 // Module
-function(_, L, Mosaic, MapTiles) {
+function(_, L, MapTiles) {
 
     /**
      * The code of this class was mostly copied from the leaflet.utfgrid Leaflet
      * extension (MIT license, by David Leaver). The difference with the
-     * original implementation is that 1) this class delegates tiles
-     * loading/caching/canceling operations to an Mosaic.MapTilesLoader
-     * instance; 2) this class notifies about loading of tiles for each new
-     * screen using the "startLoading"/"endLoading" events; 3) it loads tiles
-     * starting from the center of the current screen.
+     * original implementation is that 1) this class loads tiles using
+     * _loadTiles method; 2) this class notifies about loading of tiles for each
+     * new screen using the "startLoading"/"endLoading" events; 3) it loads
+     * tiles starting from the center of the current screen.
      */
-    var InteractionLayer = MapTiles.extend({
+    var InteractionLayer = L.Class.extend({
+
+        includes : L.Mixin.Events,
+
+        options : {
+            resolution : 4,
+            pointerCursor : true
+        },
 
         /** Initializes this layer */
         initialize : function(options) {
-            var parent = MapTiles.prototype;
-            parent.initialize.call(this, options);
-            _.defaults(this.options, {
-                resolution : 4,
-                pointerCursor : true
-            });
-            this._move = _.throttle(this._move, 20);
-            this._update = _.debounce(this._update, 10);
+            L.setOptions(this, options);
+            // this._move = _.throttle(this._move, 20);
+            // this._update = _.debounce(this._update, 10);
         },
 
         /**
@@ -33,10 +34,10 @@ function(_, L, Mosaic, MapTiles) {
         onAdd : function(map) {
             this._map = map;
             this._container = this._map._container;
-            this._update();
-            map.on('click', this._click, this);
+            // this._update();
+//            map.on('click', this._click, this);
             map.on('mousemove', this._move, this);
-            map.on('moveend', this._update, this);
+            // map.on('moveend', this._update, this);
         },
 
         /**
@@ -46,7 +47,7 @@ function(_, L, Mosaic, MapTiles) {
             var map = this._map;
             map.off('click', this._click, this);
             map.off('mousemove', this._move, this);
-            map.off('moveend', this._update, this);
+            // map.off('moveend', this._update, this);
             this._removeMouseCursorStyle();
         },
 

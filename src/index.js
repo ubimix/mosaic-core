@@ -13,8 +13,8 @@ define(
         './AdapterManager', './Dependencies', './Intents', './ViewManager',
         './ActivationTree', './ReactDataSetMixin', './InfiniteScroll',
 
-        './IndexedCanvas', './Leaflet.InteractionLayer', './Leaflet.MapTiles',
-        './Leaflet.MarkersLayer', './Leaflet.UtfGrid', './URI' ],
+        './Leaflet.InteractionLayer', './Leaflet.MapTiles',
+        './LeafletDataLayer', './Leaflet.UtfGrid', './URI' ],
 // Module
 function(require) {
     var Mosaic = require('mosaic-commons');
@@ -35,7 +35,7 @@ function(require) {
 
         InteractionLayer : require('./Leaflet.InteractionLayer'),
         MapTiles : require('./Leaflet.MapTiles'),
-        MarkersLayer : require('./Leaflet.MarkersLayer'),
+        MarkersLayer : require('./LeafletDataLayer'),
         UtfGrid : require('./Leaflet.UtfGrid')
     };
 
@@ -43,7 +43,6 @@ function(require) {
         DataSet : require('./DataSet'),
         ActivationTree : require('./ActivationTree'),
 
-        IndexedCanvas : require('./IndexedCanvas'),
         InfiniteScroll : require('./InfiniteScroll'),
         AbstractSet : require('./AbstractSet'),
         AdapterManager : require('./AdapterManager'),

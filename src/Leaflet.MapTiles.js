@@ -4,11 +4,13 @@ define([ 'underscore', 'leaflet', 'mosaic-commons' ], function(_, L, Mosaic) {
      * Common superclass for all map layers loading tiles using an external
      * loader object.
      */
-    return Mosaic.Class.extend(Mosaic.Events.prototype, {
+    return L.Class.extend({
+
+        includes : L.Mixin.Events,
 
         /** Initializes this layer */
         initialize : function(options) {
-            this.setOptions(options);
+            L.setOptions(this, options);
             _.defaults(this.options, {
                 minZoom : 0,
                 maxZoom : 25,
@@ -52,25 +54,25 @@ define([ 'underscore', 'leaflet', 'mosaic-commons' ], function(_, L, Mosaic) {
             };
             var that = this;
             that.fire('startLoading', evt);
-            return that._loadTiles(zoom, queue)//
-            .then(function(tiles) {
+            that.options.loadTiles(zoom, queue, function(err, tiles) {
+                if (err) {
+                    evt.errors = err;
+                }
                 evt.tiles = tiles;
                 that.fire('endLoading', evt);
-            }, function(errors) {
-                evt.errors = errors;
-                that.fire('endLoading', evt);
-            }).done();
+            });
+
+            /**
+             * Loads tiles corresponding to points specified in the 'queue'
+             * parameter of this method and returns these tiles using the given
+             * callback method. The first parameter of this method is an error and
+             * the second one is the resulting tiles.
+             */
+            this.options.loadTiles = function(zoom, queue, callback) {
+                callback(new Error('Not implemented'));
+            };
         },
 
-        /**
-         * Loads and returns tiles corresponding to points specified in the
-         * 'queue' parameter of this method.
-         */
-        _loadTiles : function(zoom, queue) {
-            return Mosaic.P().then(function() {
-                throw new Error('Not implemented');
-            });
-        },
 
         /** Calculates order of tiles loading */
         _getTilesReferencesFromCenterOut : function(min, max) {
