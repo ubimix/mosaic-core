@@ -1,9 +1,8 @@
-define(
-// Dependencies
-[ 'underscore', 'leaflet', 'mosaic-commons', './Leaflet.InteractionLayer' ],
-// Module
-function(_, L, Mosaic, InteractionLayer) {
-
+    var _ = require('underscore');
+    var L = require('leaflet');
+    var Mosaic = require('mosaic-commons');
+    var InteractionLayer = require('./Leaflet.InteractionLayer');
+    
     /**
      * The code of this class was mostly copied from the leaflet.utfgrid Leaflet
      * extension (MIT license, by David Leaver). The difference with the
@@ -110,6 +109,5 @@ function(_, L, Mosaic, InteractionLayer) {
 
     });
 
-    return UtfGrid;
+    module.exports = UtfGrid;
 
-});

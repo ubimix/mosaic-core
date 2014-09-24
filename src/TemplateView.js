@@ -1,11 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'underscore', 'jquery', 'mosaic-commons' ],//
-// Module
-function(require) {
+
     var _ = require('underscore');
     var $ = require('jquery');
     var Mosaic = require('mosaic-commons');
@@ -326,5 +319,4 @@ function(require) {
         return results;
     }
 
-    return TemplateView;
-});
+    module.exports = TemplateView;

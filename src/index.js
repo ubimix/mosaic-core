@@ -1,22 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'mosaic-commons', './App', './App.Actions', './App.Api',
-        './App.Component', './App.Store', './AbstractSet', './DataSet',
-        './CompositeDataSet', './DataSetView', './LeafletDataSetView',
-        './LeafletReactMap', './LeafletDataSubsetView',
-        './LeafletFeatureBuilder', './React.FilterBox',
-        './React.SearchBoxMixin',
-        // './TemplateDataSetView', './TemplateView', './TemplateViewManager',
-        './AdapterManager', './Dependencies', './Intents', './ViewManager',
-        './ActivationTree', './ReactDataSetMixin', './InfiniteScroll',
 
-        './Leaflet.InteractionLayer', './Leaflet.MapTiles',
-        './LeafletDataLayer', './Leaflet.UtfGrid', './URI' ],
-// Module
-function(require) {
     var Mosaic = require('mosaic-commons');
     Mosaic.App = require('./App');
     Mosaic.App.Actions = require('./App.Actions');
@@ -63,6 +45,5 @@ function(require) {
         URI : require('./URI')
 
     };
-    return Mosaic.Core;
+    module.exports = Mosaic.Core;
 
-});

@@ -1,11 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require' ],
-// Module
-function(require) {
+
     "use strict";
 
     /* ================================================================== */
@@ -325,5 +318,4 @@ function(require) {
         return result;
     };
 
-    return URI;
-});
+    module.exports = URI;

@@ -1,11 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', './DataSetView' ],
-// Module
-function(require) {
+
 
     var DataSetView = require('./DataSetView');
 
@@ -44,6 +37,5 @@ function(require) {
 
     });
 
-    return LeafletDataSubsetView;
+    module.exports = LeafletDataSubsetView;
 
-});

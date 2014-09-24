@@ -1,11 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'underscore', './DataSet' ],
-// Module
-function(require) {
+
 
     var _ = require('underscore');
     var DataSet = require('./DataSet');
@@ -164,6 +157,5 @@ function(require) {
         },
     });
 
-    return CompositeDataSet;
+    module.exports = CompositeDataSet;
 
-});

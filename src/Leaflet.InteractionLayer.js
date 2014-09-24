@@ -1,8 +1,7 @@
-define(
-// Dependencies
-[ 'underscore', 'leaflet', './Leaflet.MapTiles' ],
-// Module
-function(_, L, MapTiles) {
+
+    
+    var L = require('leaflet');
+    var MapTiles = require('./Leaflet.MapTiles');
 
     /**
      * The code of this class was mostly copied from the leaflet.utfgrid Leaflet
@@ -119,6 +118,5 @@ function(_, L, MapTiles) {
 
     });
 
-    return InteractionLayer;
+    module.exports = InteractionLayer;
 
-});

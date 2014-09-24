@@ -1,11 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'underscore', './AbstractSet', 'mosaic-commons' ],
-// Module
-function(require) {
+
 
     var Mosaic = require('mosaic-commons');
     var AbstractSet = require('./AbstractSet');
@@ -112,6 +105,5 @@ function(require) {
 
     });
 
-    return DataSet;
+    module.exports = DataSet;
 
-});

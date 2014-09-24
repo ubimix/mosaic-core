@@ -1,11 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'underscore' ],
-// Module
-function(require) {
+
 
     var _ = require('underscore');
 
@@ -13,7 +6,7 @@ function(require) {
      * This is a common mixin used by React classes to add automatic binding for
      * DataSets.
      */
-    return {
+    module.exports = {
 
         getDataSet : function() {
             return this.props.dataSet;
@@ -51,4 +44,3 @@ function(require) {
         },
 
     };
-});

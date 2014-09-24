@@ -1,17 +1,12 @@
 /**
  * @jsx React.DOM
  */
-define(
-// Dependencies
-[ 'require', 'underscore', 'react', 'leaflet' ],
-// Module
-function(require) {
     'use strict';
     var _ = require('underscore');
     var React = require('react');
     var L = require('leaflet');
 
-    return React.createClass({
+    module.exports = React.createClass({
         displayName : 'ReactMap',
         render : function() {
             return (React.DOM.div({
@@ -83,4 +78,3 @@ function(require) {
         }
     });
 
-});

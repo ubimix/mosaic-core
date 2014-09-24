@@ -1,16 +1,9 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'underscore', './App.Component' ],
-// Module
-function(require) {
+
     var _ = require('underscore');
     var AppComponent = require('./App.Component');
 
     /** Common superclass for all stores */
-    return AppComponent.extend({
+    module.exports = AppComponent.extend({
 
         /**
          * Overloads the parent 'setOptions' method to set the application in
@@ -66,4 +59,3 @@ function(require) {
         },
 
     });
-});

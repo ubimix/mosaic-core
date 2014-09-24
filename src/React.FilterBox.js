@@ -1,11 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'underscore', 'react', 'mosaic-commons' ],
-// Module
-function(require) {
+
 
     var _ = require('underscore');
     var Mosaic = require('mosaic-commons');
@@ -108,7 +101,7 @@ function(require) {
      * @param model.set
      *            sets a new values; new values replace the old one
      */
-    return React.createClass({
+    module.exports = React.createClass({
         displayName : 'React.FilterBox',
         statics : {
             Model : FilterBoxModel,
@@ -295,4 +288,3 @@ function(require) {
         }
     });
 
-});

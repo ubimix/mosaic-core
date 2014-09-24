@@ -1,12 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'underscore', 'jquery', './ViewManager', './TemplateView',
-        './TemplateDataSetView' ],
-// Module
-function(require) {
+
     "use strict";
 
     var _ = require('underscore');
@@ -68,6 +60,5 @@ function(require) {
 
     });
 
-    return TemplateViewManager;
+    module.exports = TemplateViewManager;
 
-});

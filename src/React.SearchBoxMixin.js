@@ -1,11 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'underscore', 'react', 'mosaic-commons', './React.FilterBox' ],
-// Module
-function(require) {
+
 
     var _ = require('underscore');
     var React = require('react');
@@ -161,6 +154,5 @@ function(require) {
         },
     };
 
-    return SearchBoxMixin;
+    module.exports = SearchBoxMixin;
 
-});

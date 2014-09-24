@@ -1,14 +1,8 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'mosaic-commons', 'leaflet' ],
-// Module
-function(require) {
+
 
     var L = require('leaflet');
     var Mosaic = require('mosaic-commons');
+    var _ = require('underscore');
 
     var Config = Mosaic.Class.extend({
 
@@ -117,6 +111,5 @@ function(require) {
         return new Config(data, options);
     };
 
-    return LeafletFeatureBuilder;
+    module.exports = LeafletFeatureBuilder;
 
-});

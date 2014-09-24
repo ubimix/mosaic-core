@@ -1,11 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'underscore', 'mosaic-commons', './AbstractSet' ],
-// Module
-function(require) {
+
 
     var Mosaic = require('mosaic-commons');
     var _ = require('underscore');
@@ -243,6 +236,5 @@ function(require) {
         return !isIndexed(key);
     };
 
-    return Dependencies;
+    module.exports = Dependencies;
 
-});

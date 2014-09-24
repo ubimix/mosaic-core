@@ -1,11 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'mosaic-commons', './Intents' ],
-// Module
-function(require) {
+
     var Mosaic = require('mosaic-commons');
     var Intents = require('./Intents');
 
@@ -13,7 +6,7 @@ function(require) {
      * An application main class. It is the common superclass for all classes
      * implementing applications.
      */
-    return Mosaic.Class.extend(Mosaic.Events.prototype, {
+    module.exports = Mosaic.Class.extend(Mosaic.Events.prototype, {
 
         /** Constructor of this class. It initializes application modules. */
         initialize : function(options) {
@@ -80,4 +73,3 @@ function(require) {
 
     });
 
-});

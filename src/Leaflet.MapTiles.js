@@ -1,10 +1,13 @@
-define([ 'underscore', 'leaflet', 'mosaic-commons' ], function(_, L, Mosaic) {
+    
+    var _ = require('underscore');
+    var L = require('leaflet');
+    var Mosaic = require('mosaic-commons');
 
     /**
      * Common superclass for all map layers loading tiles using an external
      * loader object.
      */
-    return L.Class.extend({
+    module.exports = L.Class.extend({
 
         includes : L.Mixin.Events,
 
@@ -134,4 +137,3 @@ define([ 'underscore', 'leaflet', 'mosaic-commons' ], function(_, L, Mosaic) {
 
     });
 
-});

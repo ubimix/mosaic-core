@@ -1,12 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'underscore', 'mosaic-commons', 'mosaic-teleport',
-        './App.Component' ],
-// Module
-function(require) {
+
 
     var _ = require('underscore');
     var AppComponent = require('./App.Component');
@@ -151,5 +143,4 @@ function(require) {
 
     Api.toArray = toArray;
 
-    return Api;
-});
+    module.exports = Api;

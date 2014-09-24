@@ -1,11 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'underscore', 'mosaic-commons', './AdapterManager' ],
-// Module
-function(require) {
+
     "use strict";
 
     var _ = require('underscore');
@@ -55,6 +48,5 @@ function(require) {
 
     });
 
-    return ViewManager;
+    module.exports = ViewManager;
 
-});

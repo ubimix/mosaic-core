@@ -1,11 +1,4 @@
-if (typeof define !== 'function') {
-    var define = require('amdefine')(module);
-}
-define(
-// Dependencies
-[ 'require', 'underscore', 'mosaic-commons' ],
-// Module
-function(require) {
+
 
     var Mosaic = require('mosaic-commons');
     var _ = require('underscore');
@@ -438,5 +431,4 @@ function(require) {
         }
     });
 
-    return ActivationTree;
-});
+    module.exports = ActivationTree;

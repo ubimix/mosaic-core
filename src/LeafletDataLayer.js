@@ -1,19 +1,8 @@
-/*
- * Leaflet layer visualizing data on canvas tiles.
- *  (c) 2014, Ubimix SAS
- *  (c) 2014, Mikhail Kotelnikov
- */
-if (typeof define !== "function" || !define.amd) {
-    var define = function(deps, definition) {
-        if (typeof module === 'object' && typeof module.exports === 'object') {
-            module.exports = definition([ require('L'), require('rbush') ]);
-        } else {
-            window.LeafletDataLayer = definition([ window.L, window.rbush ]);
-        }
-    };
-}
-define([ 'leaflet', 'rbush' ], function(L, rbush) {
 
+    var L = require('leaflet');
+    var rbush = require('rbush');
+    var _ = require('underscore');
+    
     // --------------------------------------------------------------------
     /**
      * This utility class allows to associate data with non-transparent pixels
@@ -878,6 +867,5 @@ define([ 'leaflet', 'rbush' ], function(L, rbush) {
 
     });
 
-    return LeafletDataLayer;
+    module.exports = LeafletDataLayer;
 
-});
