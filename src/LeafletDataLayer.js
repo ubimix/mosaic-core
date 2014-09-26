@@ -327,12 +327,12 @@ define([ 'leaflet', 'rbush' ], function(L, rbush) {
          *         tile;
          */
         drawFeature : function(tilePoint, bbox, resource, callback) {
-            var error = null;
+            var err = null;
             var result = {
                 image : null,
                 anchor : L.point(0, 0)
             };
-            callback(error, result);
+            callback(err, result);
         },
 
         // --------------------------------------------------------------------
@@ -754,11 +754,11 @@ define([ 'leaflet', 'rbush' ], function(L, rbush) {
                 L.Util.invokeEach(data, function(i, d) {
                     var dataRenderer = that._getDataRenderer();
                     dataRenderer.drawFeature(tilePoint, bbox, d, //
-                    function(error, ctx) {
+                    function(err, ctx) {
                         try {
-                            if (error) {
+                            if (err) {
                                 that._handleRenderError(canvas, tilePoint,
-                                        error);
+                                        err);
                             } else if (ctx && ctx.image) {
                                 var index = that._getCanvasIndex(canvas, true);
                                 index.draw(ctx.image, //
@@ -773,9 +773,9 @@ define([ 'leaflet', 'rbush' ], function(L, rbush) {
                     });
                 });
             }
-            dataProvider.loadData(bbox, tilePoint, function(error, data) {
-                if (error) {
-                    that._handleRenderError(canvas, tilePoint, error);
+            dataProvider.loadData(bbox, tilePoint, function(err, data) {
+                if (err) {
+                    that._handleRenderError(canvas, tilePoint, err);
                     that.tileDrawn(canvas);
                     return;
                 }
@@ -785,8 +785,8 @@ define([ 'leaflet', 'rbush' ], function(L, rbush) {
                 }
                 try {
                     renderData(data);
-                } catch (error) {
-                    that._handleRenderError(canvas, tilePoint, error);
+                } catch (renderError) {
+                    that._handleRenderError(canvas, tilePoint, renderError);
                     that.tileDrawn(canvas);
                 }
             });
@@ -795,9 +795,9 @@ define([ 'leaflet', 'rbush' ], function(L, rbush) {
         /**
          * Reports a rendering error
          */
-        _handleRenderError : function(canvas, tilePoint, error) {
+        _handleRenderError : function(canvas, tilePoint, err) {
             // TODO: visualize the error on the canvas
-            console.log('ERROR', error);
+            console.log('ERROR', err);
         },
 
         /**

@@ -24,6 +24,25 @@ function(URI, expect) {
             expect(url + '').to.eql('http://www.foo.bar/hello/world' + //
             '?param1=value1&param2=value2#abc');
         });
+        it('should be able to parse and serialize ' + //
+        'multiple query parameters with the same name', function() {
+            var str = 'http://www.foo.bar:23/hello/world' + //
+            '?a=A&b=B1&b=B2&b=B3&c=C#abc';
+            var url = new URI(str);
+            expect(url.scheme).to.eql('http');
+            expect(url.port).to.eql(23);
+            expect(url.path).to.eql('/hello/world');
+            expect(url.query).to.eql({
+                a : 'A',
+                b : [ 'B1', 'B2', 'B3' ],
+                c : 'C'
+            });
+            expect(url.fragment).to.eql('abc');
+            expect(url + '').to.eql(str);
+            url.port = null;
+            expect(url + '').to.eql('http://www.foo.bar/hello/world' + //
+            '?a=A&b=B1&b=B2&b=B3&c=C#abc');
+        });
         function test(first, second, control) {
             var a = new URI(first);
             var b = new URI(second);

@@ -33,6 +33,16 @@ function(require) {
     /* URI static utility methods */
     /* ----------------------------------------------------------------- */
 
+    function isArray(obj) {
+        if (!obj)
+            return false;
+        if (Array.isArray) {
+            return Array.isArray(obj);
+        } else {
+            return Object.prototype.toString.call(obj) == '[object Array]';
+        }
+    }
+
     /** Splits the given query string to an object */
     URI.splitQuery = function(query) {
         var result = {};
@@ -43,7 +53,16 @@ function(require) {
                 var parts = str.split('=');
                 var key = decodeURIComponent(parts[0]);
                 var value = decodeURIComponent(parts[1]);
-                result[key] = value;
+                if (!(key in result)) {
+                    result[key] = value;
+                } else {
+                    var prev = result[key];
+                    var values = prev;
+                    if (!isArray(values)) {
+                        values = result[key] = [ prev ];
+                    }
+                    values.push(value);
+                }
             }
         }
         return result;
@@ -56,13 +75,19 @@ function(require) {
             if (query.hasOwnProperty(key)) {
                 var value = query[key] || '';
                 var k = encodeURIComponent(key);
-                var v = encodeURIComponent(value);
-                if (result.length > 0) {
-                    result += '&';
+                var array = value;
+                if (!isArray(array)) {
+                    array = [ value ];
                 }
-                result += k;
-                result += '=';
-                result += v;
+                for (var i = 0; i < array.length; i++) {
+                    if (result.length > 0) {
+                        result += '&';
+                    }
+                    var v = encodeURIComponent(array[i]);
+                    result += k;
+                    result += '=';
+                    result += v;
+                }
             }
         }
         return result;
@@ -123,13 +148,13 @@ function(require) {
 
     /** Cleans up all internal fields */
     URI.prototype.reset = function(keepPath, keepDomain) {
-        if (!keepDomain){
+        if (!keepDomain) {
             delete this.scheme;
             delete this.authority;
             delete this.domain;
             delete this.port;
         }
-        if (!keepPath){
+        if (!keepPath) {
             delete this.path;
             delete this.query;
             delete this.fragment;
