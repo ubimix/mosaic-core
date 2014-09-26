@@ -1,5 +1,5 @@
 /*!
- * mosaic-core v0.0.5 | License: MIT 
+ * mosaic-core v0.0.6 | License: MIT 
  * 
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -11,7 +11,7 @@
 		exports["mosaic-core"] = factory(require("mosaic-commons"), require("underscore"), require("mosaic-teleport"), require("leaflet"), require("react"), require("rbush"));
 	else
 		root["mosaic-core"] = factory(root["mosaic-commons"], root["underscore"], root["mosaic-teleport"], root["leaflet"], root["react"], root["rbush"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_30__, __WEBPACK_EXTERNAL_MODULE_31__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_33__, __WEBPACK_EXTERNAL_MODULE_34__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_29__, __WEBPACK_EXTERNAL_MODULE_30__, __WEBPACK_EXTERNAL_MODULE_31__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_33__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -71,8 +71,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        __webpack_require__(17), __webpack_require__(18), __webpack_require__(19), __webpack_require__(20),
 	        __webpack_require__(21), __webpack_require__(22), __webpack_require__(23),
 
-	        __webpack_require__(24), __webpack_require__(25), __webpack_require__(26),
-	        __webpack_require__(27), __webpack_require__(28), __webpack_require__(29) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	        __webpack_require__(24), __webpack_require__(25),
+	        __webpack_require__(26), __webpack_require__(27), __webpack_require__(28) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 	    var Mosaic = __webpack_require__(1);
 	    Mosaic.App = __webpack_require__(2);
 	    Mosaic.App.Actions = __webpack_require__(3);
@@ -89,17 +89,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        ReactMap : __webpack_require__(12),
 	        FeatureBuilder : __webpack_require__(14),
 
-	        InteractionLayer : __webpack_require__(25),
-	        MapTiles : __webpack_require__(26),
-	        MarkersLayer : __webpack_require__(27),
-	        UtfGrid : __webpack_require__(28)
+	        InteractionLayer : __webpack_require__(24),
+	        MapTiles : __webpack_require__(25),
+	        MarkersLayer : __webpack_require__(26),
+	        UtfGrid : __webpack_require__(27)
 	    };
 
 	    Mosaic.Core = {
 	        DataSet : __webpack_require__(8),
 	        ActivationTree : __webpack_require__(21),
 
-	        IndexedCanvas : __webpack_require__(24),
 	        InfiniteScroll : __webpack_require__(23),
 	        AbstractSet : __webpack_require__(7),
 	        AdapterManager : __webpack_require__(17),
@@ -117,7 +116,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        ReactDataSetMixin : __webpack_require__(22),
 	        ViewManager : __webpack_require__(20),
 
-	        URI : __webpack_require__(29)
+	        URI : __webpack_require__(28)
 
 	    };
 	    return Mosaic.Core;
@@ -222,8 +221,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(5) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
-	    var _ = __webpack_require__(30);
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(5) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	    var _ = __webpack_require__(29);
 	    var AppComponent = __webpack_require__(5);
 
 	    /** Common superclass for all stores */
@@ -240,10 +239,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1), __webpack_require__(31),
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1), __webpack_require__(30),
 	        __webpack_require__(5) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var _ = __webpack_require__(30);
+	    var _ = __webpack_require__(29);
 	    var AppComponent = __webpack_require__(5);
 	    var Mosaic = __webpack_require__(1);
 
@@ -421,8 +420,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(5) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
-	    var _ = __webpack_require__(30);
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(5) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	    var _ = __webpack_require__(29);
 	    var AppComponent = __webpack_require__(5);
 
 	    /** Common superclass for all stores */
@@ -492,10 +491,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
-	    var _ = __webpack_require__(30);
+	    var _ = __webpack_require__(29);
 
 	    /** Objects of this type are used to keep information about data set entries */
 	    var SetEntry = Mosaic.Class.extend(// 
@@ -685,11 +684,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(7), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(7), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
 	    var AbstractSet = __webpack_require__(7);
-	    var _ = __webpack_require__(30);
+	    var _ = __webpack_require__(29);
 
 	    /**
 	     * This class represents a data set. Each dataset manages a set of objects
@@ -804,9 +803,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(8) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(8) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var _ = __webpack_require__(30);
+	    var _ = __webpack_require__(29);
 	    var DataSet = __webpack_require__(8);
 
 	    /**
@@ -975,10 +974,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1), __webpack_require__(7) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1), __webpack_require__(7) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
-	    var _ = __webpack_require__(30);
+	    var _ = __webpack_require__(29);
 	    var AbstractSet = __webpack_require__(7);
 
 	    /**
@@ -1076,9 +1075,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(32), __webpack_require__(10) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(31), __webpack_require__(10) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var L = __webpack_require__(32);
+	    var L = __webpack_require__(31);
 	    var DataSetView = __webpack_require__(10);
 
 	    /**
@@ -1176,11 +1175,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 	 * @jsx React.DOM
 	 */
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(33), __webpack_require__(32) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(32), __webpack_require__(31) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 	    'use strict';
-	    var _ = __webpack_require__(30);
-	    var React = __webpack_require__(33);
-	    var L = __webpack_require__(32);
+	    var _ = __webpack_require__(29);
+	    var React = __webpack_require__(32);
+	    var L = __webpack_require__(31);
 
 	    return React.createClass({
 	        displayName : 'ReactMap',
@@ -1314,9 +1313,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(1), __webpack_require__(32) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(1), __webpack_require__(31) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var L = __webpack_require__(32);
+	    var L = __webpack_require__(31);
 	    var Mosaic = __webpack_require__(1);
 
 	    var Config = Mosaic.Class.extend({
@@ -1437,11 +1436,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(33), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(32), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var _ = __webpack_require__(30);
+	    var _ = __webpack_require__(29);
 	    var Mosaic = __webpack_require__(1);
-	    var React = __webpack_require__(33);
+	    var React = __webpack_require__(32);
 
 	    /**
 	     * Datamodel for the FilterBox component providing access to values to
@@ -1736,10 +1735,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(33), __webpack_require__(1), __webpack_require__(15) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(32), __webpack_require__(1), __webpack_require__(15) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var _ = __webpack_require__(30);
-	    var React = __webpack_require__(33);
+	    var _ = __webpack_require__(29);
+	    var React = __webpack_require__(32);
 	    var Mosaic = __webpack_require__(1);
 	    var FilterBox = __webpack_require__(15);
 
@@ -1903,10 +1902,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 	    "use strict";
 
-	    var _ = __webpack_require__(30);
+	    var _ = __webpack_require__(29);
 	    var Mosaic = __webpack_require__(1);
 	    var Class = Mosaic.Class;
 
@@ -2110,10 +2109,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1), __webpack_require__(7) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1), __webpack_require__(7) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
-	    var _ = __webpack_require__(30);
+	    var _ = __webpack_require__(29);
 
 	    /** This is a simple class used to manage dependencies between entities. */
 	    var Dependencies = Mosaic.Class.extend({
@@ -2359,10 +2358,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1), __webpack_require__(18) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1), __webpack_require__(18) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
-	    var _ = __webpack_require__(30);
+	    var _ = __webpack_require__(29);
 	    var Dependencies = __webpack_require__(18);
 
 	    /**
@@ -2637,10 +2636,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1), __webpack_require__(17) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1), __webpack_require__(17) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 	    "use strict";
 
-	    var _ = __webpack_require__(30);
+	    var _ = __webpack_require__(29);
 	    var Mosaic = __webpack_require__(1);
 	    var AdapterManager = __webpack_require__(17);
 
@@ -2699,10 +2698,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
-	    var _ = __webpack_require__(30);
+	    var _ = __webpack_require__(29);
 	    /* ------------------------------------------------- */
 
 	    /**
@@ -3143,9 +3142,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
-	    var _ = __webpack_require__(30);
+	    var _ = __webpack_require__(29);
 
 	    /**
 	     * This is a common mixin used by React classes to add automatic binding for
@@ -3198,11 +3197,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
 	    var define = require('amdefine')(module);
 	}
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(30), __webpack_require__(1), __webpack_require__(33) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__, __webpack_require__(29), __webpack_require__(1), __webpack_require__(32) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(require) {
 
 	    var Mosaic = __webpack_require__(1);
-	    var _ = __webpack_require__(30);
-	    var React = __webpack_require__(33);
+	    var _ = __webpack_require__(29);
+	    var React = __webpack_require__(32);
 
 	    /**
 	     * This is an "infinite scroll" widget allowing to load elements by their
@@ -3423,13 +3422,297 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(30), __webpack_require__(32), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(29), __webpack_require__(31), __webpack_require__(25) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, MapTiles) {
 
+	    /**
+	     * The code of this class was mostly copied from the leaflet.utfgrid Leaflet
+	     * extension (MIT license, by David Leaver). The difference with the
+	     * original implementation is that 1) this class loads tiles using
+	     * _loadTiles method; 2) this class notifies about loading of tiles for each
+	     * new screen using the "startLoading"/"endLoading" events; 3) it loads
+	     * tiles starting from the center of the current screen.
+	     */
+	    var InteractionLayer = L.Class.extend({
+
+	        includes : L.Mixin.Events,
+
+	        options : {
+	            resolution : 4,
+	            pointerCursor : true
+	        },
+
+	        /** Initializes this layer */
+	        initialize : function(options) {
+	            L.setOptions(this, options);
+	            // this._move = _.throttle(this._move, 20);
+	            // this._update = _.debounce(this._update, 10);
+	        },
+
+	        /**
+	         * This method is called when this layer is added to the map.
+	         */
+	        onAdd : function(map) {
+	            this._map = map;
+	            this._container = this._map._container;
+	            // this._update();
+	//            map.on('click', this._click, this);
+	            map.on('mousemove', this._move, this);
+	            // map.on('moveend', this._update, this);
+	        },
+
+	        /**
+	         * This method is called when this layer is removed from the map.
+	         */
+	        onRemove : function() {
+	            var map = this._map;
+	            map.off('click', this._click, this);
+	            map.off('mousemove', this._move, this);
+	            // map.off('moveend', this._update, this);
+	            this._removeMouseCursorStyle();
+	        },
+
+	        /** Map click handler */
+	        _click : function(e) {
+	            var on = this._objectForEvent(e);
+	            if (on.data) {
+	                this.fire('click', on);
+	            }
+	        },
+
+	        /** Map move handler */
+	        _move : function(e) {
+	            var on = this._objectForEvent(e);
+	            if (on.data !== this._mouseOn) {
+	                if (this._mouseOn) {
+	                    this.fire('mouseout', {
+	                        latlng : e.latlng,
+	                        data : this._mouseOn
+	                    });
+	                    this._removeMouseCursorStyle();
+	                }
+	                if (on.data) {
+	                    this.fire('mouseover', on);
+	                    this._setMouseCursorStyle();
+	                }
+	                this._mouseOn = on.data;
+	            } else if (on.data) {
+	                this.fire('mousemove', on);
+	            }
+	        },
+
+	        /**
+	         * Checks if the cursor style of the container should be changed to
+	         * pointer cursor
+	         */
+	        _setMouseCursorStyle : function() {
+	            if (!this.options.pointerCursor)
+	                return;
+	            if (!this._container._pointerCursorCount) {
+	                this._container._pointerCursorCount = 1;
+	                this._container.style.cursor = 'pointer';
+	            } else {
+	                this._container._pointerCursorCount++;
+	            }
+	        },
+
+	        /** Removes cursor style from the container */
+	        _removeMouseCursorStyle : function() {
+	            if (!this.options.pointerCursor)
+	                return;
+	            if (this._container._pointerCursorCount) {
+	                this._container._pointerCursorCount--;
+	                if (this._container._pointerCursorCount === 0) {
+	                    this._container.style.cursor = '';
+	                    delete this._container._pointerCursorCount;
+	                }
+	            }
+	        },
+
+	        /**
+	         * Returns an object from UTF grid corresponding to the coordinates of
+	         * the mouse event.
+	         */
+	        _objectForEvent : function(e) {
+	            throw new Error('This method should be implemented ' + //
+	            'in subclasses.');
+	        },
+
+	    });
+
+	    return InteractionLayer;
+
+	}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(29), __webpack_require__(31), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic) {
+
+	    /**
+	     * Common superclass for all map layers loading tiles using an external
+	     * loader object.
+	     */
+	    return L.Class.extend({
+
+	        includes : L.Mixin.Events,
+
+	        /** Initializes this layer */
+	        initialize : function(options) {
+	            L.setOptions(this, options);
+	            _.defaults(this.options, {
+	                minZoom : 0,
+	                maxZoom : 25,
+	                tileSize : 256
+	            });
+	        },
+
+	        /**
+	         * This method is called when this layer is added to the map.
+	         */
+	        onAdd : function(map) {
+	            this._map = map;
+	            this._container = this._map._container;
+	            this._update();
+	        },
+
+	        /**
+	         * This method is called when this layer is removed from the map.
+	         */
+	        onRemove : function() {
+	        },
+
+	        /** Re-loads tiles for new map position */
+	        _update : function() {
+	            // Check if tiles should be loaded
+	            var zoom = this._map.getZoom();
+	            var tileSize = this.options.tileSize;
+	            if (zoom > this.options.maxZoom || //
+	            zoom < this.options.minZoom) {
+	                return;
+	            }
+
+	            // Load tiles
+	            var bounds = this._map.getPixelBounds();
+	            var min = this._getTilePosition(bounds.min);
+	            var max = this._getTilePosition(bounds.max);
+	            var queue = this._getTilesReferencesFromCenterOut(min, max);
+
+	            var evt = {
+	                queue : queue
+	            };
+	            var that = this;
+	            that.fire('startLoading', evt);
+	            that.options.loadTiles(zoom, queue, function(err, tiles) {
+	                if (err) {
+	                    evt.errors = err;
+	                }
+	                evt.tiles = tiles;
+	                that.fire('endLoading', evt);
+	            });
+
+	            /**
+	             * Loads tiles corresponding to points specified in the 'queue'
+	             * parameter of this method and returns these tiles using the given
+	             * callback method. The first parameter of this method is an error and
+	             * the second one is the resulting tiles.
+	             */
+	            this.options.loadTiles = function(zoom, queue, callback) {
+	                callback(new Error('Not implemented'));
+	            };
+	        },
+
+
+	        /** Calculates order of tiles loading */
+	        _getTilesReferencesFromCenterOut : function(min, max) {
+	            var queue = [];
+	            for (var j = min.y; j <= max.y; j++) {
+	                for (var i = min.x; i <= max.x; i++) {
+	                    queue.push(this._newPoint(i, j));
+	                }
+	            }
+	            if (queue.length) {
+	                var that = this;
+	                var center = this._newPoint((min.x + max.x) / 2,
+	                        (min.y + max.y) / 2);
+	                queue.sort(function(a, b) {
+	                    var delta = that._distance(a, center) - //
+	                    that._distance(b, center);
+	                    return delta;
+	                });
+	            }
+	            return queue;
+	        },
+
+	        /**
+	         * Creates and returns a new point object (containing X/Y coordinates).
+	         */
+	        _newPoint : function(x, y) {
+	            if (x.length) {
+	                y = x[1];
+	                x = x[0];
+	            }
+	            return {
+	                x : x,
+	                y : y,
+	                toString : function() {
+	                    return JSON.stringify(this, null, 2);
+	                }
+	            };
+	        },
+
+	        /**
+	         * Calculates distance between two points. This method is used to
+	         * calculate order of tiles loading.
+	         */
+	        _distance : function(a, b) {
+	            var x = a.x - b.x;
+	            var y = a.y - b.y;
+	            return Math.sqrt(x * x + y * y);
+	        },
+
+	        /**
+	         * Returns X/Y coordinates of the tile corresponding to the specified
+	         * point on the map
+	         */
+	        _getTilePosition : function(point) {
+	            var tileSize = this.options.tileSize;
+	            return this._newPoint(Math.floor(point.x / tileSize), Math
+	                    .floor(point.y / tileSize));
+	        },
+
+	    });
+
+	}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Leaflet layer visualizing data on canvas tiles.
+	 *  (c) 2014, Ubimix SAS
+	 *  (c) 2014, Mikhail Kotelnikov
+	 */
+	if (false) {
+	    var define = function(deps, definition) {
+	        if (typeof module === 'object' && typeof module.exports === 'object') {
+	            module.exports = definition([ require('L'), require('rbush') ]);
+	        } else {
+	            window.LeafletDataLayer = definition([ window.L, window.rbush ]);
+	        }
+	    };
+	}
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(31), __webpack_require__(33) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(L, rbush) {
+
+	    // --------------------------------------------------------------------
 	    /**
 	     * This utility class allows to associate data with non-transparent pixels
 	     * of images drawn on canvas.
 	     */
-	    var IndexedCanvas = Mosaic.Class.extend({
+	    var IndexedCanvas = L.Class.extend({
 
 	        /**
 	         * Initializes internal fields of this class.
@@ -3442,8 +3725,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	         *            areas (resolution = 4)
 	         */
 	        initialize : function(options) {
-	            this.setOptions(options);
-	            var resolution = this.options.reisolution || 4;
+	            L.setOptions(this, options);
+	            var resolution = this.options.resolution || 4;
 	            this.options.resolutionX = this.options.resolutionX || resolution;
 	            this.options.resolutionY = this.options.resolutionY || //
 	            this.options.resolutionX || resolution;
@@ -3527,8 +3810,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        /** Returns a unique key of the specified image. */
 	        _getImageKey : function(image) {
-	            var key = image._key = image._key || _.uniqueId('img-');
-	            return key;
+	            return L.Util.stamp(image);
 	        },
 
 	        /**
@@ -3582,520 +3864,225 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 
-	    return IndexedCanvas;
-
-	}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 25 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(30), __webpack_require__(32), __webpack_require__(1), __webpack_require__(26) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic, MapTiles) {
+	    // --------------------------------------------------------------------
+	    // Data providers
 
 	    /**
-	     * The code of this class was mostly copied from the leaflet.utfgrid Leaflet
-	     * extension (MIT license, by David Leaver). The difference with the
-	     * original implementation is that 1) this class delegates tiles
-	     * loading/caching/canceling operations to an Mosaic.MapTilesLoader
-	     * instance; 2) this class notifies about loading of tiles for each new
-	     * screen using the "startLoading"/"endLoading" events; 3) it loads tiles
-	     * starting from the center of the current screen.
+	     * A common interface providing data for individual tiles. Used to
+	     * synchronously/asynchronously load data to render on tiles.
 	     */
-	    var InteractionLayer = MapTiles.extend({
-
-	        /** Initializes this layer */
-	        initialize : function(options) {
-	            var parent = MapTiles.prototype;
-	            parent.initialize.call(this, options);
-	            _.defaults(this.options, {
-	                resolution : 4,
-	                pointerCursor : true
-	            });
-	            this._move = _.throttle(this._move, 20);
-	            this._update = _.debounce(this._update, 10);
-	        },
+	    var IDataProvider = L.Class.extend({
 
 	        /**
-	         * This method is called when this layer is added to the map.
+	         * This method loads returns an array of objects to show on tile
+	         * corresponding to the specified bounding box. This is a "do-nothing"
+	         * method and it should be overload in subclasses.
+	         * 
+	         * @param bbox
+	         *            bounding box for the tile; this bounding box includes a
+	         *            buffer zone around the tile so it is (by default) bigger
+	         *            than area corresponding to the tile
+	         * @param tilePoint
+	         *            a L.Point instance defining position of the tile
+	         * @param callback
+	         *            a callback function accepting the following parameters: 1)
+	         *            error 2) resulting array of objects to draw
 	         */
-	        onAdd : function(map) {
-	            this._map = map;
-	            this._container = this._map._container;
-	            this._update();
-	            map.on('click', this._click, this);
-	            map.on('mousemove', this._move, this);
-	            map.on('moveend', this._update, this);
+	        loadData : function(bbox, tilePoint, callback) {
+	            callback([]);
 	        },
 
-	        /**
-	         * This method is called when this layer is removed from the map.
-	         */
-	        onRemove : function() {
-	            var map = this._map;
-	            map.off('click', this._click, this);
-	            map.off('mousemove', this._move, this);
-	            map.off('moveend', this._update, this);
-	            this._removeMouseCursorStyle();
-	        },
+	        /** Static utility methods */
+	        statics : {
 
-	        /** Map click handler */
-	        _click : function(e) {
-	            var on = this._objectForEvent(e);
-	            if (on.data) {
-	                this.fire('click', on);
-	            }
-	        },
-
-	        /** Map move handler */
-	        _move : function(e) {
-	            var on = this._objectForEvent(e);
-	            if (on.data !== this._mouseOn) {
-	                if (this._mouseOn) {
-	                    this.fire('mouseout', {
-	                        latlng : e.latlng,
-	                        data : this._mouseOn
-	                    });
-	                    this._removeMouseCursorStyle();
+	            /** Returns a bounding box for a GeoJson object. */
+	            getGeoJsonBoundingBox : function(d) {
+	                var geom = d.geometry;
+	                if (!geom || !geom.coordinates)
+	                    return null;
+	                var bbox;
+	                if (geom.type == 'Point') {
+	                    var coords = geom.coordinates;
+	                    var point = L.latLng(coords[1], coords[0]);
+	                    bbox = L.latLngBounds(point, point);
+	                } else {
+	                    var layer = L.GeoJSON.geometryToLayer(geom);
+	                    bbox = layer.getBounds();
 	                }
-	                if (on.data) {
-	                    this.fire('mouseover', on);
-	                    this._setMouseCursorStyle();
-	                }
-	                this._mouseOn = on.data;
-	            } else if (on.data) {
-	                this.fire('mousemove', on);
-	            }
-	        },
+	                return bbox;
+	            },
 
-	        /**
-	         * Checks if the cursor style of the container should be changed to
-	         * pointer cursor
-	         */
-	        _setMouseCursorStyle : function() {
-	            if (!this.options.pointerCursor)
-	                return;
-	            if (!this._container._pointerCursorCount) {
-	                this._container._pointerCursorCount = 1;
-	                this._container.style.cursor = 'pointer';
-	            } else {
-	                this._container._pointerCursorCount++;
-	            }
-	        },
-
-	        /** Removes cursor style from the container */
-	        _removeMouseCursorStyle : function() {
-	            if (!this.options.pointerCursor)
-	                return;
-	            if (this._container._pointerCursorCount) {
-	                this._container._pointerCursorCount--;
-	                if (this._container._pointerCursorCount === 0) {
-	                    this._container.style.cursor = '';
-	                    delete this._container._pointerCursorCount;
-	                }
-	            }
-	        },
-
-	        /**
-	         * Returns an object from UTF grid corresponding to the coordinates of
-	         * the mouse event.
-	         */
-	        _objectForEvent : function(e) {
-	            throw new Error('This method should be implemented ' + //
-	            'in subclasses.');
 	        },
 
 	    });
 
-	    return InteractionLayer;
-
-	}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(30), __webpack_require__(32), __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic) {
-
 	    /**
-	     * Common superclass for all map layers loading tiles using an external
-	     * loader object.
+	     * A simple data provider synchronously indexing the given data using an
+	     * RTree index.
 	     */
-	    return Mosaic.Class.extend(Mosaic.Events.prototype, {
+	    var SimpleDataProvider = IDataProvider.extend({
 
-	        /** Initializes this layer */
-	        initialize : function(options) {
-	            this.setOptions(options);
-	            _.defaults(this.options, {
-	                minZoom : 0,
-	                maxZoom : 25,
-	                tileSize : 256
-	            });
-	        },
-
-	        /**
-	         * This method is called when this layer is added to the map.
-	         */
-	        onAdd : function(map) {
-	            this._map = map;
-	            this._container = this._map._container;
-	            this._update();
-	        },
-
-	        /**
-	         * This method is called when this layer is removed from the map.
-	         */
-	        onRemove : function() {
-	        },
-
-	        /** Re-loads tiles for new map position */
-	        _update : function() {
-	            // Check if tiles should be loaded
-	            var zoom = this._map.getZoom();
-	            var tileSize = this.options.tileSize;
-	            if (zoom > this.options.maxZoom || //
-	            zoom < this.options.minZoom) {
-	                return;
-	            }
-
-	            // Load tiles
-	            var bounds = this._map.getPixelBounds();
-	            var min = this._getTilePosition(bounds.min);
-	            var max = this._getTilePosition(bounds.max);
-	            var queue = this._getTilesReferencesFromCenterOut(min, max);
-
-	            var evt = {
-	                queue : queue
-	            };
-	            var that = this;
-	            that.fire('startLoading', evt);
-	            return that._loadTiles(zoom, queue)//
-	            .then(function(tiles) {
-	                evt.tiles = tiles;
-	                that.fire('endLoading', evt);
-	            }, function(errors) {
-	                evt.errors = errors;
-	                that.fire('endLoading', evt);
-	            }).done();
-	        },
-
-	        /**
-	         * Loads and returns tiles corresponding to points specified in the
-	         * 'queue' parameter of this method.
-	         */
-	        _loadTiles : function(zoom, queue) {
-	            return Mosaic.P().then(function() {
-	                throw new Error('Not implemented');
-	            });
-	        },
-
-	        /** Calculates order of tiles loading */
-	        _getTilesReferencesFromCenterOut : function(min, max) {
-	            var queue = [];
-	            for (var j = min.y; j <= max.y; j++) {
-	                for (var i = min.x; i <= max.x; i++) {
-	                    queue.push(this._newPoint(i, j));
-	                }
-	            }
-	            if (queue.length) {
-	                var that = this;
-	                var center = this._newPoint((min.x + max.x) / 2,
-	                        (min.y + max.y) / 2);
-	                queue.sort(function(a, b) {
-	                    var delta = that._distance(a, center) - //
-	                    that._distance(b, center);
-	                    return delta;
-	                });
-	            }
-	            return queue;
-	        },
-
-	        /**
-	         * Creates and returns a new point object (containing X/Y coordinates).
-	         */
-	        _newPoint : function(x, y) {
-	            if (x.length) {
-	                y = x[1];
-	                x = x[0];
-	            }
-	            return {
-	                x : x,
-	                y : y,
-	                toString : function() {
-	                    return JSON.stringify(this, null, 2);
-	                }
-	            };
-	        },
-
-	        /**
-	         * Calculates distance between two points. This method is used to
-	         * calculate order of tiles loading.
-	         */
-	        _distance : function(a, b) {
-	            var x = a.x - b.x;
-	            var y = a.y - b.y;
-	            return Math.sqrt(x * x + y * y);
-	        },
-
-	        /**
-	         * Returns X/Y coordinates of the tile corresponding to the specified
-	         * point on the map
-	         */
-	        _getTilePosition : function(point) {
-	            var tileSize = this.options.tileSize;
-	            return this._newPoint(Math.floor(point.x / tileSize), Math
-	                    .floor(point.y / tileSize));
-	        },
-
-	    });
-
-	}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(30), __webpack_require__(32), __webpack_require__(1), __webpack_require__(34),
-	        __webpack_require__(25), __webpack_require__(24) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic, Rbush, InteractionLayer, IndexedCanvas) {
-
-	    /** This mixin provides methods used to index data points. */
-	    var MarkersLayer = InteractionLayer.extend({
-
-	        /**
-	         */
-	        initialize : function(options) {
-	            options = _.extend({
-	                async : true
-	            }, options);
-	            options.fillOpacity = options.opacity;
-	            delete options.opacity;
-	            InteractionLayer.prototype.initialize.call(this, options);
-	            this._canvasLayer = new L.TileLayer.Canvas(this.options);
-	            this._canvasLayer._redrawTile = _.bind(this._redrawTile, this);
-	            var initContainer =  this._canvasLayer._initContainer;
-	            this._canvasLayer._initContainer = function () {
-	                initContainer.apply(this, arguments);
-	                var pane = this._map._panes.markerPane;
-	                pane.appendChild(this._container);
-	            };
-	            this._objectForEvent = _.bind(this._objectForEvent, this);
-	            this._clearTile = _.bind(this._onTileUnload, this);
-	            this._canvasLayer.on('tileunload', this._onTileUnload);
-	            this.setData(this.options.data);
-	        },
-
-	        // --------------------------------------------------------------------
-	        // Leaflet.InteractionLayer method
-
-	        /**
-	         * Returns an object from UTF grid corresponding to the coordinates of
-	         * the mouse event.
-	         */
-	        _objectForEvent : function(e) {
-	            var latlng = e.latlng;
-	            var map = this._map;
-	            var point = map.latLngToLayerPoint(latlng);
-	            point = point.add(map.getPixelOrigin());
-	            var tileSize = this._getTileSize();
-	            var tilePoint = point.divideBy(tileSize).floor();
-	            var key = tilePoint.x + ':' + tilePoint.y;
-	            var canvas = this._canvasLayer._tiles[key];
-	            var data;
-	            if (canvas && canvas._index) {
-	                var id = canvas._index._id;
-	                var canvasX = point.x % tileSize;
-	                var canvasY = point.y % tileSize;
-	                data = canvas._index.getData(canvasX, canvasY);
-	            }
-	            return {
-	                latlng : latlng,
-	                data : data
-	            };
-	        },
-
-	        // --------------------------------------------------------------------
-	        // Leaflet.ILayer methods
-
-	        /**
-	         * This method is called when this layer is added to the map.
-	         */
-	        onAdd : function(map) {
-	            InteractionLayer.prototype.onAdd.call(this, map);
-	            map.addLayer(this._canvasLayer);
-	        },
-
-	        /**
-	         * This method is called when this layer is removed from the map.
-	         */
-	        onRemove : function(map) {
-	            map.removeLayer(this._canvasLayer);
-	            InteractionLayer.prototype.onRemove.call(this, map);
-	        },
-
-	        // --------------------------------------------------------------------
-
+	        /** Sets and indexes the given data */
 	        setData : function(data) {
 	            this._indexData(data);
-	            this._canvasLayer.redraw();
 	        },
-	        // --------------------------------------------------------------------
 
-	        /** Indexes the specified data array using a quad tree. */
+	        /**
+	         * Loads and returns indexed data contained in the specified bounding
+	         * box.
+	         */
+	        loadData : function(bbox, tilePoint, callback) {
+	            var that = this;
+	            var results = that._searchInBbox(bbox);
+	            callback(null, results);
+	        },
+
+	        /** Indexes the specified data array using a RTree index. */
 	        _indexData : function(data) {
 	            // Data indexing
-	            this._index = Rbush(9);
+	            this._rtree = rbush(9);
 	            data = data || [];
-	            data = _.map(data, function(d) {
-	                var coordinates = this._getBoundingBoxArray(d);
-	                if (coordinates) {
-	                    coordinates.data = d;
+	            var array = [];
+	            L.Util.invokeEach(data, function(i, d) {
+	                var bbox = this._getBoundingBox(d);
+	                if (bbox) {
+	                    var coords = this._toIndexKey(bbox);
+	                    coords.data = d;
+	                    array.push(coords);
 	                }
-	                return coordinates;
 	            }, this);
-	            data = _.filter(data, function(array) {
-	                return !!array;
-	            });
-	            this._index.load(data);
+	            this._rtree.load(array);
 	        },
 
-	        /** Searches resources inside of the specified bounding box. */
+	        /** Searches resources in the specified bounding box. */
 	        _searchInBbox : function(bbox, point) {
-	            var sw = bbox.getSouthWest();
-	            var ne = bbox.getNorthEast();
-	            point = point || ne;
-	            var coords = [ sw.lat, sw.lng, ne.lat, ne.lng ];
-	            var p = [ point.lat, point.lng ];
-	            var array = this._index.search(coords);
+	            var coords = this._toIndexKey(bbox);
+	            var p = point ? [ point.lat, point.lng ] : //
+	            [ coords[0], coords[1] ];
+	            var array = this._rtree.search(coords);
 	            // Sort points by Manhattan distance to the origin point
 	            array.sort(function(a, b) {
 	                var d1 = Math.abs(a[0] - p[0]) + Math.abs(a[1] - p[1]);
 	                var d2 = Math.abs(b[0] - p[0]) + Math.abs(b[1] - p[1]);
 	                return d1 - d2;
 	            });
-	            var result = _.map(array, function(arr) {
-	                return arr.data;
+	            var result = [];
+	            L.Util.invokeEach(array, function(i, arr) {
+	                result.push(arr.data);
 	            });
 	            return result;
 	        },
 
-	        /** Returns size of canvas tiles. */
-	        _getTileSize : function() {
-	            return this._canvasLayer._getTileSize();
+	        /**
+	         * This method transforms a L.LatLngBounds instance into a key for RTree
+	         * index.
+	         */
+	        _toIndexKey : function(bbox) {
+	            var sw = bbox.getSouthWest();
+	            var ne = bbox.getNorthEast();
+	            var coords = [ sw.lat, sw.lng, ne.lat, ne.lng ];
+	            return coords;
 	        },
 
-	        /** Returns a buffer zone size around each tile. */
-	        _getBufferZoneSize : function() {
+	        /**
+	         * Returns a L.LatLngBounds instance defining a bounding box ([south,
+	         * west, north, east]) for the specified object.
+	         */
+	        _getBoundingBox : IDataProvider.getGeoJsonBoundingBox,
+
+	    });
+
+	    // --------------------------------------------------------------------
+	    // Data visualization class
+
+	    /**
+	     * A common interface visualizing data on canvas.
+	     */
+	    var IDataRenderer = L.Class.extend({
+
+	        /**
+	         * Returns a point (L.Point instance) defining a buffer zone size in
+	         * pixels around each tile.
+	         */
+	        getBufferZoneSize : function() {
+	            return L.point(0, 0);
+	        },
+
+	        /**
+	         * Draws the specified resource and returns an image with x/y position
+	         * of this image on the tile. If this method returns nothing (or a
+	         * <code>null</code> value) then nothing is drawn for the specified
+	         * resource.
+	         * 
+	         * @return an object containing the following fields: a) 'image' - an
+	         *         Image or Canvas instance with the drawn result b) 'anchor' a
+	         *         L.Point object defining position on the returned image on the
+	         *         tile;
+	         */
+	        drawFeature : function(tilePoint, bbox, resource, callback) {
+	            var err = null;
+	            var result = {
+	                image : null,
+	                anchor : L.point(0, 0)
+	            };
+	            callback(err, result);
+	        },
+
+	        // --------------------------------------------------------------------
+	        // Lifecycle methods used to initialize internal fields
+
+	        /**
+	         * This method is called when the parent layer is added to the map.
+	         */
+	        onAdd : function(layer) {
+	            this._layer = layer;
+	            this._map = layer._map;
+	            this.options = this._layer.options;
+	        },
+
+	        /**
+	         * This method is called when the paren layer is removed from the map.
+	         */
+	        onRemove : function(layer) {
+	            delete this._layer;
+	            delete this._map;
+	            delete this.options;
+	        },
+
+	    });
+
+	    /**
+	     * A common interface visualizing data on canvas.
+	     */
+	    var MarkersRenderer = IDataRenderer.extend({
+
+	        /**
+	         * Returns a buffer zone size (in pixels) around each tile.
+	         */
+	        getBufferZoneSize : function() {
 	            var r = this._getRadius() * 2.5;
 	            return L.point(r, r);
 	        },
 
 	        /**
-	         * This method is called when a tile is removed from the map. It cleans
-	         * up data associated with this tile.
-	         */
-	        _onTileUnload : function(evt) {
-	            var canvas = evt.tile;
-	            if (canvas._index) {
-	                canvas._index.reset();
-	                delete canvas._index;
-	            }
-	        },
-
-	        /**
-	         * This method is used by the underlying L.TileLayer.Canvas to draw
-	         * information on the canvas tile.
-	         */
-	        _redrawTile : function(canvas) {
-	            var that = this;
-	            var tileSize = that._getTileSize();
-	            var tilePoint = canvas._tilePoint;
-	            var nwPoint = tilePoint.multiplyBy(tileSize);
-	            var sePoint = nwPoint.add(new L.Point(tileSize, tileSize));
-	            var bufferSize = that._getBufferZoneSize();
-	            nwPoint = nwPoint.subtract(bufferSize);
-	            sePoint = sePoint.add(bufferSize);
-	            var bbox = new L.LatLngBounds(that._map.unproject(sePoint),
-	                    that._map.unproject(nwPoint));
-	            var index = that._getCanvasIndex(canvas);
-	            var data = that._searchInBbox(bbox);
-	            _.each(data, function(d) {
-	                var ctx = that._drawFeature(tilePoint, bbox, d);
-	                if (ctx) {
-	                    index.draw(ctx.image, ctx.anchor.x, ctx.anchor.y, d);
-	                }
-	            });
-	            that._canvasLayer.tileDrawn(canvas);
-	        },
-
-	        // -----------------------------------------------------------------
-
-	        /**
-	         * Returns an IndexedCanvas instance associated with the specified
-	         * canvas.
-	         */
-	        _getCanvasIndex : function(canvas) {
-	            var that = this;
-	            var index = canvas._index;
-	            if (index) {
-	                index.reset();
-	            } else {
-	                that._maskIndex = that._maskIndex || {};
-	                index = canvas._index = new IndexedCanvas({
-	                    canvas : canvas,
-	                    maskIndex : that._maskIndex
-	                });
-	            }
-	            return index;
-	        },
-
-	        /** Returns point coordinates for the specified resource. */
-	        _getCoordinates : function(d) {
-	            var geom = d.geometry;
-	            if (!geom || !geom.coordinates)
-	                return null;
-	            var coords;
-	            if (geom.type == 'Point') {
-	                coords = geom.coordinates;
-	            } else {
-	                var layer = L.GeoJSON.geometryToLayer(geom);
-	                var bbox = layer.getBounds();
-	                var center = bbox.getCenter();
-	                coords = [ center.lng, center.lat ];
-	            }
-	            return coords;
-	        },
-
-	        /**
-	         * Returns an array with a bounding box ([south, west, north, east]) for
-	         * the specified object.
-	         */
-	        _getBoundingBoxArray : function(d) {
-	            var coords = this._getCoordinates(d);
-	            if (!coords)
-	                return;
-	            var array = [ coords[1], coords[0], coords[1], coords[0] ];
-	            return array;
-	        },
-
-	        /**
-	         * Draws the specified resource and returns an image with x/y
-	         * coordinates of this image on the canvas.
+	         * Draws the specified resource and returns an image with x/y position
+	         * of this image on the tile. If this method returns nothing (or a
+	         * <code>null</code> value) then nothing is drawn for the specified
+	         * resource.
 	         * 
 	         * @return an object containing the following fields: a) 'image' - an
 	         *         Image or Canvas instance with the drawn result b) 'anchor' a
-	         *         L.Point instance defining the point on the returned image
-	         *         corresponding to resource coordinates
+	         *         L.Point object defining position on the returned image on the
+	         *         tile;
 	         */
-	        _drawFeature : function(tilePoint, bbox, resource) {
+	        drawFeature : function(tilePoint, bbox, resource, callback) {
 	            var coords = this._getCoordinates(resource);
-	            if (!coords)
+	            if (!coords) {
+	                callback(null, null);
 	                return;
-
-	            var latlng = new L.LatLng(coords[1], coords[0]);
-	            var p = this._map.project(latlng);
-	            var tileSize = this._getTileSize();
+	            }
+	            var p = this._map.project(coords);
+	            var tileSize = this._layer._getTileSize();
 	            var s = tilePoint.multiplyBy(tileSize);
 
 	            var x = Math.round(p.x - s.x);
@@ -4105,10 +4092,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (icon.anchor) {
 	                anchor._subtract(icon.anchor);
 	            }
-	            return {
+	            callback(null, {
 	                image : icon.image,
 	                anchor : anchor
-	            };
+	            });
+	        },
+
+	        // -----------------------------------------------------------------
+	        // All other methods are specific for resources corresponding to points
+	        // on maps and used only by the _getBoundingBox and/or by _drawFeature
+	        // methods.
+
+	        /**
+	         * Returns point a L.LatLng object with coordinates for the specified
+	         * resource.
+	         */
+	        _getCoordinates : function(d) {
+	            var bbox = IDataProvider.getGeoJsonBoundingBox(d);
+	            if (!bbox)
+	                return null;
+	            return bbox.getCenter();
 	        },
 
 	        /**
@@ -4134,9 +4137,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return 'resource';
 	        },
 
+	        /** Returns an option value */
 	        _getOptionValue : function(key) {
 	            var val = this.options[key];
-	            if (_.isFunction(val)) {
+	            if (typeof val === 'function') {
 	                var args = _.toArray(arguments);
 	                args.splice(0, 1);
 	                val = val.apply(this.options, args);
@@ -4144,11 +4148,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return val;
 	        },
 
+	        /** Returns an option value */
 	        _getVal : function(key, defaultValue) {
 	            return this._getOptionValue(key, this._map.getZoom()) || //
 	            defaultValue;
 	        },
 
+	        /** Get the radius of markers. */
 	        _getRadius : function(defaultValue) {
 	            return this._getVal('radius', 16);
 	        },
@@ -4184,6 +4190,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            };
 	        },
 
+	        /** Draws a simple marker */
 	        _drawMarker : function(g, x, y, width, height, radius) {
 	            g.beginPath();
 	            // a
@@ -4210,19 +4217,370 @@ return /******/ (function(modules) { // webpackBootstrap
 	            x + width / 2, y + 0);
 	            g.closePath();
 	        },
+	    });
+
+	    // --------------------------------------------------------------------
+	    // The main class
+
+	    /**
+	     * This layer draws data on canvas tiles. This class uses the following
+	     * parameters from the constructor: 1) 'dataProvider' is a IDataProvider
+	     * instance allowing asynchronously load data for each tile; by default a
+	     * SimpleDataProvider is used 2) 'dataRenderer' is a IDataRenderer instance
+	     * responsible for data visualization on canvas tiles; by default a
+	     * MarkersRenderer instance is used
+	     */
+	    var LeafletDataLayer = L.TileLayer.Canvas.extend({
+
+	        // References to classes
+	        statics : {
+	            IDataProvider : IDataProvider,
+	            SimpleDataProvider : SimpleDataProvider,
+	            IDataRenderer : IDataRenderer,
+	            MarkersRenderer : MarkersRenderer,
+	            IndexedCanvas : IndexedCanvas
+	        },
+
+	        /** Default options of this class. */
+	        options : {
+
+	            // Default size of a minimal clickable zone is 4x4 screen pixels.
+	            resolution : 4,
+
+	            // Show pointer cursor for zones associated with data
+	            pointerCursor : true,
+
+	            // Asynchronous tiles drawing
+	            async : true,
+
+	            // Don't reuse canvas tiles
+	            reuseTiles : false,
+
+	            // Use a global (per layer) index of masks.
+	            // Should be set to false if all data have individual
+	            // reprensentations on the map.
+	            reuseMasks : true
+	        },
+
+	        /**
+	         * Initializes this layer
+	         */
+	        initialize : function(options) {
+	            // Not used anymore. Deprecated. To remove.
+	            this._canvasLayer = this;
+	            options.fillOpacity = options.opacity;
+	            delete options.opacity;
+	            var url = null;
+	            L.TileLayer.Canvas.prototype.initialize.apply(this, url, options);
+	            L.setOptions(this, options);
+	            // Use a global index for image masks used by this layer.
+	            // This index accelerates mapping of individual rendered objects
+	            // but it is useful only if multiple objects have the same visual
+	            // representation on the map.
+	            if (this.options.reuseMasks) {
+	                this.options.maskIndex = this.options.maskIndex || {};
+	            }
+	            this.setData(this.options.data);
+	        },
+
+	        // --------------------------------------------------------------------
+	        // Leaflet.ILayer/L.TileLayer.Canvas methods
+
+	        /**
+	         * This method is called when this layer is added to the map.
+	         */
+	        onAdd : function(map) {
+	            this._map = map;
+	            var dataRenderer = this._getDataRenderer();
+	            dataRenderer.onAdd(this);
+	            L.TileLayer.Canvas.prototype.onAdd.apply(this, arguments);
+	            this.on('tileunload', this._onTileUnload, this);
+	            map.on('click', this._click, this);
+	            map.on('mouseover mouseout mousemove', this._move, this);
+	        },
+
+	        /**
+	         * This method is called when this layer is removed from the map.
+	         */
+	        onRemove : function(map) {
+	            this.off('tileunload', this._onTileUnload, this);
+	            map.off('click', this._click, this);
+	            map.off('mouseover mouseout mousemove', this._move, this);
+	            this._removeMouseCursorStyle();
+	            L.TileLayer.Canvas.prototype.onRemove.apply(this, arguments);
+	            var dataRenderer = this._getDataRenderer();
+	            dataRenderer.onRemove(this);
+	        },
+
+	        /**
+	         * Initializes container for tiles.
+	         */
+	        _initContainer : function() {
+	            var initContainer = L.TileLayer.Canvas.prototype._initContainer;
+	            initContainer.apply(this, arguments);
+	            var pane = this._map._panes.markerPane;
+	            pane.appendChild(this._container);
+	        },
+
+	        // --------------------------------------------------------------------
+	        // Event management
+
+	        /** Map click handler */
+	        _click : function(e) {
+	            if (!this.hasEventListeners('click'))
+	                return;
+	            var on = this._objectForEvent(e);
+	            if (on.data) {
+	                this.fire('click', on);
+	            }
+	        },
+
+	        /** Map move handler */
+	        _move : function(e) {
+	            // if (!this.hasEventListeners('mouseout')
+	            // && !this.hasEventListeners('mouseover')
+	            // && !this.hasEventListeners('mousemove'))
+	            // return;
+	            var on = this._objectForEvent(e);
+	            if (on.data !== this._mouseOn) {
+	                if (this._mouseOn) {
+	                    this.fire('mouseout', {
+	                        latlng : e.latlng,
+	                        data : this._mouseOn
+	                    });
+	                    this._removeMouseCursorStyle();
+	                }
+	                if (on.data) {
+	                    this.fire('mouseover', on);
+	                    this._setMouseCursorStyle();
+	                }
+	                this._mouseOn = on.data;
+	            } else if (on.data) {
+	                this.fire('mousemove', on);
+	            }
+	        },
+
+	        // --------------------------------------------------------------------
+	        // Cursor style management
+
+	        /**
+	         * Checks if the cursor style of the container should be changed to
+	         * pointer cursor
+	         */
+	        _setMouseCursorStyle : function() {
+	            if (!this.options.pointerCursor)
+	                return;
+	            var container = this._getMapContainer();
+	            if (!container._pointerCursorCount) {
+	                container._pointerCursorCount = 1;
+	                container.style.cursor = 'pointer';
+	            } else {
+	                container._pointerCursorCount++;
+	            }
+	        },
+
+	        /** Removes cursor style from the map container */
+	        _removeMouseCursorStyle : function() {
+	            if (!this.options.pointerCursor)
+	                return;
+	            var container = this._getMapContainer();
+	            if (container._pointerCursorCount) {
+	                container._pointerCursorCount--;
+	                if (container._pointerCursorCount === 0) {
+	                    container.style.cursor = '';
+	                    delete container._pointerCursorCount;
+	                }
+	            }
+	        },
+
+	        /** Returns a map container. */
+	        _getMapContainer : function() {
+	            return this._map._container;
+	        },
+
+	        // --------------------------------------------------------------------
+	        // Data management
+
+	        /**
+	         * Returns the underlying data provider object (a IDataProvider
+	         * instance).
+	         */
+	        _getDataProvider : function() {
+	            if (!this.options.dataProvider) {
+	                this.options.dataProvider = new SimpleDataProvider();
+	            }
+	            return this.options.dataProvider;
+	        },
+
+	        /** Sets the specified data and re-draws the layer. */
+	        setData : function(data) {
+	            var dataProvider = this._getDataProvider();
+	            if (dataProvider.setData) {
+	                dataProvider.setData(data);
+	                this.redraw();
+	            }
+	        },
+
+	        /**
+	         * This method is called when a tile is removed from the map. It cleans
+	         * up data associated with this tile.
+	         */
+	        _onTileUnload : function(evt) {
+	            var canvas = evt.tile;
+	            if (canvas._index) {
+	                canvas._index.reset();
+	                delete canvas._index;
+	            }
+	        },
+
+	        /**
+	         * This method is used to draw on canvas tiles. It is invoked by the
+	         * parent L.TileLayer.Canvas class.
+	         */
+	        _redrawTile : function(canvas) {
+	            var that = this;
+	            var tilePoint = canvas._tilePoint;
+	            var bbox = this._getTileBoundingBox(tilePoint);
+	            var dataProvider = this._getDataProvider();
+	            function renderData(data) {
+	                var counter = data ? data.length : 0;
+	                L.Util.invokeEach(data, function(i, d) {
+	                    var dataRenderer = that._getDataRenderer();
+	                    dataRenderer.drawFeature(tilePoint, bbox, d, //
+	                    function(err, ctx) {
+	                        try {
+	                            if (err) {
+	                                that._handleRenderError(canvas, tilePoint,
+	                                        err);
+	                            } else if (ctx && ctx.image) {
+	                                var index = that._getCanvasIndex(canvas, true);
+	                                index.draw(ctx.image, //
+	                                ctx.anchor.x, ctx.anchor.y, d);
+	                            }
+	                        } finally {
+	                            counter--;
+	                            if (counter === 0) {
+	                                that.tileDrawn(canvas);
+	                            }
+	                        }
+	                    });
+	                });
+	            }
+	            dataProvider.loadData(bbox, tilePoint, function(err, data) {
+	                if (err) {
+	                    that._handleRenderError(canvas, tilePoint, err);
+	                    that.tileDrawn(canvas);
+	                    return;
+	                }
+	                if (!data || data.length === 0) {
+	                    that.tileDrawn(canvas);
+	                    return;
+	                }
+	                try {
+	                    renderData(data);
+	                } catch (renderError) {
+	                    that._handleRenderError(canvas, tilePoint, renderError);
+	                    that.tileDrawn(canvas);
+	                }
+	            });
+	        },
+
+	        /**
+	         * Reports a rendering error
+	         */
+	        _handleRenderError : function(canvas, tilePoint, err) {
+	            // TODO: visualize the error on the canvas
+	            console.log('ERROR', err);
+	        },
+
+	        /**
+	         * Returns a bounding box around a tile with the specified coordinates.
+	         * This bounding box is used to load data to show on the tile. The
+	         * returned bounding box is bigger than tile - it includes a buffer zone
+	         * used to avoid clipping of rendered data. The size of the additional
+	         * buffering zone is defined by the "IDataRenderer.getBufferZoneSize"
+	         * method.
+	         */
+	        _getTileBoundingBox : function(tilePoint) {
+	            var that = this;
+	            var tileSize = that._getTileSize();
+	            var nwPoint = tilePoint.multiplyBy(tileSize);
+	            var sePoint = nwPoint.add(new L.Point(tileSize, tileSize));
+	            var dataRenderer = this._getDataRenderer();
+	            var bufferSize = dataRenderer.getBufferZoneSize();
+	            nwPoint = nwPoint.subtract(bufferSize);
+	            sePoint = sePoint.add(bufferSize);
+	            var bbox = new L.LatLngBounds(that._map.unproject(sePoint),
+	                    that._map.unproject(nwPoint));
+	            return bbox;
+	        },
+
+	        /**
+	         * Returns a IDataRenderer renderer instance responsible for data
+	         * visualization.
+	         */
+	        _getDataRenderer : function() {
+	            if (!this.options.dataRenderer) {
+	                this.options.dataRenderer = new MarkersRenderer();
+	            }
+	            return this.options.dataRenderer;
+	        },
+
+	        /**
+	         * Returns an object from the internal index corresponding to the
+	         * coordinates of the mouse event.
+	         */
+	        _objectForEvent : function(e) {
+	            var latlng = e.latlng;
+	            var map = this._map;
+	            var point = map.latLngToLayerPoint(latlng);
+	            point = point.add(map.getPixelOrigin());
+	            var tileSize = this._getTileSize();
+	            var tilePoint = point.divideBy(tileSize).floor();
+	            var key = tilePoint.x + ':' + tilePoint.y;
+	            var canvas = this._tiles[key];
+	            var data;
+	            if (canvas) {
+	                var index = this._getCanvasIndex(canvas, false);
+	                if (index) {
+	                    var canvasX = point.x % tileSize;
+	                    var canvasY = point.y % tileSize;
+	                    data = index.getData(canvasX, canvasY);
+	                }
+	            }
+	            return {
+	                latlng : latlng,
+	                data : data
+	            };
+	        },
+
+	        /**
+	         * Returns an IndexedCanvas instance associated with the specified
+	         * canvas.
+	         */
+	        _getCanvasIndex : function(canvas, create) {
+	            if (!canvas._index && create) {
+	                var maskIndex = this.options.maskIndex || {};
+	                canvas._index = new IndexedCanvas({
+	                    canvas : canvas,
+	                    maskIndex : maskIndex
+	                });
+	            }
+	            return canvas._index;
+	        },
 
 	    });
 
-	    return MarkersLayer;
+	    return LeafletDataLayer;
 
 	}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 
 /***/ },
-/* 28 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(30), __webpack_require__(32), __webpack_require__(1), __webpack_require__(25) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic, InteractionLayer) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(29), __webpack_require__(31), __webpack_require__(1), __webpack_require__(24) ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(_, L, Mosaic, InteractionLayer) {
 
 	    /**
 	     * The code of this class was mostly copied from the leaflet.utfgrid Leaflet
@@ -4336,7 +4694,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 29 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;if (false) {
@@ -4370,6 +4728,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /* URI static utility methods */
 	    /* ----------------------------------------------------------------- */
 
+	    function isArray(obj) {
+	        if (!obj)
+	            return false;
+	        if (Array.isArray) {
+	            return Array.isArray(obj);
+	        } else {
+	            return Object.prototype.toString.call(obj) == '[object Array]';
+	        }
+	    }
+
 	    /** Splits the given query string to an object */
 	    URI.splitQuery = function(query) {
 	        var result = {};
@@ -4380,7 +4748,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var parts = str.split('=');
 	                var key = decodeURIComponent(parts[0]);
 	                var value = decodeURIComponent(parts[1]);
-	                result[key] = value;
+	                if (!(key in result)) {
+	                    result[key] = value;
+	                } else {
+	                    var prev = result[key];
+	                    var values = prev;
+	                    if (!isArray(values)) {
+	                        values = result[key] = [ prev ];
+	                    }
+	                    values.push(value);
+	                }
 	            }
 	        }
 	        return result;
@@ -4393,13 +4770,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (query.hasOwnProperty(key)) {
 	                var value = query[key] || '';
 	                var k = encodeURIComponent(key);
-	                var v = encodeURIComponent(value);
-	                if (result.length > 0) {
-	                    result += '&';
+	                var array = value;
+	                if (!isArray(array)) {
+	                    array = [ value ];
 	                }
-	                result += k;
-	                result += '=';
-	                result += v;
+	                for (var i = 0; i < array.length; i++) {
+	                    if (result.length > 0) {
+	                        result += '&';
+	                    }
+	                    var v = encodeURIComponent(array[i]);
+	                    result += k;
+	                    result += '=';
+	                    result += v;
+	                }
 	            }
 	        }
 	        return result;
@@ -4460,13 +4843,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    /** Cleans up all internal fields */
 	    URI.prototype.reset = function(keepPath, keepDomain) {
-	        if (!keepDomain){
+	        if (!keepDomain) {
 	            delete this.scheme;
 	            delete this.authority;
 	            delete this.domain;
 	            delete this.port;
 	        }
-	        if (!keepPath){
+	        if (!keepPath) {
 	            delete this.path;
 	            delete this.query;
 	            delete this.fragment;
@@ -4666,6 +5049,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_29__;
+
+/***/ },
 /* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -4688,12 +5077,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_33__;
-
-/***/ },
-/* 34 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_34__;
 
 /***/ }
 /******/ ])
