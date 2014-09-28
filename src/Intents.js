@@ -31,20 +31,31 @@ function(require) {
                 if (name[0] == '_') //
                     return;
                 var action = obj[name];
+                var addToApi = true;
                 if (action.intentHandler) {
+                    var intentKey = name;
+                    var idx = name.indexOf(':');
+                    addToApi = false;
+                    if (idx < 0) {
+                        addToApi = true;
+                        intentKey = key + ':' + name;
+                        // Add code to activate the intent; this code is called
+                        // instead of the original method
+                        obj[name] = function(options) {
+                            options = options || {};
+                            var intent = that.newIntent(intentKey, options);
+                            return intent.promise;
+                        };
+                    }
                     // Register an intent handler
-                    that.addIntentHandler(key, name, function(intent) {
+                    that.addIntentHandler(key, intentKey, function(intent) {
                         return action.call(obj, intent);
                     });
-                    // Add code to activate the intent; this code is called
-                    // instead of the original method
-                    obj[name] = function(options) {
-                        options = options || {};
-                        var intent = that.newIntent(name, options);
-                        return intent.promise;
-                    };
                 }
-                api[name] = obj[name] = _.bind(obj[name], obj);
+                obj[name] = _.bind(obj[name], obj);
+                if (addToApi) {
+                    api[name] = obj[name];
+                }
             });
             return api;
         },
