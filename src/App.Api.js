@@ -22,9 +22,58 @@ function(require) {
          * Constructor of this class. Initializes the internal cache for data
          * loaded from the server.
          */
-        initialize : function() {
-            AppComponent.prototype.initialize.apply(this, arguments);
-            this._cache = {};
+        initialize : function(options) {
+            this.setOptions(options);
+            this.app = this.options.app;
+            this._initFields();
+            this.api = this._initApi(this.options.key);
+        },
+
+        // ------------------------------------------------------------------
+
+        /** Notifies subscribers about changes */
+        notify : function() {
+            this.emit('changed');
+        },
+
+        /** Adds a new change listener */
+        addChangeListener : function(listener, context) {
+            this.on('changed', listener, context);
+        },
+
+        /** Removes a change listener */
+        removeChangeListener : function(listener, context) {
+            this.off('changed', listener, context);
+        },
+
+        // ------------------------------------------------------------------
+
+        /**
+         * This method should initialize all internal fields of the store. It
+         * should be overloaded in subclasses.
+         */
+        _initFields : function() {
+        },
+
+        /**
+         * Initializes and returns an "api" field for this object. It replaces
+         * all methods marked with the "intentHandler" flag by an intent calls
+         * with the same name. The returned object contains all "public" methods
+         * (not started with the "_" symbol).
+         */
+        _initApi : function(key) {
+            var intents = this._getIntents();
+            this.api = intents.initApi(key, this);
+            return this.api;
+        },
+
+        /** Returns an Intents manager instance associated with this object. */
+        _getIntents : function() {
+            var intentsRegistry = this.intents || this.options.intents;
+            if (!intentsRegistry && this.app) {
+                intentsRegistry = this.app.intents;
+            }
+            return intentsRegistry;
         },
 
         /**
@@ -98,15 +147,16 @@ function(require) {
                 var noCache = options.noCache;
                 var forceReload = options.force;
                 var result;
+                var cache = that._cache = that._cache || {};
                 if (!noCache && !forceReload) {
-                    result = that._cache[path];
+                    result = cache[path];
                 }
                 if (result) {
                     return result;
                 }
                 return that._loadJson(path).then(function(result) {
                     if (!noCache) {
-                        that._cache[path] = result;
+                        cache[path] = result;
                     }
                     return result;
                 });
@@ -137,6 +187,11 @@ function(require) {
         },
 
     });
+
+    Api.intent = function(m) {
+        m.intentHandler = true;
+        return m;
+    };
 
     function toArray(obj) {
         if (!obj)

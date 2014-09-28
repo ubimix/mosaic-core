@@ -351,9 +351,7 @@ function(require) {
                     child.deactivate(newEvent());
                 }
             }
-            // Deactivates all node before and deactivates after
-            // already
-            // active subnode
+            // Deactivates all nodes before and after already active subnode
             function activateAfter(child, stage) {
                 function addChildren(node, obj) {
                     _.each(obj, function(value, key) {

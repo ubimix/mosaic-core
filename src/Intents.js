@@ -18,6 +18,37 @@ function(require) {
     var Intents = Mosaic.Class.extend({
 
         /**
+         * Initializes and returns an "api" for the specified object. It
+         * replaces all methods marked with the "intentHandler" flag by an
+         * intent calls with the name of this method. The returned object
+         * contains all "public" methods (not started the with "_" symbol).
+         */
+        initApi : function(key, obj) {
+            var api = {};
+            var that = this;
+            _.each(_.functions(obj), function(name) {
+                if (name[0] == '_') //
+                    return;
+                var action = obj[name];
+                if (action.intentHandler) {
+                    // Register an intent handler
+                    that.addIntentHandler(key, name, function(intent) {
+                        return action.call(obj, intent);
+                    });
+                    // Add code to activate the intent; this code is called
+                    // instead of the original method
+                    obj[name] = function(options) {
+                        options = options || {};
+                        var intent = that.newIntent(name, options);
+                        return intent.promise;
+                    };
+                }
+                api[name] = obj[name] = _.bind(obj[name], obj);
+            });
+            return api;
+        },
+
+        /**
          * Creates and propagates a new intent.
          * 
          * @param intentKey
@@ -272,6 +303,15 @@ function(require) {
             return that._deferred.promise.then(finalize, finalize).done();
         }
     });
+
+    /**
+     * A simple utility method marking the specified method with the
+     * "intentHandler" flag.
+     */
+    Intents.handler = function(m) {
+        m.intentHandler = true;
+        return m;
+    }
 
     return Intents;
 });
