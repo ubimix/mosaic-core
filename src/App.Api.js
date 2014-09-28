@@ -63,8 +63,26 @@ function(require) {
          */
         _initApi : function(key) {
             var intents = this._getIntents();
-            this.api = intents.initApi(key, this);
+            var methods = this._getApiMethods();
+            this.api = intents.initApi(key, this, methods);
             return this.api;
+        },
+
+        /**
+         * Returns a list of methods to expose in the 'api' object. Only these
+         * methods will be available from the outside of this object.
+         */
+        _getApiMethods : function() {
+            var methods = {};
+            _.each(_.functions(this), function(name) {
+                if (name[0] == '_') // Hide all "private" methods
+                    return;
+                methods[name] = true;
+            });
+            _.each(_.functions(AppComponent.prototype), function(name) {
+                delete methods[name];
+            }, this);
+            return _.keys(methods).sort();
         },
 
         /** Returns an Intents manager instance associated with this object. */

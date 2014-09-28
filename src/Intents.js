@@ -23,10 +23,11 @@ function(require) {
          * intent calls with the name of this method. The returned object
          * contains all "public" methods (not started the with "_" symbol).
          */
-        initApi : function(key, obj) {
+        initApi : function(key, obj, methods) {
             var api = {};
             var that = this;
-            _.each(_.functions(obj), function(name) {
+            methods = methods || _.functions(obj);
+            _.each(methods, function(name) {
                 if (name[0] == '_') //
                     return;
                 var action = obj[name];
