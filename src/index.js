@@ -7,14 +7,13 @@ define(
         './App.Component', './App.Store', './AbstractSet', './DataSet',
         './CompositeDataSet', './DataSetView', './LeafletDataSetView',
         './LeafletReactMap', './LeafletDataSubsetView',
-        './LeafletFeatureBuilder', './React.FilterBox',
+        './LeafletFeatureBuilder', './Leaflet.UtfGrid', './React.FilterBox',
         './React.SearchBoxMixin',
         // './TemplateDataSetView', './TemplateView', './TemplateViewManager',
         './AdapterManager', './Dependencies', './Intents', './ViewManager',
         './ActivationTree', './ReactDataSetMixin', './InfiniteScroll',
 
-        './Leaflet.InteractionLayer', './Leaflet.MapTiles',
-        './LeafletDataLayer', './Leaflet.UtfGrid', './URI' ],
+        './URI' ],
 // Module
 function(require) {
     var Mosaic = require('mosaic-commons');
@@ -32,10 +31,6 @@ function(require) {
     Mosaic.Leaflet = {
         ReactMap : require('./LeafletReactMap'),
         FeatureBuilder : require('./LeafletFeatureBuilder'),
-
-        InteractionLayer : require('./Leaflet.InteractionLayer'),
-        MapTiles : require('./Leaflet.MapTiles'),
-        MarkersLayer : require('./LeafletDataLayer'),
         UtfGrid : require('./Leaflet.UtfGrid')
     };
 

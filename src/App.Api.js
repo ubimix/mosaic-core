@@ -77,6 +77,8 @@ function(require) {
             _.each(_.functions(this), function(name) {
                 if (name[0] == '_') // Hide all "private" methods
                     return;
+                if (name.match(/^on.+$/)) // Hide all event handlers (onXxxx)
+                    return;
                 methods[name] = true;
             });
             _.each(_.functions(AppComponent.prototype), function(name) {

@@ -23,6 +23,17 @@ function(require) {
             this._children = {};
         },
 
+        /** Returns path from this node to the specified top node. */
+        getPath : function(top) {
+            var path = '';
+            var node = this;
+            while (node && node != top) {
+                path = '/' + node.getKey() + path;
+                node = node.getParent();
+            }
+            return path;
+        },
+
         /** Returns a parent for this node. */
         getParent : function() {
             return this.parent;
@@ -204,9 +215,9 @@ function(require) {
          */
         _newChild : function(key) {
             var Type = this.getClass();
-            return new Type({
+            return new Type(_.extend({}, this.options, {
                 key : key
-            });
+            }));
         },
     });
 
@@ -235,13 +246,14 @@ function(require) {
          */
         setStatus : function(status, options) {
             var prevStatus = this._status;
-            var updated = prevStatus != status;
-            if (updated || options && options.force) {
+            var update = prevStatus != status || options && options.force;
+            if (update) {
                 this._status = status;
                 this._notify('status', _.extend({}, options, {
                     prevStatus : prevStatus
                 }));
             }
+            return update;
         },
 
         /**
@@ -271,22 +283,22 @@ function(require) {
          * Activates this node.
          */
         activate : function(options) {
-            this.setStatus('active', options);
+            return this.setStatus('active', options);
         },
 
         /**
          * Deactivates this node.
          */
         deactivate : function(options) {
-            this.setStatus('inactive', options);
+            return this.setStatus('inactive', options);
         },
 
         /** Activates inactive nodes and deactivates active ones. */
         toggle : function(options) {
             if (this.isActive()) {
-                this.deactivate(options);
+                return this.deactivate(options);
             } else {
-                this.activate(options);
+                return this.activate(options);
             }
         },
 
