@@ -7,8 +7,8 @@ define(
         './App.Component', './App.Store', './AbstractSet', './DataSet',
         './CompositeDataSet', './DataSetView', './LeafletDataSetView',
         './LeafletReactMap', './LeafletDataSubsetView',
-        './LeafletFeatureBuilder', './Leaflet.UtfGrid', './React.FilterBox',
-        './React.SearchBoxMixin',
+        './LeafletFeatureBuilder', './Leaflet.UtfGrid', './LeafletMapViewport',
+        './React.FilterBox', './React.SearchBoxMixin',
         // './TemplateDataSetView', './TemplateView', './TemplateViewManager',
         './AdapterManager', './Dependencies', './Intents', './ViewManager',
         './ActivationTree', './ReactDataSetMixin', './InfiniteScroll',
@@ -31,7 +31,8 @@ function(require) {
     Mosaic.Leaflet = {
         ReactMap : require('./LeafletReactMap'),
         FeatureBuilder : require('./LeafletFeatureBuilder'),
-        UtfGrid : require('./Leaflet.UtfGrid')
+        UtfGrid : require('./Leaflet.UtfGrid'),
+        MapViewport : require('./LeafletMapViewport')
     };
 
     Mosaic.Core = {
