@@ -323,7 +323,7 @@ function(require) {
     Intents.handler = function(m) {
         m.intentHandler = true;
         return m;
-    }
+    };
 
     return Intents;
 });
