@@ -77,14 +77,21 @@ function(require) {
                 return null;
             }
             var options = that.getOptions(data);
+            var marker;
             var layer = L.GeoJSON.geometryToLayer(data, function(resource,
                 latlng) {
-                var marker = that.getMarker(resource, options);
+                marker = that.getMarker(resource, options);
                 if (marker === undefined) {
                     marker = new L.Marker(latlng, options);
                 }
                 return marker;
             }, L.GeoJSON.coordsToLatLng, options);
+            if (layer && !marker) {
+                marker = that.getMarker(data, options);
+                if (marker) {
+                    layer = L.featureGroup([ layer, marker ]);
+                }
+            }
             this.bindEventHandlers(data, layer);
             return layer;
         },

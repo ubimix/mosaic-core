@@ -46,7 +46,6 @@ function(require, L) {
         },
 
         /**
-         * 
          * Defines the viewport for the map - the visible area of the map where
          * data should be focused and fitted. If a focus position is not defined
          * then this method sets the focus position to the center of the
@@ -160,7 +159,6 @@ function(require, L) {
         fitBounds : function(bounds) {
             var viewport = this.getViewport();
             var padding = this._getViewportPadding();
-            console.log('_fitBounds', viewport, padding);
             var options = {};
             options.paddingTopLeft = padding.min;
             options.paddingBottomRight = padding.max;
