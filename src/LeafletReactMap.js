@@ -39,10 +39,11 @@ function(require) {
         },
         _newMap : function(container) {
             var mapOptions = this.props.options || {};
-            var map = L.map(container, {
+            var options = _.extend({}, mapOptions, {
                 zoomControl : false,
-                attributionControl : false
+                attributionControl : false,
             });
+            var map = L.map(container, options);
             var options = _.extend({}, mapOptions.zoomControl);
             options = _.defaults(options, {
                 position : 'topright'
@@ -58,7 +59,7 @@ function(require) {
                 var attributionControl = L.control.attribution(options);
                 map.addControl(attributionControl);
             }
-            
+
             var center = mapOptions.center;
             if (_.isArray(center)) {
                 center = L.latLng(center[1], center[0]);
@@ -73,7 +74,7 @@ function(require) {
             var node = this.getDOMNode();
             var zoom = this.map.getZoom();
             var cls = [];
-            for (var i = 0; i <= zoom; i++) {
+            for ( var i = 0; i <= zoom; i++) {
                 cls.push('zoom-' + i);
             }
             var css = node.className;
