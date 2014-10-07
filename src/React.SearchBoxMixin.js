@@ -128,7 +128,6 @@ function(require) {
                 } else {
                     that._model = new SearchBoxMixinModel();
                 }
-                var x = new FilterBox.Model();
             }
             return that._model;
         },

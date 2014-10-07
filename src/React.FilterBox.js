@@ -291,7 +291,7 @@ function(require) {
         /** Returns the size of the input box. */
         _getInputSize : function(value) {
             value = value || '';
-            return Math.min(15, Math.max(value.length, 3));
+            return Math.min(50, Math.max(value.length, 3));
         }
     });
 

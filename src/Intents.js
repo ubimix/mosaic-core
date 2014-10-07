@@ -310,9 +310,15 @@ function(require) {
                         }
                         return that._handlerPromises[key];
                     }
-                }).then(that._processed.resolve, that._processed.reject);
+                }).then(function(result) {
+                    that._processed.resolve(result);
+                    return result;
+                }, function(err) {
+                    that._processed.reject(err);
+                    throw err;
+                });
             };
-            return that._deferred.promise.then(finalize, finalize).done();
+            return that._deferred.promise.then(finalize, finalize);
         }
     });
 
