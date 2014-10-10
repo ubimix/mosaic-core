@@ -50,6 +50,12 @@ function(require) {
          */
         add : function(key, node) {
             var that = this;
+            if (!node && _.isObject(key)) {
+                node = key;
+            }
+            if (_.isFunction(key.getKey)) {
+                key = key.getKey();
+            }
             that.remove(key);
             if (!node) {
                 node = that._newChild(key);
@@ -67,9 +73,10 @@ function(require) {
          */
         get : function(key, create) {
             var that = this;
-            var result = that._children[key];
-            if (!result && create) {
-                result = that.add(key);
+            var result = this._children[key];
+            if (!result) {
+                var path = key.split('/');
+                result = this._getByPath(path, 0, create);
             }
             return result;
         },
@@ -161,6 +168,34 @@ function(require) {
             if (_.isFunction(visitor.after)) {
                 visitor.after(that);
             }
+        },
+
+        /**
+         * Returns a node corresponding to the specified path.
+         * 
+         * @param path
+         *            an array of path segments to the required node
+         * @param idx
+         *            position of the current key in the path
+         * @param create
+         *            if this flag is <code>true</code> and there is no node
+         *            corresponding to the specified path then a new node is
+         *            created
+         */
+        _getByPath : function(path, idx, create) {
+            var key = idx >= 0 && idx < path.length ? path[idx] : null;
+            if (!key)
+                return;
+            var result = this._children[key];
+
+            if (!result && create) {
+                result = this.add(key);
+            }
+            if (!result)
+                return result;
+            return idx < path.length - 1 ? //
+            result._getByPath(path, idx + 1, create) : //
+            result;
         },
 
         /**

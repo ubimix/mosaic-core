@@ -44,7 +44,7 @@ function(require) {
                 attributionControl : false,
             });
             var map = L.map(container, options);
-            var options = _.extend({}, mapOptions.zoomControl);
+            options = _.extend({}, mapOptions.zoomControl);
             options = _.defaults(options, {
                 position : 'topright'
             });

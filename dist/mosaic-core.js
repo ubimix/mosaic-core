@@ -1280,11 +1280,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 	        _newMap : function(container) {
 	            var mapOptions = this.props.options || {};
-	            var map = L.map(container, {
+	            var options = _.extend({}, mapOptions, {
 	                zoomControl : false,
-	                attributionControl : false
+	                attributionControl : false,
 	            });
-	            var options = _.extend({}, mapOptions.zoomControl);
+	            var map = L.map(container, options);
+	            options = _.extend({}, mapOptions.zoomControl);
 	            options = _.defaults(options, {
 	                position : 'topright'
 	            });
@@ -1299,7 +1300,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var attributionControl = L.control.attribution(options);
 	                map.addControl(attributionControl);
 	            }
-	            
+
 	            var center = mapOptions.center;
 	            if (_.isArray(center)) {
 	                center = L.latLng(center[1], center[0]);
@@ -1314,7 +1315,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var node = this.getDOMNode();
 	            var zoom = this.map.getZoom();
 	            var cls = [];
-	            for (var i = 0; i <= zoom; i++) {
+	            for ( var i = 0; i <= zoom; i++) {
 	                cls.push('zoom-' + i);
 	            }
 	            var css = node.className;
@@ -1456,14 +1457,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return null;
 	            }
 	            var options = that.getOptions(data);
+	            var marker;
 	            var layer = L.GeoJSON.geometryToLayer(data, function(resource,
 	                latlng) {
-	                var marker = that.getMarker(resource, options);
+	                marker = that.getMarker(resource, options);
 	                if (marker === undefined) {
 	                    marker = new L.Marker(latlng, options);
 	                }
 	                return marker;
 	            }, L.GeoJSON.coordsToLatLng, options);
+	            if (layer && !marker) {
+	                marker = that.getMarker(data, options);
+	                if (marker) {
+	                    layer = L.featureGroup([ layer, marker ]);
+	                }
+	            }
 	            this.bindEventHandlers(data, layer);
 	            return layer;
 	        },
@@ -1665,7 +1673,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 
 	        /**
-	         * 
 	         * Defines the viewport for the map - the visible area of the map where
 	         * data should be focused and fitted. If a focus position is not defined
 	         * then this method sets the focus position to the center of the
@@ -1779,7 +1786,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        fitBounds : function(bounds) {
 	            var viewport = this.getViewport();
 	            var padding = this._getViewportPadding();
-	            console.log('_fitBounds', viewport, padding);
 	            var options = {};
 	            options.paddingTopLeft = padding.min;
 	            options.paddingBottomRight = padding.max;
@@ -2105,7 +2111,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        /** Returns the size of the input box. */
 	        _getInputSize : function(value) {
 	            value = value || '';
-	            return Math.min(15, Math.max(value.length, 3));
+	            return Math.min(50, Math.max(value.length, 3));
 	        }
 	    });
 
@@ -2241,7 +2247,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                } else {
 	                    that._model = new SearchBoxMixinModel();
 	                }
-	                var x = new FilterBox.Model();
 	            }
 	            return that._model;
 	        },
@@ -3046,9 +3051,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                        return that._handlerPromises[key];
 	                    }
-	                }).then(that._processed.resolve, that._processed.reject);
+	                }).then(function(result) {
+	                    that._processed.resolve(result);
+	                    return result;
+	                }, function(err) {
+	                    that._processed.reject(err);
+	                    throw err;
+	                });
 	            };
-	            return that._deferred.promise.then(finalize, finalize).done();
+	            return that._deferred.promise.then(finalize, finalize);
 	        }
 	    });
 
@@ -3178,6 +3189,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        add : function(key, node) {
 	            var that = this;
+	            if (!node && _.isObject(key)) {
+	                node = key;
+	            }
+	            if (_.isFunction(key.getKey)) {
+	                key = key.getKey();
+	            }
 	            that.remove(key);
 	            if (!node) {
 	                node = that._newChild(key);
@@ -3195,9 +3212,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        get : function(key, create) {
 	            var that = this;
-	            var result = that._children[key];
-	            if (!result && create) {
-	                result = that.add(key);
+	            var result = this._children[key];
+	            if (!result) {
+	                var path = key.split('/');
+	                result = this._getByPath(path, 0, create);
 	            }
 	            return result;
 	        },
@@ -3289,6 +3307,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (_.isFunction(visitor.after)) {
 	                visitor.after(that);
 	            }
+	        },
+
+	        /**
+	         * Returns a node corresponding to the specified path.
+	         * 
+	         * @param path
+	         *            an array of path segments to the required node
+	         * @param idx
+	         *            position of the current key in the path
+	         * @param create
+	         *            if this flag is <code>true</code> and there is no node
+	         *            corresponding to the specified path then a new node is
+	         *            created
+	         */
+	        _getByPath : function(path, idx, create) {
+	            var key = idx >= 0 && idx < path.length ? path[idx] : null;
+	            if (!key)
+	                return;
+	            var result = this._children[key];
+
+	            if (!result && create) {
+	                result = this.add(key);
+	            }
+	            if (!result)
+	                return result;
+	            return idx < path.length - 1 ? //
+	            result._getByPath(path, idx + 1, create) : //
+	            result;
 	        },
 
 	        /**
