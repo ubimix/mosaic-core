@@ -154,6 +154,8 @@ function(require) {
          * "_getItemHeight" method.
          */
         _adjustPosition : function() {
+            if (!this.isMounted())
+                return;
             var that = this;
             var container = that.getDOMNode();
             var scrollPos = container.scrollTop;
@@ -181,6 +183,8 @@ function(require) {
          */
         _setScrollPos : function(scrollPos, force) {
             var that = this;
+            if (!that.isMounted())
+                return;
             var pageSize = that._getPageSize();
             var h = that._getItemHeight();
             var container = that.getDOMNode();
@@ -209,7 +213,9 @@ function(require) {
             params.length != that.state.length) {
                 params.callback = function(items) {
                     params.items = items;
-                    that.setState(that._newState(params));
+                    if (that.isMounted()) {
+                        that.setState(that._newState(params));
+                    }
                 };
                 that._loadItems(params);
                 delete that._resetPos;
