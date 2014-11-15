@@ -41,4 +41,4 @@ Mosaic.Core = {
     URI : require('./URI')
 
 };
-module.exports = Mosaic.Core;
+module.exports = Mosaic;

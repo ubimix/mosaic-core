@@ -4,14 +4,14 @@
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("mosaic-commons"), require("underscore"), require("react"), require("leaflet"));
+		module.exports = factory(require("mosaic-commons"), require("underscore"), require("mosaic-teleport"), require("react"), require("leaflet"));
 	else if(typeof define === 'function' && define.amd)
-		define(["mosaic-commons", "underscore", "react", "leaflet"], factory);
+		define(["mosaic-commons", "underscore", "mosaic-teleport", "react", "leaflet"], factory);
 	else if(typeof exports === 'object')
-		exports["mosaic-core"] = factory(require("mosaic-commons"), require("underscore"), require("react"), require("leaflet"));
+		exports["mosaic-core"] = factory(require("mosaic-commons"), require("underscore"), require("mosaic-teleport"), require("react"), require("leaflet"));
 	else
-		root["mosaic-core"] = factory(root["mosaic-commons"], root["underscore"], root["react"], root["leaflet"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_27__, __WEBPACK_EXTERNAL_MODULE_28__, __WEBPACK_EXTERNAL_MODULE_29__) {
+		root["mosaic-core"] = factory(root["mosaic-commons"], root["underscore"], root["mosaic-teleport"], root["react"], root["leaflet"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_27__, __WEBPACK_EXTERNAL_MODULE_28__, __WEBPACK_EXTERNAL_MODULE_29__, __WEBPACK_EXTERNAL_MODULE_30__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -101,7 +101,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    URI : __webpack_require__(26)
 	
 	};
-	module.exports = Mosaic.Core;
+	module.exports = Mosaic;
 
 
 /***/ },
@@ -206,6 +206,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _ = __webpack_require__(27);
 	var AppComponent = __webpack_require__(5);
 	var Mosaic = __webpack_require__(1);
+	var Teleport = __webpack_require__(28);
 	
 	/**
 	 * An common super-class for all APIs objects. It contains some utility methods
@@ -389,7 +390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var that = this;
 	        return Mosaic.P.then(function() {
 	            var baseUrl = that.app.options.baseUrl;
-	            var client = Mosaic.Teleport.HttpClient.newInstance({
+	            var client = Teleport.HttpClient.newInstance({
 	                baseUrl : baseUrl
 	            });
 	            return client.exec({
@@ -514,7 +515,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ = __webpack_require__(27);
 	var Mosaic = __webpack_require__(1);
-	var React = __webpack_require__(28);
+	var React = __webpack_require__(29);
 	
 	/**
 	 * Datamodel for the FilterBox component providing access to values to
@@ -805,7 +806,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(27);
-	var React = __webpack_require__(28);
+	var React = __webpack_require__(29);
 	var Mosaic = __webpack_require__(1);
 	var FilterBox = __webpack_require__(7);
 	
@@ -964,8 +965,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(27);
-	var React = __webpack_require__(28);
-	var L = __webpack_require__(29);
+	var React = __webpack_require__(29);
+	var L = __webpack_require__(30);
 	
 	module.exports = React.createClass({
 	    displayName : 'ReactMap',
@@ -1045,7 +1046,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var L = __webpack_require__(29);
+	var L = __webpack_require__(30);
 	var Mosaic = __webpack_require__(1);
 	
 	var Config = Mosaic.Class.extend({
@@ -1169,8 +1170,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(27);
-	var L = __webpack_require__(29);
-	var InteractionLayer = __webpack_require__(30);
+	var L = __webpack_require__(30);
+	var InteractionLayer = __webpack_require__(31);
 	
 	/**
 	 * The code of this class was mostly copied from the leaflet.utfgrid Leaflet
@@ -1284,7 +1285,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var L = __webpack_require__(29);
+	var L = __webpack_require__(30);
 	
 	/**
 	 * This class provides common utility methods to manage specific geographic zone
@@ -2062,7 +2063,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Mosaic = __webpack_require__(1);
 	var _ = __webpack_require__(27);
-	var React = __webpack_require__(28);
+	var React = __webpack_require__(29);
 	
 	/**
 	 * This is an "infinite scroll" widget allowing to load elements by their
@@ -3500,7 +3501,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var L = __webpack_require__(29);
+	var L = __webpack_require__(30);
 	var DataSetView = __webpack_require__(19);
 	
 	/**
@@ -4106,9 +4107,15 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
+	module.exports = __WEBPACK_EXTERNAL_MODULE_30__;
+
+/***/ },
+/* 31 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var _ = __webpack_require__(27);
-	var L = __webpack_require__(29);
-	var MapTiles = __webpack_require__(31);
+	var L = __webpack_require__(30);
+	var MapTiles = __webpack_require__(32);
 	
 	/**
 	 * The code of this class was mostly copied from the leaflet.utfgrid Leaflet
@@ -4229,11 +4236,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(27);
-	var L = __webpack_require__(29);
+	var L = __webpack_require__(30);
 	var Mosaic = __webpack_require__(1);
 	
 	/**

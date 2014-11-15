@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var AppComponent = require('./App.Component');
 var Mosaic = require('mosaic-commons');
+var Teleport = require('mosaic-teleport');
 
 /**
  * An common super-class for all APIs objects. It contains some utility methods
@@ -184,7 +185,7 @@ var Api = AppComponent.extend({
         var that = this;
         return Mosaic.P.then(function() {
             var baseUrl = that.app.options.baseUrl;
-            var client = Mosaic.Teleport.HttpClient.newInstance({
+            var client = Teleport.HttpClient.newInstance({
                 baseUrl : baseUrl
             });
             return client.exec({
