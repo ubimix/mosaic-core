@@ -764,7 +764,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    href : "#",
 	                    className : className,
 	                    onClick : this._handleItemClick.bind(this, val),
-	                }, val.label));
+	                }, val.label, React.DOM.span({
+	                    key : _.uniqueId('id-'),
+	                    className : 'cross',
+	                    onClick : this._handleItemClick.bind(this, val),
+	                })));
+	                
+	                
+	                
 	            }
 	        }, this);
 	    },
