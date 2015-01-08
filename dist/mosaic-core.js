@@ -1,5 +1,5 @@
 /*!
- * mosaic-core v0.0.12 | License: MIT 
+ * mosaic-core v0.0.13 | License: MIT 
  * 
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -2250,10 +2250,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var h = that._getItemHeight();
 	        var container = that.getDOMNode();
 	
-	        // Get the offset and index of the first visible item
-	        // If there is no such elements then use the code below
-	        // 
-	        
 	        var windowHeight = container.offsetHeight;
 	        var delta = windowHeight / 4;
 	
