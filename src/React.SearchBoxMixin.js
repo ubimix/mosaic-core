@@ -144,9 +144,10 @@ var SearchBoxMixin = {
      * keeping the state of the search box.
      */
     renderSearchBox : function(options) {
-        return (FilterBox(_.extend({}, options, {
+        var Factory = React.createFactory(FilterBox);
+        return Factory(_.extend({}, options, {
             model : this._getFilterBoxModel()
-        })));
+        }));
     },
 };
 
