@@ -1,7 +1,7 @@
 {
     "name": "mosaic-core",
   	"version": "0.0.12",
-    "main" : "src",
+    "main" : "",
     "dependencies" : {
         "mosaic-commons" : "*",
         "underscore" : "*",

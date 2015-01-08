@@ -958,9 +958,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * keeping the state of the search box.
 	     */
 	    renderSearchBox : function(options) {
-	        return (FilterBox(_.extend({}, options, {
+	        var Factory = React.createFactory(FilterBox);
+	        return Factory(_.extend({}, options, {
 	            model : this._getFilterBoxModel()
-	        })));
+	        }));
 	    },
 	};
 	
@@ -2249,6 +2250,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var h = that._getItemHeight();
 	        var container = that.getDOMNode();
 	
+	        // Get the offset and index of the first visible item
+	        // If there is no such elements then use the code below
+	        // 
+	        
 	        var windowHeight = container.offsetHeight;
 	        var delta = windowHeight / 4;
 	
@@ -3726,8 +3731,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /** Creates and returns a new view for the specified resource type. */
 	    newView : function(viewType, resourceType, options) {
-	        return this._adapterManager.newAdapterInstance(viewType, resourceType,
-	                options);
+	        return this._adapterManager.getAdapter(viewType, resourceType);
+	    },
+	
+	    /** Returns <code>true</code> if there is a view. */
+	    hasView : function(viewType, resourceType) {
+	        var adapter = this._adapterManager.getAdapter(viewType, resourceType);
+	        return !!adapter;
 	    },
 	
 	    /**

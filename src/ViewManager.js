@@ -31,8 +31,13 @@ var ViewManager = Mosaic.Class.extend({
 
     /** Creates and returns a new view for the specified resource type. */
     newView : function(viewType, resourceType, options) {
-        return this._adapterManager.newAdapterInstance(viewType, resourceType,
-                options);
+        return this._adapterManager.getAdapter(viewType, resourceType);
+    },
+
+    /** Returns <code>true</code> if there is a view. */
+    hasView : function(viewType, resourceType) {
+        var adapter = this._adapterManager.getAdapter(viewType, resourceType);
+        return !!adapter;
     },
 
     /**
