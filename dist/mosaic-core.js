@@ -1307,14 +1307,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Initializes this object.
 	     * 
 	     * @param options.map
-	     *                the Leaflet map object
+	     *            the Leaflet map object
 	     * @param options.viewport
-	     *                a L.Bounds instance defining the main visible zone on the
-	     *                map; see the #setViewport method
+	     *            a L.Bounds instance defining the main visible zone on the map;
+	     *            see the #setViewport method
 	     * @param options.focus
-	     *                focus position on the map; when user uses #focusTo method
-	     *                then the specified lat/lng point is moved in the given
-	     *                position on the screen
+	     *            focus position on the map; when user uses #focusTo method then
+	     *            the specified lat/lng point is moved in the given position on
+	     *            the screen
 	     */
 	    initialize : function(options) {
 	        L.setOptions(this, options);
@@ -1342,9 +1342,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * viewport area.
 	     * 
 	     * @param viewport
-	     *                a L.Bounds instance defining the main visible zone on the
-	     *                map; this object defines top, right, left and bottom shift
-	     *                of the viewport on the visible map screen area
+	     *            a L.Bounds instance defining the main visible zone on the map;
+	     *            this object defines top, right, left and bottom shift of the
+	     *            viewport on the visible map screen area
 	     */
 	    setViewport : function(viewport) {
 	        this._viewport = L.bounds(viewport);
@@ -1368,9 +1368,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * user tries to set view or focus on a specific geographic position.
 	     * 
 	     * @param options.focus
-	     *                focus position on the map; when user uses #focusTo method
-	     *                then the specified lat/lng point is moved in the given
-	     *                position on the screen
+	     *            focus position on the map; when user uses #focusTo method then
+	     *            the specified lat/lng point is moved in the given position on
+	     *            the screen
 	     */
 	    setFocusPosition : function(pos) {
 	        this._focusPos = L.point(pos.left, pos.top);
@@ -1407,14 +1407,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * method. It is useful to be sure that the callback is really invoked
 	     * (which is not the case with the 'zoomend' Leaflet event).
 	     */
-	    zoomTo : function(zoom, callback) {
+	    zoomTo : function(zoom, focusPos, callback) {
+	        if (typeof focusPos === 'function') {
+	            callback = focusPos;
+	            focusPos = null;
+	        }
 	        var map = this.getMap();
 	        callback = this._checkCallback(callback);
-	        if (map.getZoom() == zoom) {
-	            callback();
-	        } else {
+	        focusPos = focusPos || this.getViewport().getCenter();
+	        focusPos = map._getTopLeftPoint().add(focusPos);
+	        var coords = map.unproject(focusPos);
+	
+	        var hasChanges = (map.getZoom() !== zoom) || //
+	        (coords + '' !== map.getCenter() + '');
+	        if (hasChanges) {
 	            map.once('zoomend', callback);
-	            map.setZoom(zoom);
+	            map.setZoomAround(coords, zoom);
+	        } else {
+	            callback();
 	        }
 	    },
 	
@@ -3727,7 +3737,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /** Creates and returns a new view for the specified resource type. */
 	    newView : function(viewType, resourceType, options) {
-	        return this._adapterManager.getAdapter(viewType, resourceType);
+	        return this._adapterManager.newAdapterInstance(viewType, resourceType,
+	                options);
 	    },
 	
 	    /** Returns <code>true</code> if there is a view. */
