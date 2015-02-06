@@ -7,7 +7,8 @@ Mosaic.App.Store = require('./App.Store');
 
 Mosaic.React = {
     FilterBox : require('./React.FilterBox'),
-    SearchBoxMixin : require('./React.SearchBoxMixin')
+    SearchBoxMixin : require('./React.SearchBoxMixin'),
+    PaginatedListView : require('./PaginatedListView')
 };
 
 Mosaic.Leaflet = {
@@ -21,7 +22,6 @@ Mosaic.Core = {
     DataSet : require('./DataSet'),
     ActivationTree : require('./ActivationTree'),
 
-    PaginatedListView : require('./PaginatedListView'),
     AbstractSet : require('./AbstractSet'),
     AdapterManager : require('./AdapterManager'),
     CompositeDataSet : require('./CompositeDataSet'),
