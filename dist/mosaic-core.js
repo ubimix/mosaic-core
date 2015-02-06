@@ -67,21 +67,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Mosaic.React = {
 	    FilterBox : __webpack_require__(7),
-	    SearchBoxMixin : __webpack_require__(8)
+	    SearchBoxMixin : __webpack_require__(8),
+	    PaginatedListView : __webpack_require__(9)
 	};
 	
 	Mosaic.Leaflet = {
-	    ReactMap : __webpack_require__(9),
-	    FeatureBuilder : __webpack_require__(10),
-	    UtfGrid : __webpack_require__(11),
-	    MapViewport : __webpack_require__(12)
+	    ReactMap : __webpack_require__(10),
+	    FeatureBuilder : __webpack_require__(11),
+	    UtfGrid : __webpack_require__(12),
+	    MapViewport : __webpack_require__(13)
 	};
 	
 	Mosaic.Core = {
-	    DataSet : __webpack_require__(13),
-	    ActivationTree : __webpack_require__(14),
+	    DataSet : __webpack_require__(14),
+	    ActivationTree : __webpack_require__(15),
 	
-	    PaginatedListView : __webpack_require__(15),
 	    AbstractSet : __webpack_require__(16),
 	    AdapterManager : __webpack_require__(17),
 	    CompositeDataSet : __webpack_require__(18),
@@ -90,7 +90,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Intents : __webpack_require__(21),
 	    LeafletDataSetView : __webpack_require__(22),
 	    LeafletDataSubsetView : __webpack_require__(23),
-	    LeafletFeatureBuilder : __webpack_require__(10),
+	    LeafletFeatureBuilder : __webpack_require__(11),
 	    // TemplateDataSetView : require('./TemplateDataSetView'),
 	    // TemplateView : require('./TemplateView'),
 	    // TemplateViewManager : require('./TemplateViewManager'),
@@ -974,6 +974,182 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ = __webpack_require__(27);
 	var React = __webpack_require__(29);
+	var Mosaic = __webpack_require__(1);
+	
+	module.exports = React.createClass({
+	    displayName : 'PaginatedListView',
+	
+	    getInitialState : function() {
+	        return this._newState();
+	    },
+	
+	    componentWillMount : function() {
+	        this._updateState({
+	            index : this.props.index,
+	            reset : true
+	        });
+	    },
+	
+	    componentWillReceiveProps : function(props) {
+	        this._updateState({
+	            index : props.index,
+	            reset : true
+	        });
+	    },
+	
+	    componentDidUpdate : function() {
+	        if (this.state.reset) {
+	            this._moveToItem(this.state.index || 0);
+	        } else {
+	            this._focusToIndex(this.state.index || this.state.itemsStartIndex);
+	        }
+	    },
+	
+	    _getPageSize : function() {
+	        var pageSize = +this.props.pageSize || 50;
+	        return pageSize;
+	    },
+	
+	    _updateState : function(options) {
+	        this.setState(this._newState(options));
+	    },
+	
+	    _focusToIndex : function(index) {
+	        var that = this;
+	        setTimeout(function() {
+	            index = Math.max(index || 0, 0);
+	            var idx = Math.max(index - that.state.itemsStartIndex, 0);
+	            var elm = that.getDOMNode();
+	            var children = elm.childNodes;
+	            idx = Math.max(0, Math.min(idx, children.length - 1));
+	            var child = children[idx];
+	            var top = 0;
+	            if (child) {
+	                top = child.offsetTop;
+	            }
+	            elm.scrollTop = top;
+	        }, 1);
+	    },
+	
+	    _newState : function(options) {
+	        return _.extend({
+	            index : 0,
+	            length : 0,
+	            items : [],
+	            itemsStartIndex : 0,
+	            reset : true
+	        }, this.state, options);
+	    },
+	
+	    _setPage : function(pageId, ev) {
+	        var pageSize = this._getPageSize();
+	        var index = pageId * pageSize;
+	        this._moveToItem(index);
+	        if (ev) {
+	            ev.stopPropagation();
+	            ev.preventDefault();
+	        }
+	    },
+	
+	    _moveToItem : function(index) {
+	        var that = this;
+	        var length = 0;
+	        var itemsStartIndex = 0;
+	        return Mosaic.P.then(function() {
+	            return that.props.getItemsNumber();
+	        }).then(function(len) {
+	            length = len || 0;
+	            var idx = Math.max(0, Math.min(length - 1, index || 0));
+	            var pageSize = that._getPageSize();
+	            var from = Math.floor(idx / pageSize) * pageSize;
+	            itemsStartIndex = from;
+	            var to = Math.ceil(idx / pageSize) * pageSize;
+	            if (from === to) {
+	                to += pageSize;
+	            }
+	            to = Math.min(length - 1, to);
+	            var num = to - from + 1;
+	            return that.props.renderItems({
+	                index : from,
+	                length : num
+	            });
+	        }).then(function(items) {
+	            that._updateState({
+	                index : index,
+	                items : items,
+	                itemsStartIndex : itemsStartIndex,
+	                length : length,
+	                reset : false
+	            });
+	        });
+	    },
+	
+	    _renderPagination : function() {
+	        var pageSize = this._getPageSize();
+	        var pageIndex = Math.floor(this.state.itemsStartIndex / pageSize);
+	        var pageCount = Math.floor(this.state.length / pageSize) + 1;
+	        var buttons = [];
+	        if (pageCount <= 1) {
+	            return React.DOM.nav();
+	        }
+	        var that = this;
+	        function getButton(index, label, key, activeClass) {
+	            var className;
+	            if (pageIndex === index) {
+	                className = activeClass;
+	            }
+	            return React.DOM.li({
+	                key : key,
+	                className : className
+	            }, React.DOM.a({
+	                href : '#',
+	                onClick : that._setPage.bind(that, index)
+	            }, label));
+	        }
+	        function getSpace(index) {
+	            return getButton(index, '…', 'space-' + index);
+	        }
+	
+	        var buttonsNumber = 5;
+	
+	        buttons.push(getButton(0, '«', 'prev', 'disabled'));
+	        var from = Math.max(0, pageIndex - Math.floor(buttonsNumber / 2));
+	        if (from + buttonsNumber >= pageCount) {
+	            from = Math.max(0, pageCount - buttonsNumber);
+	        }
+	        var to = Math.min(pageCount, from + buttonsNumber);
+	
+	        if (from > 0) {
+	            buttons.push(getSpace(Math.max(0, pageIndex - buttonsNumber)));
+	        }
+	        for (var i = from; i < to; i++) {
+	            buttons.push(getButton(i, (i + 1) + '', 'item-' + i, 'active'));
+	        }
+	        if (to < pageCount) {
+	            buttons.push(getSpace(Math.min(pageCount - 1, pageIndex + //
+	            buttonsNumber)));
+	        }
+	        buttons.push(getButton(pageCount - 1, '»', 'next', 'disabled'));
+	        return React.DOM.nav({}, React.DOM.ul({
+	            className : 'pagination'
+	        }, buttons));
+	    },
+	
+	    render : function() {
+	        return React.DOM.div({
+	            className : this.props.className
+	        }, this.state.items, this._renderPagination());
+	    },
+	
+	});
+
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(27);
+	var React = __webpack_require__(29);
 	var L = __webpack_require__(30);
 	
 	module.exports = React.createClass({
@@ -1051,7 +1227,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var L = __webpack_require__(30);
@@ -1174,7 +1350,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(27);
@@ -1290,7 +1466,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var L = __webpack_require__(30);
@@ -1488,7 +1664,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Mosaic = __webpack_require__(1);
@@ -1597,7 +1773,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Mosaic = __webpack_require__(1);
@@ -2076,182 +2252,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(27);
-	var React = __webpack_require__(29);
-	var Mosaic = __webpack_require__(1);
-	
-	module.exports = React.createClass({
-	    displayName : 'PaginatedListView',
-	
-	    getInitialState : function() {
-	        return this._newState();
-	    },
-	
-	    componentWillMount : function() {
-	        this._updateState({
-	            index : this.props.index,
-	            reset : true
-	        });
-	    },
-	
-	    componentWillReceiveProps : function(props) {
-	        this._updateState({
-	            index : props.index,
-	            reset : true
-	        });
-	    },
-	
-	    componentDidUpdate : function() {
-	        if (this.state.reset) {
-	            this._moveToItem(this.state.index || 0);
-	        } else {
-	            this._focusToIndex(this.state.index || this.state.itemsStartIndex);
-	        }
-	    },
-	
-	    _getPageSize : function() {
-	        var pageSize = +this.props.pageSize || 50;
-	        return pageSize;
-	    },
-	
-	    _updateState : function(options) {
-	        this.setState(this._newState(options));
-	    },
-	
-	    _focusToIndex : function(index) {
-	        var that = this;
-	        setTimeout(function() {
-	            index = Math.max(index || 0, 0);
-	            var idx = Math.max(index - that.state.itemsStartIndex, 0);
-	            var elm = that.getDOMNode();
-	            var children = elm.childNodes;
-	            idx = Math.max(0, Math.min(idx, children.length - 1));
-	            var child = children[idx];
-	            var top = 0;
-	            if (child) {
-	                top = child.offsetTop;
-	            }
-	            elm.scrollTop = top;
-	        }, 1);
-	    },
-	
-	    _newState : function(options) {
-	        return _.extend({
-	            index : 0,
-	            length : 0,
-	            items : [],
-	            itemsStartIndex : 0,
-	            reset : true
-	        }, this.state, options);
-	    },
-	
-	    _setPage : function(pageId, ev) {
-	        var pageSize = this._getPageSize();
-	        var index = pageId * pageSize;
-	        this._moveToItem(index);
-	        if (ev) {
-	            ev.stopPropagation();
-	            ev.preventDefault();
-	        }
-	    },
-	
-	    _moveToItem : function(index) {
-	        var that = this;
-	        var length = 0;
-	        var itemsStartIndex = 0;
-	        return Mosaic.P.then(function() {
-	            return that.props.getItemsNumber();
-	        }).then(function(len) {
-	            length = len || 0;
-	            var idx = Math.max(0, Math.min(length - 1, index || 0));
-	            var pageSize = that._getPageSize();
-	            var from = Math.floor(idx / pageSize) * pageSize;
-	            itemsStartIndex = from;
-	            var to = Math.ceil(idx / pageSize) * pageSize;
-	            if (from === to) {
-	                to += pageSize;
-	            }
-	            to = Math.min(length - 1, to);
-	            var num = to - from + 1;
-	            return that.props.renderItems({
-	                index : from,
-	                length : num
-	            });
-	        }).then(function(items) {
-	            that._updateState({
-	                index : index,
-	                items : items,
-	                itemsStartIndex : itemsStartIndex,
-	                length : length,
-	                reset : false
-	            });
-	        });
-	    },
-	
-	    _renderPagination : function() {
-	        var pageSize = this._getPageSize();
-	        var pageIndex = Math.floor(this.state.itemsStartIndex / pageSize);
-	        var pageCount = Math.floor(this.state.length / pageSize) + 1;
-	        var buttons = [];
-	        if (pageCount <= 1) {
-	            return React.DOM.nav();
-	        }
-	        var that = this;
-	        function getButton(index, label, key, activeClass) {
-	            var className;
-	            if (pageIndex === index) {
-	                className = activeClass;
-	            }
-	            return React.DOM.li({
-	                key : key,
-	                className : className
-	            }, React.DOM.a({
-	                href : '#',
-	                onClick : that._setPage.bind(that, index)
-	            }, label));
-	        }
-	        function getSpace(index) {
-	            return getButton(index, '…', 'space-' + index);
-	        }
-	
-	        var buttonsNumber = 5;
-	
-	        buttons.push(getButton(0, '«', 'prev', 'disabled'));
-	        var from = Math.max(0, pageIndex - Math.floor(buttonsNumber / 2));
-	        if (from + buttonsNumber >= pageCount) {
-	            from = Math.max(0, pageCount - buttonsNumber);
-	        }
-	        var to = Math.min(pageCount, from + buttonsNumber);
-	
-	        if (from > 0) {
-	            buttons.push(getSpace(Math.max(0, pageIndex - buttonsNumber)));
-	        }
-	        for (var i = from; i < to; i++) {
-	            buttons.push(getButton(i, (i + 1) + '', 'item-' + i, 'active'));
-	        }
-	        if (to < pageCount) {
-	            buttons.push(getSpace(Math.min(pageCount - 1, pageIndex + //
-	            buttonsNumber)));
-	        }
-	        buttons.push(getButton(pageCount - 1, '»', 'next', 'disabled'));
-	        return React.DOM.nav({}, React.DOM.ul({
-	            className : 'pagination'
-	        }, buttons));
-	    },
-	
-	    render : function() {
-	        return React.DOM.div({
-	            className : this.props.className
-	        }, this.state.items, this._renderPagination());
-	    },
-	
-	});
-
-
-/***/ },
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2639,7 +2639,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(27);
-	var DataSet = __webpack_require__(13);
+	var DataSet = __webpack_require__(14);
 	
 	/**
 	 * This class is used to merge multiple datasets in one based on common data
