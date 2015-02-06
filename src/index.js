@@ -21,7 +21,7 @@ Mosaic.Core = {
     DataSet : require('./DataSet'),
     ActivationTree : require('./ActivationTree'),
 
-    InfiniteScroll : require('./InfiniteScroll'),
+    PaginatedListView : require('./PaginatedListView'),
     AbstractSet : require('./AbstractSet'),
     AdapterManager : require('./AdapterManager'),
     CompositeDataSet : require('./CompositeDataSet'),

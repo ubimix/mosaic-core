@@ -81,7 +81,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    DataSet : __webpack_require__(13),
 	    ActivationTree : __webpack_require__(14),
 	
-	    InfiniteScroll : __webpack_require__(15),
+	    PaginatedListView : __webpack_require__(15),
 	    AbstractSet : __webpack_require__(16),
 	    AdapterManager : __webpack_require__(17),
 	    CompositeDataSet : __webpack_require__(18),
@@ -2079,224 +2079,173 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Mosaic = __webpack_require__(1);
 	var _ = __webpack_require__(27);
 	var React = __webpack_require__(29);
+	var Mosaic = __webpack_require__(1);
 	
-	/**
-	 * This is an "infinite scroll" widget allowing to load elements by their
-	 * position.
-	 */
 	module.exports = React.createClass({
+	    displayName : 'PaginatedListView',
 	
-	    /** The main rendering method. */
-	    render : function() {
-	        var items = this.state.items || [];
-	        var size = this._getSize();
-	        var h = this._getItemHeight();
-	        var blockPos = (this.state.index || 0) * h;
-	        var fullHeight = size * h;
-	
-	        return React.DOM.div({
-	            id : this.props.id,
-	            className : this.props.className,
-	            style : this.props.style,
-	            onScroll : this._onScroll
-	        }, React.DOM.div({
-	            ref : 'wrapper',
-	            style : {
-	                height : fullHeight + 'px',
-	                position : 'relative',
-	            // overflow : 'hidden'
-	            }
-	        }, React.DOM.div({
-	            ref : 'block',
-	            style : {
-	                top : blockPos + 'px',
-	                position : 'absolute',
-	                left : '0px',
-	                right : '0px',
-	                bottom : 'auto'
-	            }
-	        }, items)));
-	    },
-	
-	    // -------------------------------------------------------------------
-	    // React lifecycle methods
-	    /**
-	     * This method creates "debounced" versions of some methods to avoid to
-	     * frequent calls
-	     */
-	    componentWillMount : function(nextProps) {
-	        this._adjustPosition = _.debounce(this._adjustPosition, 5);
-	        this._setScrollPos = _.debounce(_.bind(this._setScrollPos, this), 30);
-	    },
-	    /** Initializes the scroll and set it in an initial position. */
-	    componentDidMount : function() {
-	        this._resetScrollPos(this.props);
-	    },
-	    /** Updates the position of the scroller. */
-	    componentWillReceiveProps : function(nextProps) {
-	        this._resetScrollPos(nextProps);
-	    },
-	    /**
-	     * This method is called after the component is rendered and it adjusts
-	     * position of the item block.
-	     */
-	    componentDidUpdate : function() {
-	        this._adjustPosition();
-	    },
-	    /** Creates and returns the inital state object for this component. */
 	    getInitialState : function() {
-	        return this._newState({
-	            index : 0,
-	            length : 0,
-	            items : [],
-	            scrollPos : 0
+	        return this._newState();
+	    },
+	
+	    componentWillMount : function() {
+	        this._updateState({
+	            index : this.props.index,
+	            reset : true
 	        });
 	    },
 	
-	    // -------------------------------------------------------------------
-	    // Internal (private) methods
-	
-	    /**
-	     * This is an internal method creating and returning a new state.
-	     */
-	    _newState : function(options) {
-	        return _.extend({}, this.state, options);
+	    componentWillReceiveProps : function(props) {
+	        this._updateState({
+	            index : props.index,
+	            reset : true
+	        });
 	    },
-	    /**
-	     * This method returns the size of a "page" - size of block of items loaded
-	     * at once. By default this method returns the "this.props.pageSize" value.
-	     */
-	    _getPageSize : function() {
-	        return this.props.pageSize || 4;
-	    },
-	    /**
-	     * Returns the total number of items to visualize in this scroll.
-	     */
-	    _getSize : function() {
-	        return this.props.length || 0;
-	    },
-	    /**
-	     * Returns an average size of each individual item in the list. This value
-	     * is used to calculate the total size of the scroll. By default this method
-	     * returns the "this.props.itemHeight" value.
-	     */
-	    _getItemHeight : function() {
-	        return this.props.itemHeight || 10;
-	    },
-	    /**
-	     * @param params.index
-	     *                start index of the item to load
-	     * @param params.length
-	     *                number of items to load
-	     * @param params.callback
-	     *                a callback method accepting the resulting items
-	     */
-	    _loadItems : function(params) {
-	        this.props.loadItems(params);
-	    },
-	    /**
-	     * Sets the scroll in initial position or in an already existing one if the
-	     * initial position is not defined.
-	     */
-	    _resetScrollPos : function(props) {
-	        props = props || this.props;
-	        var scrollPos = this.state.scrollPos;
-	        var focusedPos = props.focusedIndex;
-	        focusedPos = !isNaN(focusedPos) ? focusedPos : -1;
-	        var size = this._getSize();
-	        if (!isNaN(focusedPos) && focusedPos >= 0 && focusedPos < size) {
-	            var h = this._getItemHeight();
-	            scrollPos = focusedPos * h;
-	        }
-	        this._focusedItemIdx = focusedPos;
-	        // We need this parameter to refresh because a debounced version
-	        // of the _setScrollPos method is used.
-	        this._resetPos = true;
-	        this._setScrollPos(scrollPos, true);
-	    },
-	    /**
-	     * Adjust the absolute position of the items block to reflect exactly the
-	     * position of the scroller. This method is required because real items
-	     * sizes could be different from the average size returned by the
-	     * "_getItemHeight" method.
-	     */
-	    _adjustPosition : function() {
-	        if (!this.isMounted())
-	            return;
-	        var that = this;
-	        var container = that.getDOMNode();
-	        var scrollPos = container.scrollTop;
 	
-	        var h = that._getItemHeight();
-	        var pos = scrollPos - that.state.index * h;
-	        var height = that.state.items.length * h;
-	        var blockNode = that.refs.block.getDOMNode();
-	        var blockHeight = blockNode.offsetHeight;
-	
-	        var blockPos = scrollPos - blockHeight * (pos / height);
-	        blockPos = Math.round(blockPos);
-	        blockNode.style.top = blockPos + 'px';
-	
-	        if (!isNaN(that._focusedItemIdx)) {
-	            // TODO: move to the item corresponding to this index
-	            delete that._focusedItemIdx;
-	            setTimeout(function() {
-	                container.scrollTop = that.state.scrollPos;
-	            }, 30);
-	        }
-	    },
-	    /**
-	     * Sets the scroller in the specified position and updates the internal
-	     * state if the content should be re-loaded.
-	     */
-	    _setScrollPos : function(scrollPos, force) {
-	        var that = this;
-	        if (!that.isMounted())
-	            return;
-	        var pageSize = that._getPageSize();
-	        var h = that._getItemHeight();
-	        var container = that.getDOMNode();
-	
-	        var windowHeight = container.offsetHeight;
-	        var delta = windowHeight / 4;
-	
-	        var startPos = Math.max(scrollPos - delta, 0);
-	        var endPos = scrollPos + windowHeight + delta;
-	
-	        var startItem = Math.floor(startPos / h);
-	        var endItem = Math.ceil((endPos + h - 1) / h);
-	
-	        var startPage = Math.floor(startItem / pageSize);
-	        var endPage = Math.ceil((endItem + pageSize - 1) / pageSize);
-	
-	        var index = startPage * pageSize;
-	        var length = (endPage - startPage) * pageSize;
-	        var params = {
-	            scrollPos : scrollPos,
-	            index : index,
-	            length : length
-	        };
-	        if (that._resetPos || force || //
-	        params.index != that.state.index || //
-	        params.length != that.state.length) {
-	            params.callback = function(items) {
-	                params.items = items;
-	                if (that.isMounted()) {
-	                    that.setState(that._newState(params));
-	                }
-	            };
-	            that._loadItems(params);
-	            delete that._resetPos;
+	    componentDidUpdate : function() {
+	        if (this.state.reset) {
+	            this._moveToItem(this.state.index || 0);
 	        } else {
-	            that._adjustPosition();
+	            this._focusToIndex(this.state.index || this.state.itemsStartIndex);
 	        }
 	    },
-	    /** This handler is called when the scroller changes its position. */
-	    _onScroll : function(event) {
-	        this._setScrollPos(this.getDOMNode().scrollTop);
+	
+	    _getPageSize : function() {
+	        var pageSize = +this.props.pageSize || 50;
+	        return pageSize;
+	    },
+	
+	    _updateState : function(options) {
+	        this.setState(this._newState(options));
+	    },
+	
+	    _focusToIndex : function(index) {
+	        var that = this;
+	        setTimeout(function() {
+	            index = Math.max(index || 0, 0);
+	            var idx = Math.max(index - that.state.itemsStartIndex, 0);
+	            var elm = that.getDOMNode();
+	            var children = elm.childNodes;
+	            idx = Math.max(0, Math.min(idx, children.length - 1));
+	            var child = children[idx];
+	            var top = 0;
+	            if (child) {
+	                top = child.offsetTop;
+	            }
+	            elm.scrollTop = top;
+	        }, 1);
+	    },
+	
+	    _newState : function(options) {
+	        return _.extend({
+	            index : 0,
+	            length : 0,
+	            items : [],
+	            itemsStartIndex : 0,
+	            reset : true
+	        }, this.state, options);
+	    },
+	
+	    _setPage : function(pageId, ev) {
+	        var pageSize = this._getPageSize();
+	        var index = pageId * pageSize;
+	        this._moveToItem(index);
+	        if (ev) {
+	            ev.stopPropagation();
+	            ev.preventDefault();
+	        }
+	    },
+	
+	    _moveToItem : function(index) {
+	        var that = this;
+	        var length = 0;
+	        var itemsStartIndex = 0;
+	        return Mosaic.P.then(function() {
+	            return that.props.getItemsNumber();
+	        }).then(function(len) {
+	            length = len || 0;
+	            var idx = Math.max(0, Math.min(length - 1, index || 0));
+	            var pageSize = that._getPageSize();
+	            var from = Math.floor(idx / pageSize) * pageSize;
+	            itemsStartIndex = from;
+	            var to = Math.ceil(idx / pageSize) * pageSize;
+	            if (from === to) {
+	                to += pageSize;
+	            }
+	            to = Math.min(length - 1, to);
+	            var num = to - from + 1;
+	            return that.props.renderItems({
+	                index : from,
+	                length : num
+	            });
+	        }).then(function(items) {
+	            that._updateState({
+	                index : index,
+	                items : items,
+	                itemsStartIndex : itemsStartIndex,
+	                length : length,
+	                reset : false
+	            });
+	        });
+	    },
+	
+	    _renderPagination : function() {
+	        var pageSize = this._getPageSize();
+	        var pageIndex = Math.floor(this.state.itemsStartIndex / pageSize);
+	        var pageCount = Math.floor(this.state.length / pageSize) + 1;
+	        var buttons = [];
+	        if (pageCount <= 1) {
+	            return React.DOM.nav();
+	        }
+	        var that = this;
+	        function getButton(index, label, key, activeClass) {
+	            var className;
+	            if (pageIndex === index) {
+	                className = activeClass;
+	            }
+	            return React.DOM.li({
+	                key : key,
+	                className : className
+	            }, React.DOM.a({
+	                href : '#',
+	                onClick : that._setPage.bind(that, index)
+	            }, label));
+	        }
+	        function getSpace(index) {
+	            return getButton(index, '…', 'space-' + index);
+	        }
+	
+	        var buttonsNumber = 5;
+	
+	        buttons.push(getButton(0, '«', 'prev', 'disabled'));
+	        var from = Math.max(0, pageIndex - Math.floor(buttonsNumber / 2));
+	        if (from + buttonsNumber >= pageCount) {
+	            from = Math.max(0, pageCount - buttonsNumber);
+	        }
+	        var to = Math.min(pageCount, from + buttonsNumber);
+	
+	        if (from > 0) {
+	            buttons.push(getSpace(Math.max(0, pageIndex - buttonsNumber)));
+	        }
+	        for (var i = from; i < to; i++) {
+	            buttons.push(getButton(i, (i + 1) + '', 'item-' + i, 'active'));
+	        }
+	        if (to < pageCount) {
+	            buttons.push(getSpace(Math.min(pageCount - 1, pageIndex + //
+	            buttonsNumber)));
+	        }
+	        buttons.push(getButton(pageCount - 1, '»', 'next', 'disabled'));
+	        return React.DOM.nav({}, React.DOM.ul({
+	            className : 'pagination'
+	        }, buttons));
+	    },
+	
+	    render : function() {
+	        return React.DOM.div({
+	            className : this.props.className
+	        }, this.state.items, this._renderPagination());
 	    },
 	
 	});
