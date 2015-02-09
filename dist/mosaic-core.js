@@ -1,5 +1,5 @@
 /*!
- * mosaic-core v0.0.16 | License: MIT 
+ * mosaic-core v0.0.17 | License: MIT 
  * 
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -1112,7 +1112,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return getButton(index, '…', 'space-' + index);
 	        }
 	
-	        var buttonsNumber = 5;
+	        var buttonsNumber = this.props.buttonsNumber || 5;
 	
 	        buttons.push(getButton(0, '«', 'prev', 'disabled'));
 	        var from = Math.max(0, pageIndex - Math.floor(buttonsNumber / 2));

@@ -138,7 +138,7 @@ module.exports = React.createClass({
             return getButton(index, '…', 'space-' + index);
         }
 
-        var buttonsNumber = 5;
+        var buttonsNumber = this.props.buttonsNumber || 5;
 
         buttons.push(getButton(0, '«', 'prev', 'disabled'));
         var from = Math.max(0, pageIndex - Math.floor(buttonsNumber / 2));
