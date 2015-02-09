@@ -45,7 +45,9 @@ module.exports = React.createClass({
         setTimeout(function() {
             index = Math.max(index || 0, 0);
             var idx = Math.max(index - that.state.itemsStartIndex, 0);
-            var elm = that.getDOMNode();
+            var scrollerElm = that.getDOMNode();
+            var elm = that.refs.items.getDOMNode();
+            var topOffset = elm.offsetTop;
             var children = elm.childNodes;
             idx = Math.max(0, Math.min(idx, children.length - 1));
             var child = children[idx];
@@ -53,7 +55,7 @@ module.exports = React.createClass({
             if (child) {
                 top = child.offsetTop;
             }
-            elm.scrollTop = top;
+            scrollerElm.scrollTop = top;
         }, 1);
     },
 
@@ -156,16 +158,38 @@ module.exports = React.createClass({
             buttonsNumber)));
         }
         buttons.push(getButton(pageCount - 1, '»', 'next', 'disabled'));
-        var className = that.props.paginationClassName || 'pagination';
+        var className = that.props.paginationClassName || 'pagination';
         return React.DOM.nav({}, React.DOM.ul({
             className : className
         }, buttons));
     },
 
+    _checkPagination : function(key, defaultValue) {
+        var value = this.props[key];
+        if (value === undefined || value === null) {
+            return defaultValue;
+        } else {
+            return !!value;
+        }
+    },
+
     render : function() {
+        var topPagination;
+        if (this._checkPagination('topPagination', false)) {
+            topPagination = this._renderPagination();
+        }
+        var bottomPagination;
+        if (this._checkPagination('bottomPagination', true)) {
+            bottomPagination = this._renderPagination();
+        }
         return React.DOM.div({
             className : this.props.className
-        }, this.state.items, this._renderPagination());
+        }, //
+        topPagination, //
+        React.DOM.div({
+            ref : 'items'
+        }, this.state.items),//
+        bottomPagination);
     },
 
 });
