@@ -8,7 +8,8 @@ module.exports = React.createClass({
         return (React.DOM.div({
             ref : 'container',
             id : this.props.id,
-            className : this.props.className
+            className : this.props.className,
+            style : this.props.style || {}
         }));
     },
     componentDidMount : function() {

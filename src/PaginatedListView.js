@@ -156,8 +156,9 @@ module.exports = React.createClass({
             buttonsNumber)));
         }
         buttons.push(getButton(pageCount - 1, '»', 'next', 'disabled'));
+        var className = that.props.paginationClassName || 'pagination';
         return React.DOM.nav({}, React.DOM.ul({
-            className : 'pagination'
+            className : className
         }, buttons));
     },
 
