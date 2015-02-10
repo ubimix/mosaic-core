@@ -43,6 +43,8 @@ module.exports = React.createClass({
     _focusToIndex : function(index) {
         var that = this;
         setTimeout(function() {
+            if (!that.isMounted())
+                return;
             index = Math.max(index || 0, 0);
             var idx = Math.max(index - that.state.itemsStartIndex, 0);
             var scrollerElm = that.getDOMNode();
@@ -138,7 +140,7 @@ module.exports = React.createClass({
             return getButton(index, '…', 'space-' + index);
         }
 
-        var buttonsNumber = this.props.buttonsNumber || 5;
+        var buttonsNumber = this.props.buttonsNumber || 5;
 
         buttons.push(getButton(0, '«', 'prev', 'disabled'));
         var from = Math.max(0, pageIndex - Math.floor(buttonsNumber / 2));
