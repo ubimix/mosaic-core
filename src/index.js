@@ -8,7 +8,8 @@ Mosaic.App.Store = require('./App.Store');
 Mosaic.React = {
     FilterBox : require('./React.FilterBox'),
     SearchBoxMixin : require('./React.SearchBoxMixin'),
-    PaginatedListView : require('./PaginatedListView')
+    PaginatedListView : require('./PaginatedListView'),
+    PopupPanel : require('./PopupPanel.jsx')
 };
 
 Mosaic.Leaflet = {
