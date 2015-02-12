@@ -1,5 +1,5 @@
 /*!
- * mosaic-core v0.0.18 | License: MIT 
+ * mosaic-core v0.0.19 | License: MIT 
  * 
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -11,7 +11,7 @@
 		exports["mosaic-core"] = factory(require("mosaic-commons"), require("underscore"), require("mosaic-teleport"), require("react"), require("leaflet"));
 	else
 		root["mosaic-core"] = factory(root["mosaic-commons"], root["underscore"], root["mosaic-teleport"], root["react"], root["leaflet"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_27__, __WEBPACK_EXTERNAL_MODULE_28__, __WEBPACK_EXTERNAL_MODULE_29__, __WEBPACK_EXTERNAL_MODULE_30__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_28__, __WEBPACK_EXTERNAL_MODULE_29__, __WEBPACK_EXTERNAL_MODULE_30__, __WEBPACK_EXTERNAL_MODULE_31__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -68,37 +68,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	Mosaic.React = {
 	    FilterBox : __webpack_require__(7),
 	    SearchBoxMixin : __webpack_require__(8),
-	    PaginatedListView : __webpack_require__(9)
+	    PaginatedListView : __webpack_require__(9),
+	    PopupPanel : __webpack_require__(10)
 	};
 	
 	Mosaic.Leaflet = {
-	    ReactMap : __webpack_require__(10),
-	    FeatureBuilder : __webpack_require__(11),
-	    UtfGrid : __webpack_require__(12),
-	    MapViewport : __webpack_require__(13)
+	    ReactMap : __webpack_require__(11),
+	    FeatureBuilder : __webpack_require__(12),
+	    UtfGrid : __webpack_require__(13),
+	    MapViewport : __webpack_require__(14)
 	};
 	
 	Mosaic.Core = {
-	    DataSet : __webpack_require__(14),
-	    ActivationTree : __webpack_require__(15),
+	    DataSet : __webpack_require__(15),
+	    ActivationTree : __webpack_require__(16),
 	
-	    AbstractSet : __webpack_require__(16),
-	    AdapterManager : __webpack_require__(17),
-	    CompositeDataSet : __webpack_require__(18),
-	    DataSetView : __webpack_require__(19),
-	    Dependencies : __webpack_require__(20),
-	    Intents : __webpack_require__(21),
-	    LeafletDataSetView : __webpack_require__(22),
-	    LeafletDataSubsetView : __webpack_require__(23),
-	    LeafletFeatureBuilder : __webpack_require__(11),
+	    AbstractSet : __webpack_require__(17),
+	    AdapterManager : __webpack_require__(18),
+	    CompositeDataSet : __webpack_require__(19),
+	    DataSetView : __webpack_require__(20),
+	    Dependencies : __webpack_require__(21),
+	    Intents : __webpack_require__(22),
+	    LeafletDataSetView : __webpack_require__(23),
+	    LeafletDataSubsetView : __webpack_require__(24),
+	    LeafletFeatureBuilder : __webpack_require__(12),
 	    // TemplateDataSetView : require('./TemplateDataSetView'),
 	    // TemplateView : require('./TemplateView'),
 	    // TemplateViewManager : require('./TemplateViewManager'),
 	
-	    ReactDataSetMixin : __webpack_require__(24),
-	    ViewManager : __webpack_require__(25),
+	    ReactDataSetMixin : __webpack_require__(25),
+	    ViewManager : __webpack_require__(26),
 	
-	    URI : __webpack_require__(26)
+	    URI : __webpack_require__(27)
 	
 	};
 	module.exports = Mosaic;
@@ -115,7 +116,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var Mosaic = __webpack_require__(1);
-	var Intents = __webpack_require__(21);
+	var Intents = __webpack_require__(22);
 	
 	/**
 	 * An application main class. It is the common superclass for all classes
@@ -192,7 +193,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(27);
+	var _ = __webpack_require__(28);
 	var AppComponent = __webpack_require__(5);
 	
 	/** Common superclass for all stores */
@@ -203,10 +204,10 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(27);
+	var _ = __webpack_require__(28);
 	var AppComponent = __webpack_require__(5);
 	var Mosaic = __webpack_require__(1);
-	var Teleport = __webpack_require__(28);
+	var Teleport = __webpack_require__(29);
 	
 	/**
 	 * An common super-class for all APIs objects. It contains some utility methods
@@ -447,7 +448,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(27);
+	var _ = __webpack_require__(28);
 	var AppComponent = __webpack_require__(5);
 	
 	/** Common superclass for all stores */
@@ -513,9 +514,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(27);
+	var _ = __webpack_require__(28);
 	var Mosaic = __webpack_require__(1);
-	var React = __webpack_require__(29);
+	var React = __webpack_require__(30);
 	
 	/**
 	 * Datamodel for the FilterBox component providing access to values to
@@ -812,8 +813,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(27);
-	var React = __webpack_require__(29);
+	var _ = __webpack_require__(28);
+	var React = __webpack_require__(30);
 	var Mosaic = __webpack_require__(1);
 	var FilterBox = __webpack_require__(7);
 	
@@ -972,8 +973,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(27);
-	var React = __webpack_require__(29);
+	var _ = __webpack_require__(28);
+	var React = __webpack_require__(30);
 	var Mosaic = __webpack_require__(1);
 	
 	module.exports = React.createClass({
@@ -997,7 +998,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    },
 	
+	    componentDidMount : function() {
+	        this._refocus();
+	    },
+	
 	    componentDidUpdate : function() {
+	        this._refocus();
+	    },
+	
+	    _refocus : function() {
 	        if (this.state.reset) {
 	            this._moveToItem(this.state.index || 0);
 	        } else {
@@ -1012,6 +1021,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _updateState : function(options) {
 	        this.setState(this._newState(options));
+	    },
+	
+	    update : function() {
+	        var idx = this.state.index || this.state.itemsStartIndex || 0;
+	        this._focusToIndex(idx);
 	    },
 	
 	    _focusToIndex : function(index) {
@@ -1175,9 +1189,163 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(27);
-	var React = __webpack_require__(29);
-	var L = __webpack_require__(30);
+	/**
+	 * @jsx React.DOM
+	 */
+	'use strict';
+	var _ = __webpack_require__(28);
+	var React = __webpack_require__(30);
+	
+	var PopupPanel = React.createClass({
+	     displayName : "PopupPanel",
+	     statics : {
+	        divStack : [],
+	        closePopup : function(options){
+	            var div = this.divStack.pop();
+	            if (!div)
+	                return ;
+	            document.body.removeChild(div);
+	            React.unmountComponentAtNode(div);
+	        },
+	        openPopup : function(options){
+	            var div = document.createElement('div');
+	            document.body.appendChild(div);
+	            this.divStack.push(div);
+	            var panel = PopupPanel.apply(this, arguments);
+	            React.render(panel, div);
+	        },
+	     },
+	       
+	    componentDidMount : function(){
+	        this._updatePopupHeight = _.bind(this._updatePopupHeight, this);
+	        this._updatePopupHeight = _.debounce(this._updatePopupHeight, 10);
+	        window.addEventListener('resize', this._updatePopupHeight);
+	        document.addEventListener('keydown', this._onKeyDown);
+	        this._updatePopupHeight();
+	        if (_.isFunction(this.props.onOpen)) {
+	            this.props.onOpen(this);
+	        }
+	        // Change the default Bootstrap settings
+	        var elm = this.refs.dialog.getDOMNode();
+	        elm.style.marginTop = '0px';
+	        elm.style.marginBottom = '0px';
+	    },
+	    componentDidUpdate : function(){
+	        this._updatePopupHeight();
+	    },
+	    componentWillUnmount : function(){
+	        window.removeEventListener('resize', this._updatePopupHeight);
+	        document.removeEventListener('keydown', this._onKeyDown);
+	        if (_.isFunction(this.props.onClose)) {
+	            this.props.onClose(this);
+	        }
+	    },
+	    _onKeyDown : function(event) {
+	        if (event.which == 27) { // ESC
+	            PopupPanel.closePopup();
+	        }
+	    },
+	    _updatePopupHeight : function(){
+	        var containerElm = this.getDOMNode();
+	        var innerBorderElm = this.refs.innerBorder.getDOMNode();
+	        var outerBorderElm = this.refs.outerBorder.getDOMNode();
+	        var containerHeight = containerElm.offsetHeight;
+	        var dialogHeight = outerBorderElm.offsetHeight;
+	        var contentPosition = this._getPosition(innerBorderElm, outerBorderElm);
+	        var contentHeight = innerBorderElm.offsetHeight;
+	        var before = contentPosition.top;
+	        var after = dialogHeight - (before + contentHeight);
+	        var height = containerHeight - (before + after);
+	        height = Math.max(height, 0);
+	        if (this.props.maxHeight) {
+	            height = Math.min(this.props.maxHeight, height);
+	        }
+	        if (!isNaN(height) && this.state.maxHeight !== height){
+	            innerBorderElm.style.maxHeight = height + 'px';
+	            var that = this;
+	            setTimeout(function(){
+	                var containerHeight = containerElm.offsetHeight;
+	                var dialogHeight = outerBorderElm.offsetHeight;
+	                var pos = Math.round((containerHeight - dialogHeight) / 2);
+	                pos = Math.max(pos, 0);
+	                outerBorderElm.style.top = pos + 'px';
+	            }, 1);
+	        }
+	    },
+	    _newState : function(options){
+	        var state = _.extend({}, this.state, options);
+	        return state;
+	    },
+	    getInitialState : function(){
+	        return this._newState();
+	    },
+	     _handleClose : function(ev){
+	         ev.stopPropagation();
+	         ev.preventDefault();
+	         var onClose = this.props.onClose;
+	         var close = true;
+	         if (_.isFunction(onClose)){
+	             var result = onClose(ev);
+	             close = !(result === false);
+	         }
+	         if (close){
+	             PopupPanel.closePopup({app : this.props.app});
+	         }
+	     },
+	     _getPosition : function(el, parent) {
+	         var _x = 0;
+	         var _y = 0;
+	         while (el && el !== parent && !isNaN(el.offsetLeft) &&
+	                 !isNaN(el.offsetTop)) {
+	             _x += el.offsetLeft - el.scrollLeft;
+	             _y += el.offsetTop - el.scrollTop;
+	             el = el.offsetParent;
+	         }
+	         return {
+	             top : _y,
+	             left : _x
+	         };
+	     },
+	     render : function(){
+	         var className = this.props.className||'';
+	         className = "modal-dialog " + className;
+	         return (
+	         React.createElement("div", {className: "modal in", tabIndex: "-1", role: "dialog", ref: "container", style: {display: 'block'}}, //
+	             React.createElement("div", {className: "modal-backdrop in", onClick: this._handleClose}), //
+	             React.createElement("div", {className: className, ref: "dialog"},  //
+	                 React.createElement("div", {className: "modal-content", ref: "outerBorder"},// 
+	                     React.createElement("div", {className: "modal-header"}, //
+	                         React.createElement("button", {type: "button", className: "close", onClick: this._handleClose}, // 
+	                             React.createElement("span", {"aria-hidden": "true"}, "×"), //
+	                             React.createElement("span", {className: "sr-only"}, "Close") //
+	                         ), //
+	                         React.createElement("h4", {className: "modal-title"}, // 
+	                             this.props.title 
+	                         )//
+	                     ), //
+	                     React.createElement("div", {className: "modal-body", ref: "innerBorder"},  
+	                         this.props.body
+	                     ), //
+	                     React.createElement("div", {className: "modal-footer"}, 
+	                         this.props.footer
+	                     ) //
+	                 ) //
+	             ) //
+	         ) //
+	         );
+	     }
+	});
+	
+	module.exports= PopupPanel;
+	 
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(28);
+	var React = __webpack_require__(30);
+	var L = __webpack_require__(31);
 	
 	module.exports = React.createClass({
 	    displayName : 'ReactMap',
@@ -1255,10 +1423,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var L = __webpack_require__(30);
+	var L = __webpack_require__(31);
 	var Mosaic = __webpack_require__(1);
 	
 	var Config = Mosaic.Class.extend({
@@ -1378,12 +1546,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(27);
-	var L = __webpack_require__(30);
-	var InteractionLayer = __webpack_require__(31);
+	var _ = __webpack_require__(28);
+	var L = __webpack_require__(31);
+	var InteractionLayer = __webpack_require__(32);
 	
 	/**
 	 * The code of this class was mostly copied from the leaflet.utfgrid Leaflet
@@ -1494,10 +1662,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var L = __webpack_require__(30);
+	var L = __webpack_require__(31);
 	
 	/**
 	 * This class provides common utility methods to manage specific geographic zone
@@ -1692,12 +1860,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Mosaic = __webpack_require__(1);
-	var AbstractSet = __webpack_require__(16);
-	var _ = __webpack_require__(27);
+	var AbstractSet = __webpack_require__(17);
+	var _ = __webpack_require__(28);
 	
 	/**
 	 * This class represents a data set. Each dataset manages a set of objects with
@@ -1801,11 +1969,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Mosaic = __webpack_require__(1);
-	var _ = __webpack_require__(27);
+	var _ = __webpack_require__(28);
 	/* ------------------------------------------------- */
 	
 	/**
@@ -2280,11 +2448,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Mosaic = __webpack_require__(1);
-	var _ = __webpack_require__(27);
+	var _ = __webpack_require__(28);
 	
 	/** Objects of this type are used to keep information about data set entries */
 	var SetEntry = Mosaic.Class.extend(// 
@@ -2464,10 +2632,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(27);
+	var _ = __webpack_require__(28);
 	var Mosaic = __webpack_require__(1);
 	var Class = Mosaic.Class;
 	
@@ -2663,11 +2831,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(27);
-	var DataSet = __webpack_require__(14);
+	var _ = __webpack_require__(28);
+	var DataSet = __webpack_require__(15);
 	
 	/**
 	 * This class is used to merge multiple datasets in one based on common data
@@ -2826,12 +2994,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Mosaic = __webpack_require__(1);
-	var _ = __webpack_require__(27);
-	var AbstractSet = __webpack_require__(16);
+	var _ = __webpack_require__(28);
+	var AbstractSet = __webpack_require__(17);
 	
 	/**
 	 * Subclasses of this type are used to visualize data set content.
@@ -2920,11 +3088,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Mosaic = __webpack_require__(1);
-	var _ = __webpack_require__(27);
+	var _ = __webpack_require__(28);
 	
 	/** This is a simple class used to manage dependencies between entities. */
 	var Dependencies = Mosaic.Class.extend({
@@ -3162,12 +3330,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Mosaic = __webpack_require__(1);
-	var _ = __webpack_require__(27);
-	var Dependencies = __webpack_require__(20);
+	var _ = __webpack_require__(28);
+	var Dependencies = __webpack_require__(21);
 	
 	/**
 	 * This class manages intents. Each intent is a deferred object containing the
@@ -3493,11 +3661,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var L = __webpack_require__(30);
-	var DataSetView = __webpack_require__(19);
+	var L = __webpack_require__(31);
+	var DataSetView = __webpack_require__(20);
 	
 	/**
 	 * A Leaflet layer providing automatic rendering of data from a dataset. This
@@ -3585,10 +3753,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var DataSetView = __webpack_require__(19);
+	var DataSetView = __webpack_require__(20);
 	
 	/**
 	 * This class manages entries of sub-sets of a data set. It does not add/remove
@@ -3628,10 +3796,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(27);
+	var _ = __webpack_require__(28);
 	
 	/**
 	 * This is a common mixin used by React classes to add automatic binding for
@@ -3678,12 +3846,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(27);
+	var _ = __webpack_require__(28);
 	var Mosaic = __webpack_require__(1);
-	var AdapterManager = __webpack_require__(17);
+	var AdapterManager = __webpack_require__(18);
 	
 	/**
 	 * Instances of this type manage visual widgets for resources shown in various
@@ -3738,7 +3906,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* ================================================================== */
@@ -4087,12 +4255,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_27__;
-
-/***/ },
 /* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -4114,9 +4276,15 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(27);
-	var L = __webpack_require__(30);
-	var MapTiles = __webpack_require__(32);
+	module.exports = __WEBPACK_EXTERNAL_MODULE_31__;
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(28);
+	var L = __webpack_require__(31);
+	var MapTiles = __webpack_require__(33);
 	
 	/**
 	 * The code of this class was mostly copied from the leaflet.utfgrid Leaflet
@@ -4237,11 +4405,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(27);
-	var L = __webpack_require__(30);
+	var _ = __webpack_require__(28);
+	var L = __webpack_require__(31);
 	var Mosaic = __webpack_require__(1);
 	
 	/**
