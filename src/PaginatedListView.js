@@ -23,7 +23,15 @@ module.exports = React.createClass({
         });
     },
 
+    componentDidMount : function() {
+        this._refocus();
+    },
+
     componentDidUpdate : function() {
+        this._refocus();
+    },
+
+    _refocus : function() {
         if (this.state.reset) {
             this._moveToItem(this.state.index || 0);
         } else {
@@ -38,6 +46,11 @@ module.exports = React.createClass({
 
     _updateState : function(options) {
         this.setState(this._newState(options));
+    },
+
+    update : function() {
+        var idx = this.state.index || this.state.itemsStartIndex || 0;
+        this._focusToIndex(idx);
     },
 
     _focusToIndex : function(index) {
