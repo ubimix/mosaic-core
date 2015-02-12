@@ -1,5 +1,5 @@
 /*!
- * mosaic-core v0.0.21 | License: MIT 
+ * mosaic-core v0.0.22 | License: MIT 
  * 
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -1246,12 +1246,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var innerBorderElm = this.refs.innerBorder.getDOMNode();
 	        var outerBorderElm = this.refs.outerBorder.getDOMNode();
 	        var containerHeight = containerElm.offsetHeight;
-	        var dialogHeight = outerBorderElm.offsetHeight;
+	        var outerHeight = outerBorderElm.offsetHeight;
 	        var contentPosition = //
 	        this._getPosition(innerBorderElm, outerBorderElm);
 	        var contentHeight = innerBorderElm.offsetHeight;
 	        var before = contentPosition.top;
-	        var after = dialogHeight - (before + contentHeight);
+	        var after = outerHeight - (before + contentHeight);
 	        var margin = this.props.verticalMargin || 0;
 	        var height = containerHeight - (before + after) - (margin * 2);
 	        height = Math.max(height, 0);
@@ -1263,10 +1263,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var that = this;
 	            setTimeout(function() {
 	                var containerHeight = containerElm.offsetHeight;
-	                var dialogHeight = outerBorderElm.offsetHeight;
+	                var dialogElm = that.refs.dialog.getDOMNode();
+	                var dialogHeight = dialogElm.offsetHeight;
 	                var pos = Math.round((containerHeight - dialogHeight) / 2);
 	                pos = Math.max(pos, 0);
-	                outerBorderElm.style.top = pos + 'px';
+	                dialogElm.style.top = pos + 'px';
 	            }, 1);
 	        }
 	    },
