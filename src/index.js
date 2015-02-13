@@ -9,7 +9,8 @@ Mosaic.React = {
     FilterBox : require('./React.FilterBox'),
     SearchBoxMixin : require('./React.SearchBoxMixin'),
     PaginatedListView : require('./PaginatedListView'),
-    PopupPanel : require('./PopupPanel')
+    PopupPanel : require('./PopupPanel'),
+    PanelSizeTracker : require('./PanelSizeTracker')
 };
 
 Mosaic.Leaflet = {
