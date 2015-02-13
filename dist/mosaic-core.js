@@ -1,5 +1,5 @@
 /*!
- * mosaic-core v0.0.23 | License: MIT 
+ * mosaic-core v0.0.24 | License: MIT 
  * 
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -1218,10 +1218,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this._updatePopupHeight = _.debounce(this._updatePopupHeight, 10);
 	        window.addEventListener('resize', this._updatePopupHeight);
 	        document.addEventListener('keydown', this._onKeyDown);
-	        this._updatePopupHeight();
-	        if (_.isFunction(this.props.onOpen)) {
-	            this.props.onOpen(this);
-	        }
+	        var that = this;
+	        this.updateHeight(function(){
+	            if (_.isFunction(that.props.onOpen)) {
+	                that.props.onOpen(that);
+	            }
+	        });
 	        // Change the default Bootstrap settings
 	        var elm = this.refs.dialog.getDOMNode();
 	        elm.style.marginTop = '0px';
@@ -1243,6 +1245,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    },
 	    _updatePopupHeight : function() {
+	        this.updateHeight();
+	    },
+	
+	    updateHeight : function(callback) {
 	        var containerElm = this.getDOMNode();
 	        var innerBorderElm = this.refs.innerBorder.getDOMNode();
 	        var outerBorderElm = this.refs.outerBorder.getDOMNode();
@@ -1269,7 +1275,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var pos = Math.round((containerHeight - dialogHeight) / 2);
 	                pos = Math.max(pos, 0);
 	                dialogElm.style.top = pos + 'px';
+	                if (callback) {
+	                    callback();
+	                }
 	            }, 1);
+	        } else {
+	            if (callback) {
+	                callback();
+	            }
 	        }
 	    },
 	    _newState : function(options) {
