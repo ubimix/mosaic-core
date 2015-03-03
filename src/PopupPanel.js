@@ -9,16 +9,29 @@ var PopupPanel = React.createClass({
             var div = this.divStack.pop();
             if (!div)
                 return;
-            document.body.removeChild(div);
+            var popupContainer = this.getPopupContainer();
+            popupContainer.removeChild(div);
             React.unmountComponentAtNode(div);
         },
         openPopup : function(options) {
+            var popupContainer = this.getPopupContainer();
             var div = document.createElement('div');
-            document.body.appendChild(div);
+            popupContainer.appendChild(div);
             this.divStack.push(div);
             var panel = PopupPanel.apply(this, arguments);
             React.render(panel, div);
         },
+        getPopupContainer : function(){
+            console.log('this._popupContainer', this._popupContainer);
+            if (!this._popupContainer){
+                this._popupContainer = document.body;
+            }
+            return this._popupContainer;
+        },
+        setPopupContainer : function(container) {
+            this._popupContainer = container;
+            console.log('this.setPopupContainer', this._popupContainer);
+        }
     },
 
     componentDidMount : function() {
@@ -27,7 +40,7 @@ var PopupPanel = React.createClass({
         window.addEventListener('resize', this._updatePopupHeight);
         document.addEventListener('keydown', this._onKeyDown);
         var that = this;
-        this.updateHeight(function(){
+        this.updateHeight(function() {
             if (_.isFunction(that.props.onOpen)) {
                 that.props.onOpen(that);
             }
@@ -48,7 +61,7 @@ var PopupPanel = React.createClass({
         }
     },
     _onKeyDown : function(event) {
-        if (event.which == 27) { // ESC
+        if (!this.props.disableEsc && event.which == 27) { // ESC
             PopupPanel.closePopup();
         }
     },
@@ -83,12 +96,12 @@ var PopupPanel = React.createClass({
                 var pos = Math.round((containerHeight - dialogHeight) / 2);
                 pos = Math.max(pos, 0);
                 dialogElm.style.top = pos + 'px';
-                if (callback) {
+                if (callback) {
                     callback();
                 }
             }, 1);
         } else {
-            if (callback) {
+            if (callback) {
                 callback();
             }
         }
@@ -100,9 +113,11 @@ var PopupPanel = React.createClass({
     getInitialState : function() {
         return this._newState();
     },
-    _handleClose : function(ev) {
+    _handleClose : function(force, ev) {
         ev.stopPropagation();
         ev.preventDefault();
+        if (this.props.disableEsc && !force)
+            return ;
         var onClose = this.props.onClose;
         var close = true;
         if (_.isFunction(onClose)) {
@@ -143,7 +158,7 @@ var PopupPanel = React.createClass({
         }, //
         React.createElement("div", {
             className : "modal-backdrop in",
-            onClick : this._handleClose
+            onClick : this._handleClose.bind(this, false)
         }), //
         React.createElement("div", {
             className : className,
@@ -159,7 +174,7 @@ var PopupPanel = React.createClass({
         React.createElement("button", {
             type : "button",
             className : "close",
-            onClick : this._handleClose
+            onClick : this._handleClose.bind(this, true)
         }, //
         React.createElement("span", {
             "aria-hidden" : "true"
