@@ -1,5 +1,5 @@
 /*!
- * mosaic-core v0.0.26 | License: MIT 
+ * mosaic-core v0.0.27 | License: MIT 
  * 
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -1518,7 +1518,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            map.addControl(zoomControl);
 	        }
 	
-	        if (mapOptions.tilesAttribution !== false) {
+	        if (mapOptions.tilesAttribution && mapOptions.tilesAttribution.text) {
 	            var attributionControl = L.control.attribution(mapOptions.tilesAttribution);
 	            attributionControl.addAttribution(mapOptions.tilesAttribution.text);
 	            map.addControl(attributionControl);
@@ -4676,5 +4676,5 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ }
 /******/ ])
 });
-;
+
 //# sourceMappingURL=mosaic-core.js.map
