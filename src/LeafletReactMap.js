@@ -47,8 +47,9 @@ module.exports = React.createClass({
             map.addControl(zoomControl);
         }
 
-        if (mapOptions.attributionControl !== false) {
-            var attributionControl = L.control.attribution(options);
+        if (mapOptions.tilesAttribution !== false) {
+            var attributionControl = L.control.attribution(mapOptions.tilesAttribution);
+            attributionControl.addAttribution(mapOptions.tilesAttribution.text);
             map.addControl(attributionControl);
         }
 

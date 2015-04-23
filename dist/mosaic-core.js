@@ -1518,8 +1518,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            map.addControl(zoomControl);
 	        }
 	
-	        if (mapOptions.attributionControl !== false) {
-	            var attributionControl = L.control.attribution(options);
+	        if (mapOptions.attribution !== false) {
+	            var attributionControl = L.control.attribution(mapOptions.attribution);
+	            attributionControl.addAttribution(mapOptions.attribution.text);
 	            map.addControl(attributionControl);
 	        }
 	
@@ -4675,5 +4676,5 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ }
 /******/ ])
 });
-
+;
 //# sourceMappingURL=mosaic-core.js.map
