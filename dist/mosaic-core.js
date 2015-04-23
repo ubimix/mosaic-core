@@ -1,5 +1,5 @@
 /*!
- * mosaic-core v0.0.25 | License: MIT 
+ * mosaic-core v0.0.26 | License: MIT 
  * 
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -1518,9 +1518,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            map.addControl(zoomControl);
 	        }
 	
-	        if (mapOptions.attribution !== false) {
-	            var attributionControl = L.control.attribution(mapOptions.attribution);
-	            attributionControl.addAttribution(mapOptions.attribution.text);
+	        if (mapOptions.tilesAttribution !== false) {
+	            var attributionControl = L.control.attribution(mapOptions.tilesAttribution);
+	            attributionControl.addAttribution(mapOptions.tilesAttribution.text);
 	            map.addControl(attributionControl);
 	        }
 	
