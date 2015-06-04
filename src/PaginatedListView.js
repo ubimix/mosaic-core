@@ -110,7 +110,7 @@ module.exports = React.createClass({
             if (from === to) {
                 to += pageSize;
             }
-            to = Math.min(length - 1, to);
+            to = Math.min(length, to);
             var num = to - from;
             return that.props.renderItems({
                 index : from,
