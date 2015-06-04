@@ -163,14 +163,15 @@ module.exports = React.createClass({
         var to = Math.min(pageCount, from + buttonsNumber);
 
         if (from > 0) {
-            buttons.push(getSpace(Math.max(0, pageIndex - buttonsNumber)));
+            var idx = Math.max(0, pageIndex - buttonsNumber);
+            buttons.push(getButton(idx, '‹', 'space-' + idx));
         }
         for (var i = from; i < to; i++) {
             buttons.push(getButton(i, (i + 1) + '', 'item-' + i, 'active'));
         }
         if (to < pageCount) {
-            buttons.push(getSpace(Math.min(pageCount - 1, pageIndex + //
-            buttonsNumber)));
+            var idx = Math.min(pageCount - 1, pageIndex + buttonsNumber);
+            buttons.push(getButton(idx, '›', 'space-' + idx));
         }
         buttons.push(getButton(pageCount - 1, '»', 'next', 'disabled'));
         var className = that.props.paginationClassName || 'pagination';
