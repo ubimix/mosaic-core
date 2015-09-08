@@ -22,7 +22,6 @@ var PopupPanel = React.createClass({
             React.render(panel, div);
         },
         getPopupContainer : function(){
-            console.log('this._popupContainer', this._popupContainer);
             if (!this._popupContainer){
                 this._popupContainer = document.body;
             }
@@ -30,7 +29,6 @@ var PopupPanel = React.createClass({
         },
         setPopupContainer : function(container) {
             this._popupContainer = container;
-            console.log('this.setPopupContainer', this._popupContainer);
         }
     },
 
