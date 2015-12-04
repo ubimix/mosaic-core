@@ -1,5 +1,5 @@
 /*!
- * mosaic-core v0.0.27 | License: MIT 
+ * mosaic-core v0.0.31 | License: MIT 
  * 
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -1036,7 +1036,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return;
 	            index = Math.max(index || 0, 0);
 	            var idx = Math.max(index - that.state.itemsStartIndex, 0);
-	            var scrollerElm = that.getDOMNode();
+	            var scrollerElm = that._getScrollerElement();
 	            var elm = that.refs.items.getDOMNode();
 	            var topOffset = elm.offsetTop;
 	            var children = elm.childNodes;
@@ -1048,6 +1048,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            scrollerElm.scrollTop = top;
 	        }, 1);
+	    },
+	    
+	    _getScrollerElement : function(){
+	        var elm = this.props.scroller || this.getDOMNode();
+	        if (_.isFunction(elm)) {
+	            elm = elm();
+	        }
+	        return elm;
 	    },
 	
 	    _newState : function(options) {
@@ -1086,8 +1094,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (from === to) {
 	                to += pageSize;
 	            }
-	            to = Math.min(length - 1, to);
-	            var num = to - from + 1;
+	            to = Math.min(length, to);
+	            var num = to - from;
 	            return that.props.renderItems({
 	                index : from,
 	                length : num
@@ -1138,15 +1146,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        var to = Math.min(pageCount, from + buttonsNumber);
 	
+	        var idx;
 	        if (from > 0) {
-	            buttons.push(getSpace(Math.max(0, pageIndex - buttonsNumber)));
+	            idx = Math.max(0, pageIndex - buttonsNumber);
+	            buttons.push(getButton(idx, '‹', 'space-' + idx));
 	        }
 	        for (var i = from; i < to; i++) {
 	            buttons.push(getButton(i, (i + 1) + '', 'item-' + i, 'active'));
 	        }
 	        if (to < pageCount) {
-	            buttons.push(getSpace(Math.min(pageCount - 1, pageIndex + //
-	            buttonsNumber)));
+	            idx = Math.min(pageCount - 1, pageIndex + buttonsNumber);
+	            buttons.push(getButton(idx, '›', 'space-' + idx));
 	        }
 	        buttons.push(getButton(pageCount - 1, '»', 'next', 'disabled'));
 	        var className = that.props.paginationClassName || 'pagination';
@@ -1214,7 +1224,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            React.render(panel, div);
 	        },
 	        getPopupContainer : function(){
-	            console.log('this._popupContainer', this._popupContainer);
 	            if (!this._popupContainer){
 	                this._popupContainer = document.body;
 	            }
@@ -1222,7 +1231,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 	        setPopupContainer : function(container) {
 	            this._popupContainer = container;
-	            console.log('this.setPopupContainer', this._popupContainer);
 	        }
 	    },
 	

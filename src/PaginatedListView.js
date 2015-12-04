@@ -170,15 +170,16 @@ module.exports = React.createClass({
         }
         var to = Math.min(pageCount, from + buttonsNumber);
 
+        var idx;
         if (from > 0) {
-            var idx = Math.max(0, pageIndex - buttonsNumber);
+            idx = Math.max(0, pageIndex - buttonsNumber);
             buttons.push(getButton(idx, '‹', 'space-' + idx));
         }
         for (var i = from; i < to; i++) {
             buttons.push(getButton(i, (i + 1) + '', 'item-' + i, 'active'));
         }
         if (to < pageCount) {
-            var idx = Math.min(pageCount - 1, pageIndex + buttonsNumber);
+            idx = Math.min(pageCount - 1, pageIndex + buttonsNumber);
             buttons.push(getButton(idx, '›', 'space-' + idx));
         }
         buttons.push(getButton(pageCount - 1, '»', 'next', 'disabled'));
