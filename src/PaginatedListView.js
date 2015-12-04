@@ -60,7 +60,7 @@ module.exports = React.createClass({
                 return;
             index = Math.max(index || 0, 0);
             var idx = Math.max(index - that.state.itemsStartIndex, 0);
-            var scrollerElm = that.getDOMNode();
+            var scrollerElm = that._getScrollerElement();
             var elm = that.refs.items.getDOMNode();
             var topOffset = elm.offsetTop;
             var children = elm.childNodes;
@@ -72,6 +72,14 @@ module.exports = React.createClass({
             }
             scrollerElm.scrollTop = top;
         }, 1);
+    },
+    
+    _getScrollerElement : function(){
+        var elm = this.props.scroller || this.getDOMNode();
+        if (_.isFunction(elm)) {
+            elm = elm();
+        }
+        return elm;
     },
 
     _newState : function(options) {
